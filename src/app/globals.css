@@ -1,0 +1,715 @@
+@import "tailwindcss";
+
+:root {
+  /* Modern Black Theme - Elegant and Attractive */
+  --background-light: #171820; /* Modern black - not pitch black */
+  --foreground-light: #f2f2f2; /* High contrast off-white text */
+  --primary-light: #4e85c5; /* Vibrant blue */
+  --secondary-light: #9c8178; /* Warm taupe accent */
+  --accent-light: #e46955; /* Bold coral accent */
+  --card-bg-light: #1e1f2a; /* Slightly lighter background for cards */
+  --card-border-light: #2a2c3d; /* Subtle but visible border */
+  --shadow-light: rgba(10, 11, 20, 0.3); /* Soft shadows */
+  
+  /* RGB Values for CSS color functions */
+  --primary-light-rgb: 78, 133, 197; /* RGB values for primary blue */
+  --accent-light-rgb: 228, 105, 85; /* RGB values for coral accent */
+  --secondary-light-rgb: 156, 129, 120; /* RGB values for taupe */
+  
+  /* Additional color palette - more vibrant and attractive */
+  --teal-light: #45d1c8; /* Vivid teal */
+  --teal-light-rgb: 69, 209, 200;
+  --purple-light: #8a70ff; /* Rich purple */
+  --purple-light-rgb: 138, 112, 255;
+  --green-light: #5acfa6; /* Fresh green */
+  --green-light-rgb: 90, 207, 166;
+  --gold-light: #f7cd4c; /* Bright gold */
+  --gold-light-rgb: 247, 205, 76;
+  
+  /* Additional Light Theme Colors - Deeper contrast for UI elements */
+  --primary-light-50: #263249; /* Deep blue-gray */
+  --primary-light-100: #324267; /* Dark blue-gray */
+  --primary-light-200: #405685; /* Medium blue-gray */
+  --primary-light-300: #5170a9; /* Light blue-gray */
+  --primary-light-700: #3975bd; /* Deep blue for active elements */
+  --primary-light-800: #2a5d98; /* Deep blue for emphasis */
+  --accent-light-50: #39232a; /* Deep accent */
+  --accent-light-100: #543139; /* Dark accent */
+  --accent-light-200: #754549; /* Medium accent */
+  --accent-light-700: #d35547; /* Bright accent for highlights */
+  --neutral-light-100: #21232f; /* Dark gray */
+  --neutral-light-200: #2a2d3f; /* Medium dark gray */
+  --neutral-light-300: #3c4057; /* Medium gray */
+
+  /* Dark Theme - Refined Modern Black */
+  --background-dark: #12131a; /* Modern black background */
+  --foreground-dark: #f5f5f5; /* Crisp white text */
+  --primary-dark: #3d7ed1; /* Vibrant blue */
+  --secondary-dark: #8e7871; /* Warm taupe accent */
+  --accent-dark: #ff5e48; /* Vibrant coral accent */
+  --card-bg-dark: #1a1b25; /* Card background */
+  --card-border-dark: #282a3d; /* Subtle border */
+  --shadow-dark: rgba(5, 6, 12, 0.35); /* Deep shadows */
+  
+  /* RGB Values for CSS color functions in dark theme */
+  --primary-dark-rgb: 61, 126, 209; /* RGB for primary blue */
+  --accent-dark-rgb: 255, 94, 72; /* RGB for coral accent */
+  --secondary-dark-rgb: 142, 120, 113; /* RGB for taupe */
+  
+  /* Additional color palette for dark mode - more vibrant */
+  --teal-dark: #20d0c2; /* Brighter teal */
+  --teal-dark-rgb: 32, 208, 194;
+  --purple-dark: #9d66ff; /* Vibrant purple */
+  --purple-dark-rgb: 157, 102, 255;
+  --green-dark: #3dd598; /* Bright green */
+  --green-dark-rgb: 61, 213, 152;
+  --gold-dark: #ffce45; /* Bright gold */
+  --gold-dark-rgb: 255, 206, 69;
+  
+  /* Additional Dark Theme Colors - Enhanced for UI elements */
+  --primary-dark-50: #1c2235; /* Darker blue-gray */
+  --primary-dark-100: #252e47; /* Deep blue-gray */
+  --primary-dark-200: #2f3c5e; /* Darker medium blue-gray */
+  --primary-dark-300: #3a4d78; /* Darker light blue-gray */
+  --primary-dark-700: #4885d6; /* Vibrant blue for contrast */
+  --primary-dark-800: #659ae0; /* Brighter blue for visibility */
+  --accent-dark-50: #291613; /* Deeper accent dark */
+  --accent-dark-100: #3a1d18; /* Darker accent */
+  --accent-dark-200: #542b25; /* Darker medium accent */
+  --accent-dark-700: #ff7c6a; /* Vibrant accent for visibility */
+  --accent-dark-800: #ff9a88; /* Brighter accent for visibility */
+  --neutral-dark-100: #16171f; /* Darker gray */
+  --neutral-dark-200: #1e202c; /* Darker medium gray */
+  --neutral-dark-300: #272a38; /* Darker medium-light gray */
+
+  /* Neutral (used by both themes or overridden) */
+  --font-sans: "Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Fira Code", "Courier New", monospace;
+  --font-display: var(--font-sans);
+  
+  /* Consistent spacing variables - unchanged */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  
+  /* Typography scale - unchanged */
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-md: 1.125rem;    /* 18px - added for more granular control */
+  --font-size-lg: 1.25rem;     /* 20px */
+  --font-size-xl: 1.5rem;      /* 24px */
+  --font-size-2xl: 1.875rem;   /* 30px */
+  --font-size-3xl: 2.25rem;    /* 36px */
+  --font-size-4xl: 3rem;       /* 48px */
+  --font-size-5xl: 3.75rem;    /* 60px */
+  --font-size-6xl: 4.5rem;     /* 72px */
+  
+  /* Font weights - unchanged */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line heights - unchanged */
+  --line-height-none: 1;
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+  
+  /* Letter spacing - unchanged */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0em;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+}
+
+/* Default to dark theme variables always */
+:root {
+  --background: var(--background-dark);
+  --foreground: var(--foreground-dark);
+  --primary: var(--primary-dark);
+  --secondary: var(--secondary-dark);
+  --accent: var(--accent-dark);
+  --card-bg: var(--card-bg-dark);
+  --card-border: var(--card-border-dark);
+  --shadow: var(--shadow-dark);
+  --primary-rgb: var(--primary-dark-rgb);
+  --accent-rgb: var(--accent-dark-rgb);
+  --secondary-rgb: var(--secondary-dark-rgb);
+  --teal: var(--teal-dark);
+  --teal-rgb: var(--teal-dark-rgb);
+  --purple: var(--purple-dark);
+  --purple-rgb: var(--purple-dark-rgb);
+  --green: var(--green-dark);
+  --green-rgb: var(--green-dark-rgb);
+  --gold: var(--gold-dark);
+  --gold-rgb: var(--gold-dark-rgb);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: var(--line-height-normal);
+  font-size: var(--font-size-base);
+  position: relative;
+  font-weight: var(--font-weight-normal);
+  font-feature-settings: "kern", "liga", "calt";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Enhanced modern background pattern with subtle colors */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.03; /* Very subtle pattern */
+  background-image: 
+    radial-gradient(circle at 15% 25%, rgba(var(--accent-rgb), 0.9) 0.5px, transparent 1px),
+    radial-gradient(circle at 40% 40%, rgba(var(--teal-rgb), 0.9) 0.5px, transparent 1px),
+    radial-gradient(circle at 65% 70%, rgba(var(--primary-rgb), 0.9) 0.5px, transparent 1px),
+    radial-gradient(circle at 80% 20%, rgba(var(--purple-rgb), 0.9) 0.5px, transparent 1px),
+    radial-gradient(circle at 25% 85%, rgba(var(--gold-rgb), 0.9) 0.5px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(var(--green-rgb), 0.9) 0.5px, transparent 1px);
+  background-size: 40px 40px, 50px 50px, 60px 60px, 70px 70px, 45px 45px, 55px 55px;
+  background-position: 0 0, 20px 20px, 10px 10px, 15px 15px, 25px 25px, 5px 5px;
+}
+
+/* Universal card styling for consistency across the site */
+.custom-card {
+  background: linear-gradient(to bottom, var(--background, #12131a) 5%, rgba(var(--primary-rgb), 0.05));
+  border: 2px solid rgba(var(--primary-rgb), 0.15);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.custom-card:hover {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Card header accent line */
+.custom-card .card-accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  opacity: 0.7;
+}
+
+/* Card content divider */
+.custom-card .card-divider {
+  width: 80%;
+  height: 1px;
+  margin: 0.5rem auto;
+  background: linear-gradient(to right, transparent, rgba(var(--primary-rgb), 0.3), transparent);
+  opacity: 0.5;
+}
+
+/* Enhanced buttons with modern styling */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  padding: 0.75rem 1.5rem;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  border-radius: 0.75rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  transform: translateZ(0);
+  user-select: none;
+  outline: none;
+  letter-spacing: 0.025em;
+  isolation: isolate;
+}
+
+/* Primary button with sophisticated effects */
+.btn-primary {
+  background: linear-gradient(135deg, 
+    var(--primary-dark-700) 0%,
+    var(--primary) 50%,
+    var(--primary-dark-800) 100%
+  );
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 12px rgba(var(--primary-rgb), 0.2),
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, 
+    var(--primary) 0%,
+    var(--primary-dark-700) 50%,
+    var(--primary) 100%
+  );
+  box-shadow: 
+    0 8px 20px rgba(var(--primary-rgb), 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn-primary:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-primary:active {
+  box-shadow: 
+    0 4px 8px rgba(var(--primary-rgb), 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Accent button with enhanced effects */
+.btn-accent {
+  background: linear-gradient(135deg, 
+    var(--accent-dark-700) 0%,
+    var(--accent) 50%,
+    var(--accent-dark-800) 100%
+  );
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 12px rgba(var(--accent-rgb), 0.25),
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.btn-accent::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.btn-accent:hover {
+  background: linear-gradient(135deg, 
+    var(--accent) 0%,
+    var(--accent-dark-700) 50%,
+    var(--accent) 100%
+  );
+  box-shadow: 
+    0 8px 20px rgba(var(--accent-rgb), 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn-accent:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-accent:active {
+  box-shadow: 
+    0 4px 8px rgba(var(--accent-rgb), 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Outlined button with sophisticated effects */
+.btn-outline {
+  background: rgba(var(--primary-rgb), 0.03);
+  color: var(--foreground);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 2px 6px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+.btn-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(var(--primary-rgb), 0.1) 0%, 
+    rgba(var(--accent-rgb), 0.05) 50%,
+    rgba(var(--primary-rgb), 0.1) 100%
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-outline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.btn-outline:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.btn-outline:hover::before {
+  opacity: 1;
+}
+
+.btn-outline:hover::after {
+  transform: translateX(100%);
+}
+
+.btn-outline:active {
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Glow button with enhanced effects */
+.btn-glow {
+  background: linear-gradient(135deg, 
+    var(--primary-dark-700) 0%,
+    var(--primary) 50%,
+    var(--primary-dark-800) 100%
+  );
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 4px 12px rgba(var(--primary-rgb), 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before,
+.btn-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.btn-glow::before {
+  background: linear-gradient(45deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.15) 50%, 
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-glow::after {
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.1) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.btn-glow:hover {
+  box-shadow: 
+    0 8px 20px rgba(var(--primary-rgb), 0.25),
+    0 2px 5px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn-glow:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-glow:hover::after {
+  opacity: 1;
+}
+
+.btn-glow:active {
+  box-shadow: 
+    0 4px 8px rgba(var(--primary-rgb), 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Disabled state for all buttons */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  filter: grayscale(0.5);
+}
+
+/* Focus state for accessibility */
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow: 
+    0 0 0 4px rgba(var(--primary-rgb), 0.2),
+    0 4px 12px rgba(var(--primary-rgb), 0.15);
+}
+
+/* Loading state for buttons */
+.btn.loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: button-loading-spinner 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* Glass effect background for sections */
+.bg-glass-dark {
+  background: rgba(var(--background), 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Enhance headings with slight gradient and fix overlapping */
+h1, h2, h3 {
+  background: linear-gradient(
+    135deg, 
+    var(--foreground) 0%, 
+    rgba(255, 255, 255, 0.8) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
+  line-height: 1.3;
+}
+
+/* Specific heading styles */
+h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+  margin-bottom: var(--space-6);
+}
+
+h2 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-top: var(--space-8);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Handle consecutive headings */
+h1 + h2, h2 + h3 {
+  margin-top: var(--space-2); /* Reduce spacing between consecutive headings */
+}
+
+/* Basic paragraph styles for better spacing */
+p {
+  margin-bottom: var(--space-4);
+}
+
+/* Responsive heading styles for mobile */
+@media (max-width: 768px) {
+  h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-4);
+  }
+  
+  h2 {
+    font-size: var(--font-size-xl);
+    margin-top: var(--space-6);
+  }
+  
+  h3 {
+    font-size: var(--font-size-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: var(--font-size-2xl);
+    line-height: 1.2;
+  }
+  
+  h2 {
+    font-size: var(--font-size-lg);
+    margin-top: var(--space-5);
+  }
+  
+  h3 {
+    font-size: var(--font-size-md);
+  }
+}
+
+/* Update scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-dark-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark-300);
+}
+
+/* Handle section headings in components with custom styles */
+[class*="Section"] h2,
+[class*="section"] h2 {
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-6);
+  line-height: 1.1;
+}
+
+[class*="Section"] h3,
+[class*="section"] h3,
+[class*="Section"] h4,
+[class*="section"] h4 {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
+  line-height: 1.3;
+}
+
+/* Fix for cards with headings */
+.custom-card h3,
+.custom-card h4 {
+  margin-top: 0 !important; /* Override the default margin for card headings */
+}
+
+/* Add more vertical space between sections */
+section {
+  margin-bottom: var(--space-16);
+}
+
+/* Fix background-clip for all gradient text elements */
+[class*="bg-clip-text"],
+[class*="bg-gradient"] {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+/* Additional spacing for mobile */
+@media (max-width: 640px) {
+  [class*="Section"] h2,
+  [class*="section"] h2 {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+  
+  section {
+    margin-bottom: var(--space-10);
+  }
+}
+
+/* Fix for the hero section scroll indicator */
+section a[href="#about"] {
+  position: absolute;
+  bottom: 2rem !important;
+  opacity: 1 !important;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: var(--foreground);
+}
+
+/* Animation for the bounce effect */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
+}
