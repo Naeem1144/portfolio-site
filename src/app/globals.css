@@ -197,6 +197,40 @@ body::before {
   background-position: 0 0, 20px 20px, 10px 10px, 15px 15px, 25px 25px, 5px 5px;
 }
 
+/* Utility pattern background class used in multiple sections */
+.bg-grid-pattern {
+  background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px;
+  background-position: 0 0, 0 0;
+}
+
+/* Shimmer animation used by skeletons */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.shimmer-animation {
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* Floating particles/ornaments */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
 /* Universal card styling for consistency across the site */
 .custom-card {
   background: linear-gradient(to bottom, var(--background, #12131a) 5%, rgba(var(--primary-rgb), 0.05));
