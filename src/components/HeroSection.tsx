@@ -16,12 +16,13 @@ export function HeroSection() {
   };
 
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden w-full">      {/* Dark gradient background */}
+    <section className="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden w-full">
+      {/* Layered modern background */}
       <div 
         className="absolute inset-0 -z-10"
         style={{
-          background: 'radial-gradient(circle at top right, #000000 0%, transparent 50%), linear-gradient(135deg, #000000 0%, #0a1a2f 40%, #1a365d 100%)',
-          opacity: 0.98
+          background: 'radial-gradient(circle at 80% 0%, rgba(99,102,241,0.2) 0%, rgba(99,102,241,0) 40%), radial-gradient(circle at 10% 20%, rgba(236,72,153,0.18) 0%, rgba(236,72,153,0) 36%), linear-gradient(135deg, #0b1020 0%, #0a1a2f 40%, #0f1a2e 100%)',
+          opacity: 1
         }}
       />
       
@@ -38,12 +39,23 @@ export function HeroSection() {
       
       {/* Add keyframes to the globals.css file for the animation */}
       
-      <div className="container max-w-8l mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Intro badge */}
+        <motion.div
+          className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm backdrop-blur-md"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.5 }}
+        >
+          <span className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-accent shadow-[0_0_12px_rgba(99,102,241,0.6)]" />
+          <span>Data Science • Analytics • AI</span>
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
-        >          <motion.h1 
+        >
+          <motion.h1 
             className={`text-center mb-3 ${GeistSans.className}`}
             style={{
               background: 'linear-gradient(45deg, #8B5CF6, #C4B5FD, #A78BFA)',
@@ -80,7 +92,7 @@ export function HeroSection() {
           ></motion.div>
           
           <motion.p 
-            className="text-lg md:text-xl max-w-4xl mx-auto mb-20 text-gray-500 dark:text-gray-400 leading-relaxed text-center text-balance"
+            className="text-lg md:text-xl max-w-3xl mx-auto mb-20 text-gray-400 leading-relaxed text-center text-balance"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.7, ease: "easeOut" }}
@@ -117,6 +129,11 @@ export function HeroSection() {
       >
         <FiArrowDownCircle size={32} className="animate-bounce" />
       </motion.a>
+      {/* Aurora-style light streaks */}
+      <div aria-hidden className="pointer-events-none absolute -z-10 inset-0">
+        <div className="absolute -top-24 left-1/4 w-[40rem] h-[12rem] rotate-12 bg-gradient-to-r from-primary/20 via-accent/10 to-transparent blur-3xl opacity-40" />
+        <div className="absolute -bottom-24 right-1/4 w-[40rem] h-[12rem] -rotate-12 bg-gradient-to-r from-accent/20 via-primary/10 to-transparent blur-3xl opacity-40" />
+      </div>
     </section>
   );
 }
