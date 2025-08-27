@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'; // Using Card sub-components
-import { Button } from './ui/Button';
 import { motion } from 'framer-motion';
-import { FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa'; // Removed unused icons
+import { FiSend, FiMail, FiUser, FiMessageSquare, FiCheck, FiAlertCircle } from 'react-icons/fi';
 
 interface FormData {
   name: string;
@@ -63,177 +61,247 @@ export function ContactSection() {
     }
   };
 
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1],
-        staggerChildren: 0.1
-      } 
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        duration: 0.6,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }
-  };
-
   return (
-    <motion.div
-      variants={sectionVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
-      className="w-full"
-    >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[500px] h-[500px] bg-gradient-radial from-primary/10 via-accent/5 to-transparent rounded-full opacity-50 blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/2 transform translate-x-1/2 w-[400px] h-[400px] bg-gradient-radial from-accent/10 via-primary/5 to-transparent rounded-full opacity-50 blur-3xl"></div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center mt-20">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Let&apos;s Connect</h2>
-        <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 text-center font-normal">
-          Have a project in mind, a question, or just want to say hi? I&apos;d love to hear from you.
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-3 items-stretch mt-3">
-        {/* Contact Form Card */}
-        <motion.div 
-          className="h-full"
-          variants={cardVariants}
+    <div className="w-full">
+      {/* Section Header */}
+      <motion.div 
+        className="flex flex-col items-center justify-center mb-16"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        <motion.h2 
+          className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-4"
+          style={{
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            textShadow: '0 0 40px rgba(102,126,234,0.5)',
+          }}
         >
-          <Card className="custom-card overflow-hidden 
-                   bg-gradient-to-b from-background/95 to-primary/10 
-                   dark:from-background-dark/95 dark:to-primary-dark/10 
-                   border-2 border-primary/15 dark:border-primary-dark/15 
-                   shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-            {/* Remove previous background elements since we're using the consistent style */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
-            
-            <CardHeader className="!pb-2 !mb-4 p-6 md:p-8">
-              <CardTitle className="!text-2xl md:!text-3xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                Send a Message
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col p-6 md:p-8 pt-0">
-              {submitStatus === 'success' && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-start p-4 mb-6 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-300/30 dark:border-green-700/30"
-                >
-                  <FaCheckCircle className="text-green-500 dark:text-green-400 mr-3 mt-1 flex-shrink-0" size={20} />
-                  <div>
-                    <h4 className="font-semibold text-green-700 dark:text-green-300">Message Sent!</h4>
-                    <p className="text-sm text-green-600 dark:text-green-400/90">Thanks for reaching out. I&apos;ll get back to you as soon as possible.</p>
-                  </div>
-                </motion.div>
-              )}
-              {submitStatus === 'error' && (
-                <motion.div 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-start p-4 mb-6 rounded-md bg-red-50 dark:bg-red-900/30 border border-red-300/30 dark:border-red-700/30"
-                >
-                  <FaExclamationCircle className="text-red-500 dark:text-red-400 mr-3 mt-1 flex-shrink-0" size={20} />
-                  <div>
-                    <h4 className="font-semibold text-red-700 dark:text-red-300">Oops! Something went wrong.</h4>
-                    <p className="text-sm text-red-600 dark:text-red-400/90">Please try submitting the form again, or reach out via one of my social channels.</p>
-                  </div>
-                </motion.div>
-              )}
-              
-              <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
-                <div className="space-y-6 flex-1">
-                  <div className="group">
-                    <label htmlFor="name" className="block text-sm font-medium text-foreground/90 dark:text-foreground-dark/90 mb-1.5 group-focus-within:text-primary dark:group-focus-within:text-primary-dark transition-colors">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your Name"
-                      className="w-full px-4 py-2.5 rounded-md border border-white/10 bg-background/50 dark:bg-card-bg-dark/50 backdrop-blur-sm outline-none focus:outline-none focus:ring-0 transition-all duration-200 shadow-sm hover:shadow-md selection:bg-primary/10 dark:selection:bg-primary-dark/10"
-                    />
-                  </div>
-                  
-                  <div className="group">
-                    <label htmlFor="email" className="block text-sm font-medium text-foreground/90 dark:text-foreground-dark/90 mb-1.5 group-focus-within:text-primary dark:group-focus-within:text-primary-dark transition-colors">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="your.email@example.com"
-                      className="w-full px-4 py-2.5 rounded-md border border-white/10 bg-background/50 dark:bg-card-bg-dark/50 backdrop-blur-sm outline-none focus:outline-none focus:ring-0 transition-all duration-200 shadow-sm hover:shadow-md selection:bg-primary/10 dark:selection:bg-primary-dark/10"
-                    />
-                  </div>
-                  
-                  <div className="group flex-1">
-                    <label htmlFor="message" className="block text-sm font-medium text-foreground/90 dark:text-foreground-dark/90 mb-1.5 group-focus-within:text-primary dark:group-focus-within:text-primary-dark transition-colors">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={5}
-                      placeholder="How can I help you?"
-                      className="w-full h-full min-h-[120px] px-4 py-2.5 rounded-md border border-white/10 bg-background/50 dark:bg-card-bg-dark/50 backdrop-blur-sm outline-none focus:outline-none focus:ring-0 transition-all duration-200 shadow-sm hover:shadow-md resize-none"
-                    />
+          Let&apos;s Connect
+        </motion.h2>
+        <motion.p 
+          className="text-lg md:text-xl text-white/70 text-center max-w-2xl"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          Have a project in mind or want to collaborate? Let&apos;s create something amazing together
+        </motion.p>
+      </motion.div>
+
+      {/* Contact Form */}
+      <motion.div 
+        className="max-w-2xl mx-auto"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <div
+          className="relative p-8 md:p-12 rounded-3xl"
+          style={{
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
+            backdropFilter: 'blur(25px)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 25px 45px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.1)',
+          }}
+        >
+          {/* Animated Background Gradient */}
+          <div 
+            className="absolute inset-0 rounded-3xl opacity-30"
+            style={{
+              background: 'linear-gradient(45deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1), rgba(236,72,153,0.1))',
+              backgroundSize: '300% 300%',
+              animation: 'gradientMove 8s ease infinite',
+            }}
+          />
+
+          {/* Status Messages */}
+          {submitStatus === 'success' && (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mb-8 p-6 rounded-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(34,197,94,0.15), rgba(34,197,94,0.05))',
+                border: '1px solid rgba(34,197,94,0.2)',
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <FiCheck className="w-5 h-5 text-green-400" />
                   </div>
                 </div>
-                
-                <Button 
-                  type="submit" 
-                  variant="primary" 
-                  size="lg" 
-                  className="w-full sm:w-auto group relative overflow-hidden mt-auto rounded-lg"
-                  disabled={isSubmitting}
-                >
-                  <span className="relative z-10 flex items-center">
-                    {isSubmitting ? (
-                      <>
-                        <motion.div className="mr-2 w-4 h-4 border-2 border-transparent border-t-white rounded-full animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <FaPaperPlane className="mr-2 group-hover:translate-x-1 transition-transform" /> 
-                        Send Message
-                      </>
-                    )}
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </motion.div>
+                <div>
+                  <h4 className="font-semibold text-green-300 mb-1">Message Sent Successfully!</h4>
+                  <p className="text-green-200/80 text-sm">Thanks for reaching out. I&apos;ll get back to you as soon as possible.</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {submitStatus === 'error' && (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mb-8 p-6 rounded-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05))',
+                border: '1px solid rgba(239,68,68,0.2)',
+              }}
+            >
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                    <FiAlertCircle className="w-5 h-5 text-red-400" />
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-red-300 mb-1">Oops! Something went wrong</h4>
+                  <p className="text-red-200/80 text-sm">Please try again or reach out via my social channels.</p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+          
+          {/* Contact Form */}
+          <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
+            {/* Name Field */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-3">
+                <FiUser className="inline w-4 h-4 mr-2" />
+                Your Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300"
+                placeholder="Your full name"
+                style={{
+                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
+                }}
+              />
+            </motion.div>
+
+            {/* Email Field */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-3">
+                <FiMail className="inline w-4 h-4 mr-2" />
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300"
+                placeholder="your.email@example.com"
+                style={{
+                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
+                }}
+              />
+            </motion.div>
+
+            {/* Message Field */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-3">
+                <FiMessageSquare className="inline w-4 h-4 mr-2" />
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                rows={6}
+                value={formData.message}
+                onChange={handleChange}
+                required
+                className="w-full px-6 py-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400/50 transition-all duration-300 resize-none"
+                placeholder="Tell me about your project, ask a question, or just say hello..."
+                style={{
+                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
+                }}
+              />
+            </motion.div>
+
+            {/* Submit Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <motion.button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full px-8 py-4 rounded-2xl font-medium text-white transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(99,102,241,0.8), rgba(139,92,246,0.8))',
+                  boxShadow: '0 8px 25px rgba(99,102,241,0.3)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+                whileHover={!isSubmitting ? { 
+                  scale: 1.02,
+                  y: -2,
+                  background: 'linear-gradient(135deg, rgba(99,102,241,0.9), rgba(139,92,246,0.9))',
+                  boxShadow: '0 12px 35px rgba(99,102,241,0.4)',
+                } : {}}
+                whileTap={!isSubmitting ? { scale: 0.98 } : {}}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center gap-3">
+                    <motion.div
+                      className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    />
+                    <span>Sending Message...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center gap-3">
+                    <FiSend className="w-5 h-5" />
+                    <span>Send Message</span>
+                  </div>
+                )}
+              </motion.button>
+            </motion.div>
+          </form>
+        </div>
+      </motion.div>
+
+      {/* Custom CSS for animations */}
+      <style jsx>{`
+        @keyframes gradientMove {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+      `}</style>
+    </div>
   );
 }
