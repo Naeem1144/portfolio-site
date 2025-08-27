@@ -2,11 +2,9 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Button } from './ui/Button';
-import { Card, CardContent, CardTitle } from './ui/Card';
-import { FaGithub, FaLinkedin, FaFileDownload, FaEnvelope } from 'react-icons/fa';
-import { FiDownload, FiMail, FiMapPin, FiUsers, FiUser, FiExternalLink } from 'react-icons/fi';
-import { motion, useSpring, useTransform, useMotionValue } from 'framer-motion';
+import { FaGithub, FaLinkedin } from 'react-icons/fa';
+import { FiDownload, FiMail, FiMapPin } from 'react-icons/fi';
+import { motion, useTransform, useMotionValue } from 'framer-motion';
 
 interface ProfileCardProps {
   profile: {

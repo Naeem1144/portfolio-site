@@ -1,17 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from './ui/Card';
-import { Button } from './ui/Button';
-import { FaGithub, FaExternalLinkAlt, FaStar, FaCodeBranch } from 'react-icons/fa';
-import { FiExternalLink, FiGithub, FiStar, FiGitBranch, FiCode, FiTrendingUp } from 'react-icons/fi';
+import { FiExternalLink, FiGithub, FiStar, FiGitBranch } from 'react-icons/fi';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 
 interface Repo {

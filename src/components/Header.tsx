@@ -2,10 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Button } from './ui/Button';
-import { FaGithub, FaBars, FaTimes, FaFileAlt } from 'react-icons/fa';
-import { FiDownload, FiExternalLink, FiMenu, FiX } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaGithub } from 'react-icons/fa';
+import { FiDownload, FiMenu, FiX } from 'react-icons/fi';
 import { useHarmonicScroll } from '@/hooks/useHarmonicScroll';
 
 export function Header() {

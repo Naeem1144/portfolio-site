@@ -1,15 +1,14 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { Button } from './ui/Button';
-import { motion, useAnimation, useMotionValue, useSpring } from 'framer-motion';
-import { FiArrowDownCircle, FiStar, FiZap, FiTrendingUp } from 'react-icons/fi';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { FiStar, FiZap, FiTrendingUp } from 'react-icons/fi';
 import { GeistSans } from 'geist/font/sans';
 import { useHarmonicScroll } from '@/hooks/useHarmonicScroll';
 
 export function HeroSection() {
   const { scrollToSection } = useHarmonicScroll();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const cursorX = useMotionValue(0);
   const cursorY = useMotionValue(0);
   const springX = useSpring(cursorX, { stiffness: 100, damping: 10 });
@@ -24,7 +23,6 @@ export function HeroSection() {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    setMousePosition({ x, y });
     cursorX.set(x);
     cursorY.set(y);
   };
