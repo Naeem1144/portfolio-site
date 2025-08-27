@@ -4,13 +4,14 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/Button';
-import { FaGithub, FaBars, FaTimes } from 'react-icons/fa';
+import { FaGithub, FaBars, FaTimes, FaFileAlt } from 'react-icons/fa';
 import { useHarmonicScroll } from '@/hooks/useHarmonicScroll';
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [scrollProgress, setScrollProgress] = useState(0);
   const { scrollToSection } = useHarmonicScroll();
   
   useEffect(() => {
@@ -34,6 +35,12 @@ export function Header() {
           break;
         }
       }
+
+      // Update scroll progress for top indicator
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+      setScrollProgress(progress);
     };
     
     window.addEventListener('scroll', handleScroll);
@@ -74,7 +81,7 @@ export function Header() {
   return (
     <header 
       className={`
-        fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out 
+        fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out relative
         ${isScrolled || isMobileMenuOpen ? 'bg-background/85 backdrop-blur-lg shadow-lg border-b border-white/10' : 'bg-transparent border-b border-transparent'}
       `}
     >
@@ -94,7 +101,7 @@ export function Header() {
           </motion.div>
           
           {/* Desktop navigation */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2" role="navigation" aria-label="Primary">
             <motion.div 
               className="flex space-x-1 lg:space-x-2" 
               initial={{ opacity: 0, y: -10 }}
@@ -113,6 +120,7 @@ export function Header() {
                       ? 'bg-foreground/5' 
                       : 'hover:bg-foreground/5'}
                   `}
+                  aria-current={activeSection === item.id ? 'page' : undefined}
                 >
                   {item.name}
                 </a>
@@ -123,13 +131,23 @@ export function Header() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex items-center"
             >
+              <Button 
+                href="/Naeem_Resume.pdf"
+                target="_blank"
+                variant="outline"
+                size="sm"
+                className="ml-2"
+              >
+                <FaFileAlt className="mr-2" /> Resume
+              </Button>
               <Button 
                 href="https://github.com/Naeem1144" 
                 target="_blank"
                 variant="primary"
                 size="sm"
-                className="ml-4"
+                className="ml-2"
               >
                 <FaGithub className="mr-2" /> GitHub
               </Button>
@@ -226,8 +244,18 @@ export function Header() {
                     }
                   }
                 }}
-                className="w-full flex justify-center mt-1 pt-1"
+                className="w-full flex flex-col items-center gap-2 mt-1 pt-1"
               >
+                <Button 
+                  href="/Naeem_Resume.pdf" 
+                  target="_blank"
+                  variant="outline"
+                  size="sm"
+                  className="w-[calc(100%-1rem)]"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <FaFileAlt className="mr-2" /> Resume
+                </Button>
                 <Button 
                   href="https://github.com/Naeem1144" 
                   target="_blank"
@@ -243,6 +271,13 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
+      {/* Scroll progress indicator */}
+      <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] bg-white/5">
+        <div
+          className="h-full bg-gradient-to-r from-primary via-accent to-primary transition-[width] duration-150 ease-out"
+          style={{ width: `${scrollProgress}%` }}
+        />
+      </div>
     </header>
   );
 }
