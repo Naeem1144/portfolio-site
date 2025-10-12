@@ -38,12 +38,13 @@ export default async function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Container for the two-row layout + new header */}
             <div className="flex flex-col gap-3">
-              {/* Moved Section Header: "More About Me" */}
-              <div className="flex flex-col items-center justify-center mt-20">
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">About Me</h2>
-                <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 text-center font-normal">
+              {/* Premium Section Header */}
+              <div className="flex flex-col items-center justify-center mt-24 mb-8">
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white via-primary to-accent mb-4">About Me</h2>
+                <p className="text-lg md:text-xl text-gray-300/80 text-center font-normal max-w-2xl">
                   A glimpse into my journey, skills, and what drives my passion for technology and data.
                 </p>
+                <div className="mt-4 h-1 w-24 bg-gradient-to-r from-primary via-accent to-secondary rounded-full" />
               </div>
               
               {/* First Row: ProfileCard and MoreAboutMeSection */}

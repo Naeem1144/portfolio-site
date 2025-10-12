@@ -20,9 +20,9 @@ export function Card({
   animate = false
 }: CardProps) {
   const baseCardStyles = `
-    bg-[var(--card-bg)] rounded-lg border border-[var(--card-border)] p-6
-    shadow-[0_4px_12px_-2px_var(--shadow),_0_2px_4px_-1px_var(--shadow)]
-    transition-all duration-300 ease-out relative overflow-hidden
+    bg-gradient-to-br from-[var(--card-bg)]/80 to-[var(--card-bg)]/60 rounded-xl border border-[var(--card-border)] p-6
+    shadow-[0_8px_32px_-4px_var(--shadow),_0_4px_8px_-2px_var(--shadow)]
+    backdrop-blur-xl transition-all duration-500 ease-out relative overflow-hidden
   `;
 
   const variantStyles = {
@@ -34,9 +34,9 @@ export function Card({
     glass: "bg-glass-dark backdrop-blur-md border-white/10"
   };
 
-  // Hover styles with subtle transform and enhanced shadow
+  // Premium hover styles with smooth transform and shadow
   const hoverStyles = hoverable 
-    ? "hover:shadow-[0_10px_20px_-4px_var(--shadow),_0_4px_8px_-2px_var(--shadow)] hover:border-primary/30 hover:-translate-y-1 custom-card-hover" 
+    ? "hover:shadow-[0_16px_48px_-8px_var(--shadow),_0_8px_16px_-4px_var(--shadow)] hover:border-primary/40 hover:-translate-y-2 hover:scale-[1.02] custom-card-hover" 
     : "";
 
   const CardComponent = animate ? motion.div : 'div';
@@ -51,16 +51,18 @@ export function Card({
       className={`${baseCardStyles} ${variantStyles[variant]} ${hoverStyles} ${className}`.trim()}
       {...animationProps}
     >
-      {/* Enhanced gradient overlay with variant-specific coloring */}
-      <div className={`absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent pointer-events-none z-[1] ${variant !== 'default' ? `from-${variant}/[0.08]` : ''}`}></div>
+      {/* Premium gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-primary/[0.02] pointer-events-none z-[1]"></div>
       
-      {/* Pulsing border effect on hover for hoverable cards */}
+      {/* Animated glow effect on hover */}
       {hoverable && (
-        <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none border-2 border-primary/30 rounded-lg z-0 animate-pulse"></div>
+        <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 blur-xl"></div>
+        </div>
       )}
       
-      {/* Optional highlight accent in top left for visual interest */}
-      <div className="absolute -top-1 -left-1 w-12 h-12 bg-gradient-to-br from-primary/20 to-transparent rounded-br-3xl pointer-events-none z-[1] opacity-70"></div>
+      {/* Subtle top highlight */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent pointer-events-none z-[1]"></div>
       
       {children}
     </CardComponent>
@@ -79,7 +81,7 @@ export function CardHeader({ className = '', children }: { className?: string, c
 // CardTitle component
 export function CardTitle({ className = '', children }: { className?: string, children: React.ReactNode }) {
   return (
-    <h3 className={`text-xl lg:text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-dark-800 ${className}`.trim()}>
+    <h3 className={`text-xl lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white via-primary/90 to-primary/80 ${className}`.trim()}>
       {children}
     </h3>
   );
