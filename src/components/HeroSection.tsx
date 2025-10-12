@@ -36,17 +36,6 @@ export function HeroSection() {
       {/* Premium grid pattern overlay */}
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.015]"></div>
       
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(10px, -10px) scale(1.05); }
-          50% { transform: translate(-5px, 10px) scale(0.95); }
-          75% { transform: translate(-10px, -5px) scale(1.02); }
-        }
-      `}</style>
-      
-      {/* Add keyframes to the globals.css file for the animation */}
-      
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Premium intro badge */}
         <motion.div
@@ -85,19 +74,6 @@ export function HeroSection() {
           >
             Hello, and welcome to my portfolio!
           </motion.h1>
-          
-          <style jsx>{`
-            @keyframes gradientFlow {
-              0% { background-position: 0% 50%; }
-              50% { background-position: 100% 50%; }
-              100% { background-position: 0% 50%; }
-            }
-            @keyframes shimmer {
-              0% { opacity: 0.5; transform: scale(0.98); }
-              50% { opacity: 1; transform: scale(1); }
-              100% { opacity: 0.5; transform: scale(0.98); }
-            }
-          `}</style>
           
           {/* Premium accent line with glow */}
           <motion.div 

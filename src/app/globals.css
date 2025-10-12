@@ -620,6 +620,28 @@ body::after {
   }
 }
 
+/* Hero section gradient flow animation */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Shimmer effect animation */
+@keyframes shimmer {
+  0% { opacity: 0.5; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.5; transform: scale(0.98); }
+}
+
+/* Float animation for particles */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(10px, -10px) scale(1.05); }
+  50% { transform: translate(-5px, 10px) scale(0.95); }
+  75% { transform: translate(-10px, -5px) scale(1.02); }
+}
+
 /* Glass effect background for sections */
 .bg-glass-dark {
   background: rgba(var(--background), 0.6);
