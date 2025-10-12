@@ -102,11 +102,32 @@ export function ContactSection() {
         <div className="absolute bottom-0 right-1/2 transform translate-x-1/2 w-[400px] h-[400px] bg-gradient-radial from-accent/10 via-primary/5 to-transparent rounded-full opacity-50 blur-3xl"></div>
       </div>
 
-      <div className="flex flex-col items-center justify-center mt-20">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Let&apos;s Connect</h2>
-        <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 text-center font-normal">
+      <div className="flex flex-col items-center justify-center mt-24 mb-8">
+        <motion.h2 
+          className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white via-primary to-accent mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          Let&apos;s Connect
+        </motion.h2>
+        <motion.p 
+          className="text-lg md:text-xl text-gray-300/80 text-center font-normal max-w-2xl"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
           Have a project in mind, a question, or just want to say hi? I&apos;d love to hear from you.
-        </p>
+        </motion.p>
+        <motion.div 
+          className="mt-4 h-1 w-24 bg-gradient-to-r from-primary via-accent to-secondary rounded-full"
+          initial={{ opacity: 0, scale: 0 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        />
       </div>
       
       <div className="grid grid-cols-1 gap-3 items-stretch mt-3">
@@ -115,20 +136,13 @@ export function ContactSection() {
           className="h-full"
           variants={cardVariants}
         >
-          <Card className="custom-card overflow-hidden 
-                   bg-gradient-to-b from-background/95 to-primary/10 
-                   dark:from-background-dark/95 dark:to-primary-dark/10 
-                   border-2 border-primary/15 dark:border-primary-dark/15 
-                   shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-            {/* Remove previous background elements since we're using the consistent style */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
-            
-            <CardHeader className="!pb-2 !mb-4 p-6 md:p-8">
-              <CardTitle className="!text-2xl md:!text-3xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+          <Card className="custom-card overflow-hidden h-full flex flex-col">
+            <CardHeader className="!pb-2 !mb-4 p-6 md:p-8 relative z-10">
+              <CardTitle className="!text-2xl md:!text-3xl">
                 Send a Message
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col p-6 md:p-8 pt-0">
+            <CardContent className="flex-1 flex flex-col p-6 md:p-8 pt-0 relative z-10">
               {submitStatus === 'success' && (
                 <motion.div 
                   initial={{ opacity: 0, y: -10 }}
@@ -170,7 +184,7 @@ export function ContactSection() {
                       onChange={handleChange}
                       required
                       placeholder="Your Name"
-                      className="w-full px-4 py-2.5 rounded-md border border-white/10 bg-background/50 dark:bg-card-bg-dark/50 backdrop-blur-sm outline-none focus:outline-none focus:ring-0 transition-all duration-200 shadow-sm hover:shadow-md selection:bg-primary/10 dark:selection:bg-primary-dark/10"
+                      className="w-full px-4 py-3 rounded-lg border border-white/10 bg-background/30 backdrop-blur-md outline-none focus:outline-none focus:border-primary/50 focus:bg-background/40 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg selection:bg-primary/20"
                     />
                   </div>
                   
@@ -186,7 +200,7 @@ export function ContactSection() {
                       onChange={handleChange}
                       required
                       placeholder="your.email@example.com"
-                      className="w-full px-4 py-2.5 rounded-md border border-white/10 bg-background/50 dark:bg-card-bg-dark/50 backdrop-blur-sm outline-none focus:outline-none focus:ring-0 transition-all duration-200 shadow-sm hover:shadow-md selection:bg-primary/10 dark:selection:bg-primary-dark/10"
+                      className="w-full px-4 py-3 rounded-lg border border-white/10 bg-background/30 backdrop-blur-md outline-none focus:outline-none focus:border-primary/50 focus:bg-background/40 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg selection:bg-primary/20"
                     />
                   </div>
                   

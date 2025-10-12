@@ -68,15 +68,11 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
       className="w-full h-full"
     >
       <Card 
-        className="overflow-hidden custom-card h-full flex flex-col 
-                   bg-gradient-to-b from-background/95 to-primary/10 
-                   dark:from-background-dark/95 dark:to-primary-dark/10 
-                   border-2 border-primary/15 dark:border-primary-dark/15 
-                   shadow-lg hover:shadow-xl transition-all duration-300"
+        className="overflow-hidden custom-card h-full flex flex-col"
         hoverable={false}
       >
-        <CardContent className="p-6 flex flex-col items-center text-center">
-          <div className="relative w-36 h-36 mb-5 rounded-full overflow-hidden border-4 border-primary dark:border-primary-dark shadow-lg">
+        <CardContent className="p-6 flex flex-col items-center text-center relative z-10">
+          <div className="relative w-36 h-36 mb-5 rounded-full overflow-hidden border-4 border-primary/50 shadow-2xl shadow-primary/20 ring-2 ring-primary/20 ring-offset-2 ring-offset-background">
             <Image 
               src={profile.avatarUrl}
               alt={`${profile.name}'s avatar`}

@@ -96,17 +96,18 @@ const skills: SkillCategory[] = [
 export function CoreCompetenciesSection() {
   return (
     <div className="w-full">
-      <div className="flex flex-col items-center justify-center mt-20">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Core Competencies</h2>
-        <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 text-center font-normal mt-2">
+      <div className="flex flex-col items-center justify-center mt-24 mb-8">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white via-primary to-accent mb-4">Core Competencies</h2>
+        <p className="text-lg md:text-xl text-gray-300/80 text-center font-normal mt-2 max-w-2xl">
           A comprehensive overview of my key skills and expertise
         </p>
+        <div className="mt-4 h-1 w-24 bg-gradient-to-r from-primary via-accent to-secondary rounded-full" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-3 w-full mt-3">
         {/* Data Analysis - Featured Card */}
         <div className="md:col-span-3 lg:col-span-4">
-          <Card className="custom-card h-full overflow-hidden shadow-lg border-2 border-primary/15 dark:border-primary-dark/15 hover:shadow-xl transition-all duration-300">
+          <Card className="custom-card h-full overflow-hidden">
             <div className={`absolute inset-0 bg-gradient-to-br ${skills[0].color} opacity-50`}></div>
             <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
             <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
@@ -146,7 +147,7 @@ export function CoreCompetenciesSection() {
 
         {/* Machine Learning - Tall Card */}
         <div className="md:col-span-3 lg:col-span-4">
-          <Card className="custom-card h-full overflow-hidden shadow-lg border-2 border-primary/15 dark:border-primary-dark/15 hover:shadow-xl transition-all duration-300">
+          <Card className="custom-card h-full overflow-hidden">
             <div className={`absolute inset-0 bg-gradient-to-br ${skills[1].color} opacity-50`}></div>
             <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
             <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
@@ -186,7 +187,7 @@ export function CoreCompetenciesSection() {
 
         {/* AI & LLM - Compact Card */}
         <div className="md:col-span-3 lg:col-span-4">
-          <Card className="custom-card h-full overflow-hidden shadow-lg border-2 border-primary/15 dark:border-primary-dark/15 hover:shadow-xl transition-all duration-300">
+          <Card className="custom-card h-full overflow-hidden">
             <div className={`absolute inset-0 bg-gradient-to-br ${skills[2].color} opacity-50`}></div>
             <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
             <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
@@ -226,7 +227,7 @@ export function CoreCompetenciesSection() {
 
         {/* Databases - Small Card */}
         <div className="md:col-span-2 lg:col-span-3">
-          <Card className="custom-card h-full overflow-hidden shadow-lg border-2 border-primary/15 dark:border-primary-dark/15 hover:shadow-xl transition-all duration-300">
+          <Card className="custom-card h-full overflow-hidden">
             <div className={`absolute inset-0 bg-gradient-to-br ${skills[3].color} opacity-50`}></div>
             <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
             <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
@@ -266,7 +267,7 @@ export function CoreCompetenciesSection() {
 
         {/* Statistics - Small Card */}
         <div className="md:col-span-2 lg:col-span-3">
-          <Card className="custom-card h-full overflow-hidden shadow-lg border-2 border-primary/15 dark:border-primary-dark/15 hover:shadow-xl transition-all duration-300">
+          <Card className="custom-card h-full overflow-hidden">
             <div className={`absolute inset-0 bg-gradient-to-br ${skills[4].color} opacity-50`}></div>
             <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
             <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
@@ -306,7 +307,7 @@ export function CoreCompetenciesSection() {
 
         {/* Professional Skills - Wide Card */}
         <div className="md:col-span-4 lg:col-span-6">
-          <Card className="custom-card h-full overflow-hidden shadow-lg border-2 border-primary/15 dark:border-primary-dark/15 hover:shadow-xl transition-all duration-300">
+          <Card className="custom-card h-full overflow-hidden">
             <div className={`absolute inset-0 bg-gradient-to-br ${skills[5].color} opacity-50`}></div>
             <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
             <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
