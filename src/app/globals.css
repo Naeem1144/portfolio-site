@@ -329,7 +329,7 @@ body::after {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, 
-    rgba(var(--primary-rgb), 1.1) 0%,
+    rgba(var(--primary-rgb), 1) 0%,
     rgba(var(--primary-rgb), 1) 100%
   );
   box-shadow: 
