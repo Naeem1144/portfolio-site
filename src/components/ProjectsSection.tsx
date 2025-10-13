@@ -81,11 +81,33 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
 
   return (
     <div className="w-full">
-      <div className="flex flex-col items-center justify-center mt-20">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">Featured Projects</h2>
-        <p className="text-lg md:text-xl text-gray-500 dark:text-gray-400 text-center font-normal">
+      <div className="flex flex-col items-center justify-center mt-24 mb-8">
+        <motion.h2 
+          className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white via-primary to-accent mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          Featured Projects
+        </motion.h2>
+        <motion.p 
+          className="text-lg md:text-xl text-gray-300/80 text-center font-normal max-w-2xl"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
           A curated selection of my work, showcasing my skills in action.
-        </p>
+        </motion.p>
+        {/* Decorative line */}
+        <motion.div 
+          className="mt-4 h-1 w-24 bg-gradient-to-r from-primary via-accent to-secondary rounded-full"
+          initial={{ opacity: 0, scale: 0 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        />
       </div>
       
       <div className="mt-3">
@@ -136,19 +158,12 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
           >
             {repos.map((repo) => (
               <motion.div key={repo.name} variants={itemVariants}>
-              <Card className="h-full flex flex-col custom-card overflow-hidden 
-                   bg-gradient-to-b from-background/95 to-primary/10 
-                   dark:from-background-dark/95 dark:to-primary-dark/10 
-                   border-2 border-primary/15 dark:border-primary-dark/15 
-                   shadow-lg hover:shadow-xl transition-all duration-300" hoverable={false}>
+              <Card className="h-full flex flex-col custom-card overflow-hidden group" hoverable={false}>
                   {/* Remove previous background elements since we're using the consistent style */}
                   
-                  <CardHeader className="relative">
-                    {/* Card top accent bar */}
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
-                    
+                  <CardHeader className="relative z-10">
                     <div className="flex justify-between items-start mb-3 relative">
-                      <CardTitle className="!text-lg lg:!text-xl !mb-1 break-all bg-clip-text text-transparent bg-gradient-to-r from-primary to-foreground dark:from-primary-dark dark:to-foreground-dark">
+                      <CardTitle className="!text-lg lg:!text-xl !mb-1 break-all group-hover:text-primary transition-colors duration-300">
                         {repo.name}
                       </CardTitle>
                     </div>
@@ -156,9 +171,7 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
                       {repo.description || 'No description provided for this project.'}
                     </CardDescription>
                   </CardHeader>
-                    <CardContent className="flex-grow relative">
-                    {/* Subtle divider */}
-                    <div className="absolute -left-2 -right-2 top-0 h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent"></div>
+                    <CardContent className="flex-grow relative z-10">
                     
                     {repo.topics && repo.topics.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-2">
@@ -176,9 +189,7 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
                       </div>
                     )}
                   </CardContent>
-                    <CardFooter className="flex flex-col sm:flex-row gap-3 relative pt-5">
-                    {/* Footer top decorative border */}
-                    <div className="absolute -left-2 -right-2 top-0 h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent"></div>
+                    <CardFooter className="flex flex-col sm:flex-row gap-3 relative pt-5 z-10">
                     
                     <Button 
                       href={repo.htmlUrl} 
