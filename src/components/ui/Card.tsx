@@ -15,7 +15,6 @@ interface CardProps {
 export function Card({ 
   className = '', 
   children, 
-  hoverable = false,
   variant = 'default',
   animate = false
 }: CardProps) {

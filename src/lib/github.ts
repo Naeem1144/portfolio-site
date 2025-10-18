@@ -84,8 +84,9 @@ export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
       publicRepos: data.public_repos,
       htmlUrl: data.html_url,
     };
-  } catch (error: any) {
-    if ((error?.status === 401 || error?.status === 403) && authenticatedOctokit) {
+  } catch (error: unknown) {
+    const errorWithStatus = error as { status?: number };
+    if ((errorWithStatus?.status === 401 || errorWithStatus?.status === 403) && authenticatedOctokit) {
       console.warn('GitHub profile request failed with provided token. Retrying without authentication.');
 
       try {
@@ -146,8 +147,9 @@ async function fetchFallbackRepos() {
       homepage: repo.homepage || '',
       topics: repo.topics ?? [],
     }));
-  } catch (error: any) {
-    if ((error?.status === 401 || error?.status === 403) && authenticatedOctokit) {
+  } catch (error: unknown) {
+    const errorWithStatus = error as { status?: number };
+    if ((errorWithStatus?.status === 401 || errorWithStatus?.status === 403) && authenticatedOctokit) {
       console.warn('GitHub REST API returned an authorization error. Retrying without authentication.');
 
       try {
@@ -237,8 +239,9 @@ export async function fetchPinnedRepos() {
       homepage: repo.homepageUrl || '',
       topics: repo.repositoryTopics.nodes.map(topic => topic.topic.name),
     }));
-  } catch (error: any) {
-    if (error?.status === 401 || error?.status === 403) {
+  } catch (error: unknown) {
+    const errorWithStatus = error as { status?: number };
+    if (errorWithStatus?.status === 401 || errorWithStatus?.status === 403) {
       console.warn('GitHub GraphQL returned an authorization error. Falling back to public repository data.');
       return fetchFallbackRepos();
     }
