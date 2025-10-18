@@ -16,7 +16,8 @@ export function Card({
   className = '', 
   children, 
   variant = 'default',
-  animate = false
+  animate = false,
+  hoverable: _hoverable
 }: CardProps) {
   const baseCardStyles = `
     bg-gradient-to-br from-[var(--card-bg)]/95 to-[var(--card-bg)]/85 rounded-xl border border-[var(--card-border)] p-6
