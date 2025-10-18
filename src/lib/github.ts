@@ -3,17 +3,23 @@ import { graphql } from '@octokit/graphql';
 
 const username = 'Naeem1144';
 
-// Initialize Octokit with authentication
-const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN
-});
+const githubToken = process.env.GITHUB_TOKEN;
 
-// Initialize GraphQL client with authentication
-const graphqlWithAuth = graphql.defaults({
-  headers: {
-    authorization: `token ${process.env.GITHUB_TOKEN}`,
-  },
-});
+const publicOctokit = new Octokit();
+const authenticatedOctokit = githubToken
+  ? new Octokit({
+      auth: githubToken,
+    })
+  : null;
+
+// Lazily create GraphQL client only when a token is configured
+const graphqlWithAuth = githubToken
+  ? graphql.defaults({
+      headers: {
+        authorization: `Bearer ${githubToken}`,
+      },
+    })
+  : null;
 
 interface GitHubProfile {
   name: string;
@@ -58,8 +64,10 @@ interface GraphQLResponse {
 
 // Function to fetch user profile data
 export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
+  const client = authenticatedOctokit ?? publicOctokit;
+
   try {
-    const { data } = await octokit.users.getByUsername({
+    const { data } = await client.users.getByUsername({
       username,
     });
 
@@ -76,14 +84,116 @@ export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
       publicRepos: data.public_repos,
       htmlUrl: data.html_url,
     };
-  } catch (error) {
+  } catch (error: any) {
+    if ((error?.status === 401 || error?.status === 403) && authenticatedOctokit) {
+      console.warn('GitHub profile request failed with provided token. Retrying without authentication.');
+
+      try {
+        const { data } = await publicOctokit.users.getByUsername({
+          username,
+        });
+
+        return {
+          name: data.name || username,
+          bio: data.bio || '',
+          avatarUrl: data.avatar_url,
+          followers: data.followers,
+          following: data.following,
+          location: data.location || '',
+          company: data.company || '',
+          blog: data.blog || '',
+          twitterUsername: data.twitter_username || '',
+          publicRepos: data.public_repos,
+          htmlUrl: data.html_url,
+        };
+      } catch (publicError) {
+        console.error('Error fetching GitHub profile without authentication:', publicError);
+        return null;
+      }
+    }
+
     console.error('Error fetching GitHub profile:', error);
     return null;
   }
 }
 
-// Function to fetch pinned repositories using GraphQL
+async function fetchFallbackRepos() {
+  const client = authenticatedOctokit ?? publicOctokit;
+
+  try {
+    const { data } = await client.repos.listForUser({
+      username,
+      type: 'owner',
+      per_page: 100,
+      sort: 'updated',
+      mediaType: {
+        previews: ['mercy'],
+      },
+    });
+
+    const topRepos = data
+      .filter(repo => !repo.fork)
+      .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
+      .slice(0, 6);
+
+    return topRepos.map(repo => ({
+      name: repo.name,
+      description: repo.description || '',
+      htmlUrl: repo.html_url,
+      stars: repo.stargazers_count,
+      forks: repo.forks_count,
+      language: repo.language,
+      homepage: repo.homepage || '',
+      topics: repo.topics ?? [],
+    }));
+  } catch (error: any) {
+    if ((error?.status === 401 || error?.status === 403) && authenticatedOctokit) {
+      console.warn('GitHub REST API returned an authorization error. Retrying without authentication.');
+
+      try {
+        const { data } = await publicOctokit.repos.listForUser({
+          username,
+          type: 'owner',
+          per_page: 100,
+          sort: 'updated',
+          mediaType: {
+            previews: ['mercy'],
+          },
+        });
+
+        const topRepos = data
+          .filter(repo => !repo.fork)
+          .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
+          .slice(0, 6);
+
+        return topRepos.map(repo => ({
+          name: repo.name,
+          description: repo.description || '',
+          htmlUrl: repo.html_url,
+          stars: repo.stargazers_count,
+          forks: repo.forks_count,
+          language: repo.language,
+          homepage: repo.homepage || '',
+          topics: repo.topics ?? [],
+        }));
+      } catch (publicError) {
+        console.error('Error fetching fallback GitHub repos without authentication:', publicError);
+        return [];
+      }
+    }
+
+    console.error('Error fetching fallback GitHub repos:', error);
+    return [];
+  }
+}
+
+// Function to fetch pinned repositories using GraphQL when possible, otherwise fall back
 export async function fetchPinnedRepos() {
+  if (!graphqlWithAuth) {
+    console.warn('GITHUB_TOKEN is not configured. Falling back to public repository data.');
+    return fetchFallbackRepos();
+  }
+
   try {
     const query = `
       query {
@@ -117,17 +227,22 @@ export async function fetchPinnedRepos() {
     const response = await graphqlWithAuth<GraphQLResponse>(query);
     const pinnedRepos = response.user.pinnedItems.nodes;
 
-    return pinnedRepos.map((repo: Repository) => ({
+    return pinnedRepos.map(repo => ({
       name: repo.name,
       description: repo.description || '',
       htmlUrl: repo.url,
       stars: repo.stargazerCount,
       forks: repo.forkCount,
-      language: repo.primaryLanguage?.name,
+      language: repo.primaryLanguage?.name || null,
       homepage: repo.homepageUrl || '',
       topics: repo.repositoryTopics.nodes.map(topic => topic.topic.name),
     }));
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.status === 401 || error?.status === 403) {
+      console.warn('GitHub GraphQL returned an authorization error. Falling back to public repository data.');
+      return fetchFallbackRepos();
+    }
+
     console.error('Error fetching pinned GitHub repos:', error);
     return [];
   }

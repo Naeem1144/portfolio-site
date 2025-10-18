@@ -81,11 +81,11 @@ export function Header() {
   return (
     <header 
       className={`
-        fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-out relative
-        ${isScrolled || isMobileMenuOpen ? 'bg-background/60 backdrop-blur-xl shadow-2xl border-b border-white/10' : 'bg-transparent border-b border-transparent'}
+        fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out relative
+        ${isScrolled || isMobileMenuOpen ? 'bg-background/70 backdrop-blur-2xl border-b border-primary/5' : 'bg-transparent border-b border-transparent'}
       `}
       style={{
-        backdropFilter: isScrolled || isMobileMenuOpen ? 'blur(20px) saturate(180%)' : 'none',
+        backdropFilter: isScrolled || isMobileMenuOpen ? 'blur(24px) saturate(150%)' : 'none',
       }}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -95,11 +95,9 @@ export function Header() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Link href="/" className="group flex items-center no-underline hover:no-underline">
-              <span className="relative text-2xl font-bold text-white transition-all duration-300">
-                <span className="relative z-10">Naeem</span>
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary via-accent to-secondary rounded-full group-hover:w-full transition-all duration-500 shadow-lg shadow-primary/50"></span>
-                <span className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/10 to-primary/0 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500"></span>
+            <Link href="/" className="flex items-center no-underline">
+              <span className="text-2xl font-bold text-foreground">
+                Naeem
               </span>
             </Link>
           </motion.div>
@@ -118,11 +116,11 @@ export function Header() {
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
                   className={`
-                    relative px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
-                    text-white/90 hover:text-white !text-white no-underline hover:no-underline
+                    relative px-4 py-2 rounded-lg text-sm font-medium
+                    text-foreground/80 no-underline
                     ${activeSection === item.id 
-                      ? 'bg-primary/15 shadow-lg shadow-primary/20' 
-                      : 'hover:bg-white/5 hover:shadow-md'}
+                      ? 'bg-primary/10 text-foreground' 
+                      : ''}
                   `}
                   aria-current={activeSection === item.id ? 'page' : undefined}
                 >
@@ -160,7 +158,7 @@ export function Header() {
           
           {/* Mobile menu button */}
           <motion.button 
-            className="md:hidden p-2 text-foreground hover:text-primary rounded-md hover:bg-foreground/5 transition-colors duration-200"
+            className="md:hidden p-2 text-foreground/70 rounded-md"
             onClick={toggleMobileMenu}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             initial={{ opacity: 0, x: 20 }}
@@ -180,8 +178,8 @@ export function Header() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-background/80 backdrop-blur-2xl shadow-2xl absolute top-full left-1/2 -translate-x-1/2 w-[85%] max-w-[300px] rounded-xl border border-white/20"
-            style={{ backdropFilter: 'blur(24px) saturate(180%)' }}
+            className="md:hidden bg-background/85 backdrop-blur-2xl absolute top-full left-1/2 -translate-x-1/2 w-[85%] max-w-[300px] rounded-xl border border-primary/8"
+            style={{ backdropFilter: 'blur(24px)' }}
           >
             <motion.nav 
               className="flex flex-col items-center space-y-1 py-3"
@@ -221,11 +219,11 @@ export function Header() {
                     href={item.href}
                     onClick={(e) => handleNavClick(e, item.href)}
                     className={`
-                      flex justify-center py-2.5 px-4 mx-2 rounded-lg text-base transition-all duration-300
-                      text-white/90 hover:text-white !text-white no-underline hover:no-underline
+                      flex justify-center py-2.5 px-4 mx-2 rounded-lg text-base
+                      text-foreground/80 no-underline
                       ${activeSection === item.id 
-                        ? 'bg-primary/15 font-medium shadow-lg shadow-primary/10' 
-                        : 'hover:bg-white/5'}
+                        ? 'bg-primary/10 text-foreground font-medium' 
+                        : ''}
                     `}
                   >
                     {item.name}
@@ -276,14 +274,12 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* Premium scroll progress indicator with glow */}
-      <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 right-0 h-[3px] bg-white/5">
+      {/* Refined scroll progress indicator */}
+      <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] bg-transparent">
         <div
-          className="h-full bg-gradient-to-r from-primary via-accent to-secondary transition-[width] duration-150 ease-out relative"
+          className="h-full bg-primary transition-[width] duration-150 ease-out opacity-60"
           style={{ width: `${scrollProgress}%` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-secondary blur-sm opacity-60" />
-        </div>
+        />
       </div>
     </header>
   );

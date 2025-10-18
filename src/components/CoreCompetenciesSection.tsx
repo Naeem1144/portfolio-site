@@ -96,12 +96,12 @@ const skills: SkillCategory[] = [
 export function CoreCompetenciesSection() {
   return (
     <div className="w-full">
-      <div className="flex flex-col items-center justify-center mt-24 mb-8">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white via-primary to-accent mb-4">Core Competencies</h2>
-        <p className="text-lg md:text-xl text-gray-300/80 text-center font-normal mt-2 max-w-2xl">
+      <div className="flex flex-col items-center justify-center mt-32 mb-12">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">Core Competencies</h2>
+        <p className="text-base md:text-lg text-foreground/60 text-center font-light mt-2 max-w-xl">
           A comprehensive overview of my key skills and expertise
         </p>
-        <div className="mt-4 h-1 w-24 bg-gradient-to-r from-primary via-accent to-secondary rounded-full" />
+        <div className="mt-6 h-0.5 w-20 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full opacity-50" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-3 w-full mt-3">
@@ -114,15 +114,15 @@ export function CoreCompetenciesSection() {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
             
             <CardContent className="p-6 relative">
-              <h4 className="text-2xl font-semibold text-white mb-6 drop-shadow-md">
+              <h4 className="text-xl font-semibold text-foreground mb-5">
                 {skills[0].category}
               </h4>
               
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {skills[0].items.map((item) => (
                   <li
                     key={item.name}
-                    className="flex items-start text-foreground/85 dark:text-foreground-dark/85"
+                    className="flex items-start text-foreground/75"
                   >
                     <svg 
                       width="16" 
@@ -133,11 +133,11 @@ export function CoreCompetenciesSection() {
                       strokeWidth="2" 
                       strokeLinecap="round" 
                       strokeLinejoin="round" 
-                      className="mr-3 mt-1 flex-shrink-0 w-4 h-4 text-primary/70 dark:text-primary-dark/70"
+                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-base">{item.name}</span>
+                    <span className="flex-grow text-sm">{item.name}</span>
                   </li>
                 ))}
               </ul>
@@ -154,15 +154,15 @@ export function CoreCompetenciesSection() {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
             
             <CardContent className="p-6 relative">
-              <h4 className="text-2xl font-semibold text-white mb-6 drop-shadow-md">
+              <h4 className="text-xl font-semibold text-foreground mb-5">
                 {skills[1].category}
               </h4>
               
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {skills[1].items.map((item) => (
                   <li
                     key={item.name}
-                    className="flex items-start text-foreground/85 dark:text-foreground-dark/85"
+                    className="flex items-start text-foreground/75"
                   >
                     <svg 
                       width="16" 
@@ -173,11 +173,11 @@ export function CoreCompetenciesSection() {
                       strokeWidth="2" 
                       strokeLinecap="round" 
                       strokeLinejoin="round" 
-                      className="mr-3 mt-1 flex-shrink-0 w-4 h-4 text-primary/70 dark:text-primary-dark/70"
+                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-base">{item.name}</span>
+                    <span className="flex-grow text-sm">{item.name}</span>
                   </li>
                 ))}
               </ul>
@@ -194,15 +194,15 @@ export function CoreCompetenciesSection() {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
             
             <CardContent className="p-6 relative">
-              <h4 className="text-2xl font-semibold text-white mb-6 drop-shadow-md">
+              <h4 className="text-xl font-semibold text-foreground mb-5">
                 {skills[2].category}
               </h4>
               
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {skills[2].items.map((item) => (
                   <li
                     key={item.name}
-                    className="flex items-start text-foreground/85 dark:text-foreground-dark/85"
+                    className="flex items-start text-foreground/75"
                   >
                     <svg 
                       width="16" 
@@ -213,11 +213,11 @@ export function CoreCompetenciesSection() {
                       strokeWidth="2" 
                       strokeLinecap="round" 
                       strokeLinejoin="round" 
-                      className="mr-3 mt-1 flex-shrink-0 w-4 h-4 text-primary/70 dark:text-primary-dark/70"
+                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-base">{item.name}</span>
+                    <span className="flex-grow text-sm">{item.name}</span>
                   </li>
                 ))}
               </ul>
@@ -234,15 +234,15 @@ export function CoreCompetenciesSection() {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
             
             <CardContent className="p-6 relative">
-              <h4 className="text-2xl font-semibold text-white mb-6 drop-shadow-md">
+              <h4 className="text-xl font-semibold text-foreground mb-5">
                 {skills[3].category}
               </h4>
               
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {skills[3].items.map((item) => (
                   <li
                     key={item.name}
-                    className="flex items-start text-foreground/85 dark:text-foreground-dark/85"
+                    className="flex items-start text-foreground/75"
                   >
                     <svg 
                       width="16" 
@@ -253,11 +253,11 @@ export function CoreCompetenciesSection() {
                       strokeWidth="2" 
                       strokeLinecap="round" 
                       strokeLinejoin="round" 
-                      className="mr-3 mt-1 flex-shrink-0 w-4 h-4 text-primary/70 dark:text-primary-dark/70"
+                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-base">{item.name}</span>
+                    <span className="flex-grow text-sm">{item.name}</span>
                   </li>
                 ))}
               </ul>
@@ -274,15 +274,15 @@ export function CoreCompetenciesSection() {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
             
             <CardContent className="p-6 relative">
-              <h4 className="text-2xl font-semibold text-white mb-6 drop-shadow-md">
+              <h4 className="text-xl font-semibold text-foreground mb-5">
                 {skills[4].category}
               </h4>
               
-              <ul className="space-y-3">
+              <ul className="space-y-2.5">
                 {skills[4].items.map((item) => (
                   <li
                     key={item.name}
-                    className="flex items-start text-foreground/85 dark:text-foreground-dark/85"
+                    className="flex items-start text-foreground/75"
                   >
                     <svg 
                       width="16" 
@@ -293,11 +293,11 @@ export function CoreCompetenciesSection() {
                       strokeWidth="2" 
                       strokeLinecap="round" 
                       strokeLinejoin="round" 
-                      className="mr-3 mt-1 flex-shrink-0 w-4 h-4 text-primary/70 dark:text-primary-dark/70"
+                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-base">{item.name}</span>
+                    <span className="flex-grow text-sm">{item.name}</span>
                   </li>
                 ))}
               </ul>
@@ -314,15 +314,15 @@ export function CoreCompetenciesSection() {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
             
             <CardContent className="p-6 relative">
-              <h4 className="text-2xl font-semibold text-white mb-6 drop-shadow-md">
+              <h4 className="text-xl font-semibold text-foreground mb-5">
                 {skills[5].category}
               </h4>
               
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                 {skills[5].items.map((item) => (
                   <li
                     key={item.name}
-                    className="flex items-start text-foreground/85 dark:text-foreground-dark/85"
+                    className="flex items-start text-foreground/75"
                   >
                     <svg 
                       width="16" 
@@ -333,11 +333,11 @@ export function CoreCompetenciesSection() {
                       strokeWidth="2" 
                       strokeLinecap="round" 
                       strokeLinejoin="round" 
-                      className="mr-3 mt-1 flex-shrink-0 w-4 h-4 text-primary/70 dark:text-primary-dark/70"
+                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-base">{item.name}</span>
+                    <span className="flex-grow text-sm">{item.name}</span>
                   </li>
                 ))}
               </ul>

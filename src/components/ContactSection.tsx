@@ -102,9 +102,9 @@ export function ContactSection() {
         <div className="absolute bottom-0 right-1/2 transform translate-x-1/2 w-[400px] h-[400px] bg-gradient-radial from-accent/10 via-primary/5 to-transparent rounded-full opacity-50 blur-3xl"></div>
       </div>
 
-      <div className="flex flex-col items-center justify-center mt-24 mb-8">
+      <div className="flex flex-col items-center justify-center mt-32 mb-12">
         <motion.h2 
-          className="text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white via-primary to-accent mb-4"
+          className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -113,7 +113,7 @@ export function ContactSection() {
           Let&apos;s Connect
         </motion.h2>
         <motion.p 
-          className="text-lg md:text-xl text-gray-300/80 text-center font-normal max-w-2xl"
+          className="text-base md:text-lg text-foreground/60 text-center font-light max-w-xl"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -122,7 +122,7 @@ export function ContactSection() {
           Have a project in mind, a question, or just want to say hi? I&apos;d love to hear from you.
         </motion.p>
         <motion.div 
-          className="mt-4 h-1 w-24 bg-gradient-to-r from-primary via-accent to-secondary rounded-full"
+          className="mt-6 h-0.5 w-20 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full opacity-50"
           initial={{ opacity: 0, scale: 0 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
@@ -173,7 +173,7 @@ export function ContactSection() {
               <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
                 <div className="space-y-6 flex-1">
                   <div className="group">
-                    <label htmlFor="name" className="block text-sm font-medium text-foreground/90 dark:text-foreground-dark/90 mb-1.5 group-focus-within:text-primary dark:group-focus-within:text-primary-dark transition-colors">
+                    <label htmlFor="name" className="block text-sm font-medium text-foreground/80 mb-2 transition-colors">
                       Full Name
                     </label>
                     <input
@@ -184,12 +184,12 @@ export function ContactSection() {
                       onChange={handleChange}
                       required
                       placeholder="Your Name"
-                      className="w-full px-4 py-3 rounded-lg border border-white/10 bg-background/30 backdrop-blur-md outline-none focus:outline-none focus:border-primary/50 focus:bg-background/40 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg selection:bg-primary/20"
+                      className="w-full px-4 py-3 rounded-lg border border-primary/10 bg-background/40 backdrop-blur-md outline-none focus:border-primary/30 transition-all duration-200 selection:bg-primary/20"
                     />
                   </div>
                   
                   <div className="group">
-                    <label htmlFor="email" className="block text-sm font-medium text-foreground/90 dark:text-foreground-dark/90 mb-1.5 group-focus-within:text-primary dark:group-focus-within:text-primary-dark transition-colors">
+                    <label htmlFor="email" className="block text-sm font-medium text-foreground/80 mb-2 transition-colors">
                       Email Address
                     </label>
                     <input
@@ -200,12 +200,12 @@ export function ContactSection() {
                       onChange={handleChange}
                       required
                       placeholder="your.email@example.com"
-                      className="w-full px-4 py-3 rounded-lg border border-white/10 bg-background/30 backdrop-blur-md outline-none focus:outline-none focus:border-primary/50 focus:bg-background/40 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg selection:bg-primary/20"
+                      className="w-full px-4 py-3 rounded-lg border border-primary/10 bg-background/40 backdrop-blur-md outline-none focus:border-primary/30 transition-all duration-200 selection:bg-primary/20"
                     />
                   </div>
                   
                   <div className="group flex-1">
-                    <label htmlFor="message" className="block text-sm font-medium text-foreground/90 dark:text-foreground-dark/90 mb-1.5 group-focus-within:text-primary dark:group-focus-within:text-primary-dark transition-colors">
+                    <label htmlFor="message" className="block text-sm font-medium text-foreground/80 mb-2 transition-colors">
                       Message
                     </label>
                     <textarea
@@ -216,7 +216,7 @@ export function ContactSection() {
                       required
                       rows={5}
                       placeholder="How can I help you?"
-                      className="w-full h-full min-h-[120px] px-4 py-2.5 rounded-md border border-white/10 bg-background/50 dark:bg-card-bg-dark/50 backdrop-blur-sm outline-none focus:outline-none focus:ring-0 transition-all duration-200 shadow-sm hover:shadow-md resize-none"
+                      className="w-full h-full min-h-[120px] px-4 py-3 rounded-lg border border-primary/20 bg-background/40 backdrop-blur-sm outline-none focus:border-primary/40 transition-all duration-200 resize-none"
                     />
                   </div>
                 </div>
@@ -225,10 +225,10 @@ export function ContactSection() {
                   type="submit" 
                   variant="primary" 
                   size="lg" 
-                  className="w-full sm:w-auto group relative overflow-hidden mt-auto rounded-lg"
+                  className="w-full sm:w-auto mt-auto rounded-lg"
                   disabled={isSubmitting}
                 >
-                  <span className="relative z-10 flex items-center">
+                  <span className="flex items-center">
                     {isSubmitting ? (
                       <>
                         <motion.div className="mr-2 w-4 h-4 border-2 border-transparent border-t-white rounded-full animate-spin" />
@@ -236,12 +236,11 @@ export function ContactSection() {
                       </>
                     ) : (
                       <>
-                        <FaPaperPlane className="mr-2 group-hover:translate-x-1 transition-transform" /> 
+                        <FaPaperPlane className="mr-2" /> 
                         Send Message
                       </>
                     )}
                   </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-white/20 to-primary/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                 </Button>
               </form>
             </CardContent>

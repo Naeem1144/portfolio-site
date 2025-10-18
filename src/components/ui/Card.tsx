@@ -20,24 +20,22 @@ export function Card({
   animate = false
 }: CardProps) {
   const baseCardStyles = `
-    bg-gradient-to-br from-[var(--card-bg)]/80 to-[var(--card-bg)]/60 rounded-xl border border-[var(--card-border)] p-6
-    shadow-[0_8px_32px_-4px_var(--shadow),_0_4px_8px_-2px_var(--shadow)]
-    backdrop-blur-xl transition-all duration-500 ease-out relative overflow-hidden
+    bg-gradient-to-br from-[var(--card-bg)]/95 to-[var(--card-bg)]/85 rounded-xl border border-[var(--card-border)] p-6
+    shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5),_0_2px_8px_rgba(0,0,0,0.3)]
+    backdrop-blur-2xl relative overflow-hidden
   `;
 
   const variantStyles = {
     default: "",
-    primary: "border-primary/20 bg-primary/[0.03]",
-    accent: "border-accent/20 bg-accent/[0.03]",
-    teal: "border-teal/20 bg-teal/[0.03]", 
-    purple: "border-purple/20 bg-purple/[0.03]",
-    glass: "bg-glass-dark backdrop-blur-md border-white/10"
+    primary: "border-primary/8 bg-primary/[0.02]",
+    accent: "border-accent/8 bg-accent/[0.02]",
+    teal: "border-teal/8 bg-teal/[0.02]", 
+    purple: "border-purple/8 bg-purple/[0.02]",
+    glass: "bg-glass-dark backdrop-blur-md border-white/5"
   };
 
-  // Premium hover styles with smooth transform and shadow
-  const hoverStyles = hoverable 
-    ? "hover:shadow-[0_16px_48px_-8px_var(--shadow),_0_8px_16px_-4px_var(--shadow)] hover:border-primary/40 hover:-translate-y-2 hover:scale-[1.02] custom-card-hover" 
-    : "";
+  // No hover styles - elegant and static
+  const hoverStyles = "";
 
   const CardComponent = animate ? motion.div : 'div';
   const animationProps = animate ? {
@@ -51,18 +49,11 @@ export function Card({
       className={`${baseCardStyles} ${variantStyles[variant]} ${hoverStyles} ${className}`.trim()}
       {...animationProps}
     >
-      {/* Premium gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] via-transparent to-primary/[0.02] pointer-events-none z-[1]"></div>
+      {/* Refined gradient overlay - subtle and elegant */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] via-transparent to-primary/[0.005] pointer-events-none z-[1]"></div>
       
-      {/* Animated glow effect on hover */}
-      {hoverable && (
-        <div className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10 blur-xl"></div>
-        </div>
-      )}
-      
-      {/* Subtle top highlight */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent pointer-events-none z-[1]"></div>
+      {/* Elegant top highlight */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/10 to-transparent pointer-events-none z-[1]"></div>
       
       {children}
     </CardComponent>
@@ -72,7 +63,7 @@ export function Card({
 // CardHeader component
 export function CardHeader({ className = '', children }: { className?: string, children: React.ReactNode }) {
   return (
-    <div className={`pb-4 mb-4 border-b border-[var(--card-border)] ${className}`.trim()}>
+    <div className={`pb-4 mb-4 border-b border-white/[0.03] ${className}`.trim()}>
       {children}
     </div>
   );
@@ -81,7 +72,7 @@ export function CardHeader({ className = '', children }: { className?: string, c
 // CardTitle component
 export function CardTitle({ className = '', children }: { className?: string, children: React.ReactNode }) {
   return (
-    <h3 className={`text-xl lg:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-white via-primary/90 to-primary/80 ${className}`.trim()}>
+    <h3 className={`text-xl lg:text-2xl font-bold text-foreground ${className}`.trim()}>
       {children}
     </h3>
   );
@@ -108,7 +99,7 @@ export function CardContent({ className = '', children }: { className?: string, 
 // CardFooter component
 export function CardFooter({ className = '', children }: { className?: string, children: React.ReactNode }) {
   return (
-    <div className={`mt-6 pt-4 border-t border-[var(--card-border)] ${className}`.trim()}>
+    <div className={`mt-6 pt-4 border-t border-white/[0.03] ${className}`.trim()}>
       {children}
     </div>
   );

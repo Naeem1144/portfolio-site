@@ -42,6 +42,7 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body
         className={`${firaCode.variable} antialiased theme-ultra-dark`}
+        suppressHydrationWarning
       >
         {children}
       </body>
