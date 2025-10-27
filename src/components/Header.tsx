@@ -138,7 +138,7 @@ export function Header() {
               <Button 
                 href="/Naeem_Resume.pdf"
                 target="_blank"
-                variant="outline"
+                variant="bordered"
                 size="sm"
                 className="ml-2"
               >
@@ -252,7 +252,7 @@ export function Header() {
                 <Button 
                   href="/Naeem_Resume.pdf" 
                   target="_blank"
-                  variant="outline"
+                  variant="bordered"
                   size="sm"
                   className="w-[calc(100%-1rem)]"
                   onClick={() => setIsMobileMenuOpen(false)}

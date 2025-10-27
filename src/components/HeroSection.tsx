@@ -93,7 +93,7 @@ export function HeroSection() {
             <Button href="#projects" size="lg" variant="primary" className="w-full sm:w-auto">
               Explore My Work
             </Button>
-            <Button href="#contact" variant="outline" size="lg" className="w-full sm:w-auto">
+            <Button href="#contact" variant="bordered" size="lg" className="w-full sm:w-auto">
               Get In Touch
             </Button>
           </motion.div>

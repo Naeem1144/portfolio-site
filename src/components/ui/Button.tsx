@@ -7,7 +7,8 @@ import { useHarmonicScroll } from '@/hooks/useHarmonicScroll';
 interface ButtonProps {
   children: React.ReactNode;
   href?: string;
-  variant?: 'primary' | 'outline' | 'secondary' | 'ghost' | 'link'; // Added more common variants
+  // Support both local and NextUI-like naming. 'bordered' aliases 'outline'.
+  variant?: 'primary' | 'outline' | 'secondary' | 'ghost' | 'link' | 'bordered';
   size?: 'sm' | 'md' | 'lg' | 'icon'; // Added icon size
   className?: string;
   onClick?: () => void;
@@ -41,6 +42,7 @@ export function Button({
   const variantClasses = {
     primary: "btn-primary",
     outline: "btn-outline",
+    bordered: "btn-outline", // alias for outline
     secondary: "btn-secondary",
     ghost: "btn-ghost",
     link: "text-primary underline-offset-4 hover:underline hover:text-opacity-90",
