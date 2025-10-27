@@ -16,7 +16,7 @@ export const Header = () => {
 
   const menuItems = ["Home", "About", "Projects", "Contact"];
 
-  const handleScrollTo = (id:any) => {
+  const handleScrollTo = (id: string) => {
     const element = document.getElementById(id.toLowerCase());
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });

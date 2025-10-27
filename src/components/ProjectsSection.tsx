@@ -4,7 +4,6 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Image,
   Link,
   Button,
 } from "@heroui/react";
