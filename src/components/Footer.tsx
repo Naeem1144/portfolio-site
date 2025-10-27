@@ -1,37 +1,42 @@
+
 "use client";
+import { Link } from "@heroui/react";
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 
-import React from 'react';
-import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
-
-export function Footer() {
+export const Footer = () => {
   const year = new Date().getFullYear();
   return (
-    <footer className="pt-16 pb-10 relative overflow-hidden mt-32">
-      {/* Refined top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
-      
-      {/* Elegant ambient background */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent pointer-events-none" />
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col items-center gap-8">
-          <div className="flex items-center gap-3">
-            <a href="https://github.com/Naeem1144" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="p-2.5 rounded-lg bg-primary/5 border border-primary/10 text-foreground/60">
-              <FaGithub size={18} />
-            </a>
-            <a href="https://www.linkedin.com/in/naeemnagori/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="p-2.5 rounded-lg bg-primary/5 border border-primary/10 text-foreground/60">
-              <FaLinkedin size={18} />
-            </a>
-            <a href="mailto:aknaeem246@gmail.com" aria-label="Email" className="p-2.5 rounded-lg bg-primary/5 border border-primary/10 text-foreground/60">
-              <FaEnvelope size={18} />
-            </a>
+    <footer className="py-10 bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center gap-6">
+          <div className="flex items-center gap-4">
+            <Link
+              href="https://github.com/Naeem1144"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+            >
+              <FaGithub size={24} />
+            </Link>
+            <Link
+              href="https://www.linkedin.com/in/naeemnagori/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <FaLinkedin size={24} />
+            </Link>
+            <Link href="mailto:aknaeem246@gmail.com" aria-label="Email">
+              <FaEnvelope size={24} />
+            </Link>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-sm text-foreground/60 font-medium">Naeem</p>
-            <p className="text-xs text-foreground/40">© {year} All rights reserved.</p>
+          <div>
+            <p className="text-sm text-gray-400">
+              © {year} Naeem. All rights reserved.
+            </p>
           </div>
         </div>
       </div>
     </footer>
   );
-}
+};
