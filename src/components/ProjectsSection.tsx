@@ -194,7 +194,7 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
                       <Button 
                         href={repo.homepage}
                         target="_blank"
-                        variant="outline"
+                        variant="bordered"
                         className="w-full sm:flex-1"
                       >
                         <FaExternalLinkAlt className="mr-2" /> Live Demo
