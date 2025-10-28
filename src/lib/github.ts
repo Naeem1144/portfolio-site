@@ -12,6 +12,12 @@ const authenticatedOctokit = githubToken
     })
   : null;
 
+const EXCLUDED_REPOS = ['portfolio-site', 'Naeem1144'];
+
+function isRepoExcluded(name: string) {
+  return EXCLUDED_REPOS.some(repo => repo.toLowerCase() === name.toLowerCase());
+}
+
 // Lazily create GraphQL client only when a token is configured
 const graphqlWithAuth = githubToken
   ? graphql.defaults({
@@ -134,6 +140,7 @@ async function fetchFallbackRepos() {
 
     const topRepos = data
       .filter(repo => !repo.fork)
+      .filter(repo => !isRepoExcluded(repo.name))
       .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
       .slice(0, 6);
 
@@ -165,6 +172,7 @@ async function fetchFallbackRepos() {
 
         const topRepos = data
           .filter(repo => !repo.fork)
+          .filter(repo => !isRepoExcluded(repo.name))
           .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
           .slice(0, 6);
 
@@ -229,16 +237,18 @@ export async function fetchPinnedRepos() {
     const response = await graphqlWithAuth<GraphQLResponse>(query);
     const pinnedRepos = response.user.pinnedItems.nodes;
 
-    return pinnedRepos.map(repo => ({
-      name: repo.name,
-      description: repo.description || '',
-      htmlUrl: repo.url,
-      stars: repo.stargazerCount,
-      forks: repo.forkCount,
-      language: repo.primaryLanguage?.name || null,
-      homepage: repo.homepageUrl || '',
-      topics: repo.repositoryTopics.nodes.map(topic => topic.topic.name),
-    }));
+    return pinnedRepos
+      .filter(repo => !isRepoExcluded(repo.name))
+      .map(repo => ({
+        name: repo.name,
+        description: repo.description || '',
+        htmlUrl: repo.url,
+        stars: repo.stargazerCount,
+        forks: repo.forkCount,
+        language: repo.primaryLanguage?.name || null,
+        homepage: repo.homepageUrl || '',
+        topics: repo.repositoryTopics.nodes.map(topic => topic.topic.name),
+      }));
   } catch (error: unknown) {
     const errorWithStatus = error as { status?: number };
     if (errorWithStatus?.status === 401 || errorWithStatus?.status === 403) {

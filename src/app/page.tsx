@@ -10,7 +10,7 @@ import { ContactSection } from '@/components/ContactSection';
 import { ProfileCard } from '@/components/ProfileCard';
 import { Footer } from '@/components/Footer';
 import { fetchGitHubProfile, fetchPinnedRepos } from '@/lib/github';
-import { ScrollRestoration } from '@/components/ScrollRestoration';
+import { ScrollRestoration, Container, Section } from '@/components/ScrollRestoration';
 
 export default async function Home() {
   const profile = await fetchGitHubProfile();
@@ -20,34 +20,23 @@ export default async function Home() {
     <>
       <ScrollRestoration />
       <Header />
-      
-      {/* Main content container with consistent horizontal padding */}
       <main className="flex flex-col items-center w-full">
-        {/* Hero Section - Full width, specific styling within component */}
         <HeroSection />
-        
-        {/* About Section */}
-        <section id="about" className="w-full relative overflow-hidden">
-          {/* Background decorative elements with reduced opacity for subtlety */}
+
+        <Section id="about" className="overflow-hidden">
           <div className="absolute inset-0 -z-10 opacity-30">
             <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
             <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px]" />
           </div>
-          
-          {/* Max width container for content within the section */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Container for the two-row layout + new header */}
+          <Container>
             <div className="flex flex-col gap-3">
-              {/* Refined Section Header - Elegant and Sophisticated */}
               <div className="flex flex-col items-center justify-center mt-32 mb-12">
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">About Me</h2>
                 <p className="text-base md:text-lg text-foreground/60 text-center font-light max-w-xl">
                   A glimpse into my journey, skills, and what drives my passion for technology and data.
                 </p>
-                <div className="mt-6 h-0.5 w-20 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full opacity-50" />
+                <div className="mt-6 w-24 mx-auto divider" />
               </div>
-              
-              {/* First Row: ProfileCard and MoreAboutMeSection */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start lg:items-stretch">
                 <div className="lg:col-span-1 h-full">
                   <Suspense fallback={<ProfileCard profile={null} isLoading={true} />}>
@@ -58,35 +47,29 @@ export default async function Home() {
                   <MoreAboutMeSection />
                 </div>
               </div>
-
-              {/* Second Row: CoreCompetenciesSection */}
-              <div className="w-full"> 
+              <div className="w-full">
                 <CoreCompetenciesSection /> 
               </div>
             </div>
-          </div>
-        </section>
-        
-        {/* Projects Section */}
-        <section id="projects" className="w-full">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          </Container>
+        </Section>
+
+        <Section id="projects">
+          <Container>
             <Suspense fallback={<ProjectsSection repos={[]} isLoading={true} />}>
               <ProjectsSection repos={repos} />
             </Suspense>
-          </div>
-        </section>
-        
-        {/* Contact Section */}
-        <section id="contact" className="w-full">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          </Container>
+        </Section>
+
+        <Section id="contact">
+          <Container>
             <ContactSection />
-          </div>
-        </section>
+          </Container>
+        </Section>
       </main>
-      
-      <div className="mt-7">
-        <Footer />
-      </div>
+
+      <Footer />
     </>
   );
 }

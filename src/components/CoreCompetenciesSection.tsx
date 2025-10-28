@@ -96,25 +96,47 @@ const skills: SkillCategory[] = [
 export function CoreCompetenciesSection() {
   return (
     <div className="w-full">
-      <div className="flex flex-col items-center justify-center mt-32 mb-12">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">Core Competencies</h2>
-        <p className="text-base md:text-lg text-foreground/60 text-center font-light mt-2 max-w-xl">
+      <div className="flex flex-col items-center justify-center mt-28 mb-10">
+        <h2 
+          className="font-bold text-foreground mb-4 text-center"
+          style={{
+            fontSize: 'clamp(2rem, 4vw, 2.5rem)',
+            lineHeight: 'var(--line-height-tight)',
+            letterSpacing: 'var(--letter-spacing-tight)',
+            textWrap: 'balance'
+          }}
+        >
+          Core Competencies
+        </h2>
+        <p 
+          className="text-foreground/65 text-center font-light mt-2 max-w-xl"
+          style={{
+            fontSize: 'var(--font-size-md)',
+            lineHeight: 'var(--line-height-relaxed)',
+            letterSpacing: 'var(--letter-spacing-wide)'
+          }}
+        >
           A comprehensive overview of my key skills and expertise
         </p>
-        <div className="mt-6 h-0.5 w-20 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full opacity-50" />
+        <div className="mt-5 w-20 divider mx-auto" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-3 w-full mt-3">
         {/* Data Analysis - Featured Card */}
         <div className="md:col-span-3 lg:col-span-4">
           <Card className="custom-card h-full overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-br ${skills[0].color} opacity-50`}></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
+            
             
             <CardContent className="p-6 relative">
-              <h4 className="text-xl font-semibold text-foreground mb-5">
+              <h4 
+                className="font-semibold text-foreground mb-4"
+                style={{
+                  fontSize: 'var(--font-size-lg)',
+                  lineHeight: 'var(--line-height-snug)',
+                  letterSpacing: 'var(--letter-spacing-tight)'
+                }}
+              >
                 {skills[0].category}
               </h4>
               
@@ -137,7 +159,16 @@ export function CoreCompetenciesSection() {
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-sm">{item.name}</span>
+                    <span 
+                      className="flex-grow font-mono"
+                      style={{
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: 'var(--line-height-relaxed)',
+                        letterSpacing: '-0.01em'
+                      }}
+                    >
+                      {item.name}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -148,13 +179,18 @@ export function CoreCompetenciesSection() {
         {/* Machine Learning - Tall Card */}
         <div className="md:col-span-3 lg:col-span-4">
           <Card className="custom-card h-full overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-br ${skills[1].color} opacity-50`}></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
+            
             
             <CardContent className="p-6 relative">
-              <h4 className="text-xl font-semibold text-foreground mb-5">
+              <h4 
+                className="font-semibold text-foreground mb-4"
+                style={{
+                  fontSize: 'var(--font-size-lg)',
+                  lineHeight: 'var(--line-height-snug)',
+                  letterSpacing: 'var(--letter-spacing-tight)'
+                }}
+              >
                 {skills[1].category}
               </h4>
               
@@ -177,7 +213,16 @@ export function CoreCompetenciesSection() {
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-sm">{item.name}</span>
+                    <span 
+                      className="flex-grow font-mono"
+                      style={{
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: 'var(--line-height-relaxed)',
+                        letterSpacing: '-0.01em'
+                      }}
+                    >
+                      {item.name}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -188,13 +233,18 @@ export function CoreCompetenciesSection() {
         {/* AI & LLM - Compact Card */}
         <div className="md:col-span-3 lg:col-span-4">
           <Card className="custom-card h-full overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-br ${skills[2].color} opacity-50`}></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
+            
             
             <CardContent className="p-6 relative">
-              <h4 className="text-xl font-semibold text-foreground mb-5">
+              <h4 
+                className="font-semibold text-foreground mb-4"
+                style={{
+                  fontSize: 'var(--font-size-lg)',
+                  lineHeight: 'var(--line-height-snug)',
+                  letterSpacing: 'var(--letter-spacing-tight)'
+                }}
+              >
                 {skills[2].category}
               </h4>
               
@@ -217,7 +267,16 @@ export function CoreCompetenciesSection() {
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-sm">{item.name}</span>
+                    <span 
+                      className="flex-grow font-mono"
+                      style={{
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: 'var(--line-height-relaxed)',
+                        letterSpacing: '-0.01em'
+                      }}
+                    >
+                      {item.name}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -228,13 +287,18 @@ export function CoreCompetenciesSection() {
         {/* Databases - Small Card */}
         <div className="md:col-span-2 lg:col-span-3">
           <Card className="custom-card h-full overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-br ${skills[3].color} opacity-50`}></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
+            
             
             <CardContent className="p-6 relative">
-              <h4 className="text-xl font-semibold text-foreground mb-5">
+              <h4 
+                className="font-semibold text-foreground mb-4"
+                style={{
+                  fontSize: 'var(--font-size-lg)',
+                  lineHeight: 'var(--line-height-snug)',
+                  letterSpacing: 'var(--letter-spacing-tight)'
+                }}
+              >
                 {skills[3].category}
               </h4>
               
@@ -257,7 +321,16 @@ export function CoreCompetenciesSection() {
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-sm">{item.name}</span>
+                    <span 
+                      className="flex-grow font-mono"
+                      style={{
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: 'var(--line-height-relaxed)',
+                        letterSpacing: '-0.01em'
+                      }}
+                    >
+                      {item.name}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -268,13 +341,18 @@ export function CoreCompetenciesSection() {
         {/* Statistics - Small Card */}
         <div className="md:col-span-2 lg:col-span-3">
           <Card className="custom-card h-full overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-br ${skills[4].color} opacity-50`}></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
+            
             
             <CardContent className="p-6 relative">
-              <h4 className="text-xl font-semibold text-foreground mb-5">
+              <h4 
+                className="font-semibold text-foreground mb-4"
+                style={{
+                  fontSize: 'var(--font-size-lg)',
+                  lineHeight: 'var(--line-height-snug)',
+                  letterSpacing: 'var(--letter-spacing-tight)'
+                }}
+              >
                 {skills[4].category}
               </h4>
               
@@ -297,7 +375,16 @@ export function CoreCompetenciesSection() {
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-sm">{item.name}</span>
+                    <span 
+                      className="flex-grow font-mono"
+                      style={{
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: 'var(--line-height-relaxed)',
+                        letterSpacing: '-0.01em'
+                      }}
+                    >
+                      {item.name}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -308,13 +395,18 @@ export function CoreCompetenciesSection() {
         {/* Professional Skills - Wide Card */}
         <div className="md:col-span-4 lg:col-span-6">
           <Card className="custom-card h-full overflow-hidden">
-            <div className={`absolute inset-0 bg-gradient-to-br ${skills[5].color} opacity-50`}></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-background/95 to-background/80 dark:from-background-dark/95 dark:to-background-dark/80"></div>
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] dark:opacity-[0.05]"></div>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/60 to-accent/60 opacity-70"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
+            
             
             <CardContent className="p-6 relative">
-              <h4 className="text-xl font-semibold text-foreground mb-5">
+              <h4 
+                className="font-semibold text-foreground mb-4"
+                style={{
+                  fontSize: 'var(--font-size-lg)',
+                  lineHeight: 'var(--line-height-snug)',
+                  letterSpacing: 'var(--letter-spacing-tight)'
+                }}
+              >
                 {skills[5].category}
               </h4>
               
@@ -337,7 +429,16 @@ export function CoreCompetenciesSection() {
                     >
                       <polyline points="20 6 9 17 4 12"></polyline>
                     </svg>
-                    <span className="flex-grow text-sm">{item.name}</span>
+                    <span 
+                      className="flex-grow font-mono"
+                      style={{
+                        fontSize: 'var(--font-size-sm)',
+                        lineHeight: 'var(--line-height-relaxed)',
+                        letterSpacing: '-0.01em'
+                      }}
+                    >
+                      {item.name}
+                    </span>
                   </li>
                 ))}
               </ul>

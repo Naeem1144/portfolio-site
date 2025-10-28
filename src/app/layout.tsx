@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Fira_Code } from "next/font/google";
 import "./globals.css";
 import { GeistSans } from 'geist/font/sans';
+import { PerformanceMode } from '@/components/PerformanceMode';
 
 const firaCode = Fira_Code({
   variable: "--font-fira-code",
@@ -44,7 +45,10 @@ export default function RootLayout({
         className={`${firaCode.variable} antialiased theme-ultra-dark`}
         suppressHydrationWarning
       >
-        {children}
+        <div className="min-h-svh flex flex-col">
+          <PerformanceMode />
+          {children}
+        </div>
       </body>
     </html>
   );

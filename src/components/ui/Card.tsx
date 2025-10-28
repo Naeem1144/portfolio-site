@@ -11,7 +11,7 @@ interface CardProps {
   animate?: boolean;
 }
 
-// Main Card component
+// Main Card component with refined glassmorphism
 export function Card({ 
   className = '', 
   children, 
@@ -19,21 +19,20 @@ export function Card({
   animate = false
 }: CardProps) {
   const baseCardStyles = `
-    bg-gradient-to-br from-[var(--card-bg)]/95 to-[var(--card-bg)]/85 rounded-xl border border-[var(--card-border)] p-6
-    shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5),_0_2px_8px_rgba(0,0,0,0.3)]
-    backdrop-blur-2xl relative overflow-hidden
+    bg-gradient-to-br from-white/[0.04] to-white/[0.01] rounded-2xl border border-white/[0.06] p-6
+    shadow-[0_8px_32px_-8px_rgba(0,0,0,0.3),_0_1px_2px_rgba(0,0,0,0.1)]
+    backdrop-blur-xl relative overflow-hidden
   `;
 
   const variantStyles = {
     default: "",
-    primary: "border-primary/8 bg-primary/[0.02]",
-    accent: "border-accent/8 bg-accent/[0.02]",
-    teal: "border-teal/8 bg-teal/[0.02]", 
-    purple: "border-purple/8 bg-purple/[0.02]",
-    glass: "bg-glass-dark backdrop-blur-md border-white/5"
+    primary: "border-white/[0.08] bg-white/[0.02]",
+    accent: "border-white/[0.08] bg-white/[0.02]",
+    teal: "border-white/[0.08] bg-white/[0.02]", 
+    purple: "border-white/[0.08] bg-white/[0.02]",
+    glass: "bg-white/[0.02] backdrop-blur-xl border-white/[0.05]"
   };
 
-  // No hover styles - elegant and static
   const hoverStyles = "";
 
   const CardComponent = animate ? motion.div : 'div';
@@ -48,11 +47,11 @@ export function Card({
       className={`${baseCardStyles} ${variantStyles[variant]} ${hoverStyles} ${className}`.trim()}
       {...animationProps}
     >
-      {/* Refined gradient overlay - subtle and elegant */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] via-transparent to-primary/[0.005] pointer-events-none z-[1]"></div>
+      {/* Subtle inner glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-transparent pointer-events-none z-[1]"></div>
       
-      {/* Elegant top highlight */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/10 to-transparent pointer-events-none z-[1]"></div>
+      {/* Minimal top highlight */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/[0.08] to-transparent pointer-events-none z-[1] opacity-50"></div>
       
       {children}
     </CardComponent>
@@ -69,18 +68,50 @@ export function CardHeader({ className = '', children }: { className?: string, c
 }
 
 // CardTitle component
-export function CardTitle({ className = '', children }: { className?: string, children: React.ReactNode }) {
+interface CardTitleProps {
+  className?: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}
+
+export function CardTitle({ className = '', children, style }: CardTitleProps) {
+  const defaultStyle: React.CSSProperties = {
+    fontSize: 'clamp(var(--font-size-lg), 2vw, var(--font-size-xl))',
+    lineHeight: 'var(--line-height-snug)',
+    letterSpacing: 'var(--letter-spacing-tight)',
+    ...style
+  };
+  
   return (
-    <h3 className={`text-xl lg:text-2xl font-bold text-foreground ${className}`.trim()}>
+    <h3 
+      className={`font-bold text-foreground ${className}`.trim()}
+      style={defaultStyle}
+    >
       {children}
     </h3>
   );
 }
 
 // CardDescription component
-export function CardDescription({ className = '', children }: { className?: string, children: React.ReactNode }) {
+interface CardDescriptionProps {
+  className?: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}
+
+export function CardDescription({ className = '', children, style }: CardDescriptionProps) {
+  const defaultStyle: React.CSSProperties = {
+    fontSize: 'var(--font-size-sm)',
+    lineHeight: 'var(--line-height-relaxed)',
+    letterSpacing: 'var(--letter-spacing-wide)',
+    ...style
+  };
+  
   return (
-    <p className={`text-sm text-[var(--foreground)]/80 dark:text-[var(--foreground-dark)]/80 mt-2 ${className}`.trim()}>
+    <p 
+      className={`text-[var(--foreground)]/75 dark:text-[var(--foreground-dark)]/75 mt-2 ${className}`.trim()}
+      style={defaultStyle}
+    >
       {children}
     </p>
   );
@@ -123,7 +154,13 @@ export function CardBadge({
   };
 
   return (
-    <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${variantStyles[variant]} ${className}`}>
+    <span 
+      className={`inline-flex px-2.5 py-0.5 rounded-full font-medium ${variantStyles[variant]} ${className}`}
+      style={{
+        fontSize: 'var(--font-size-xs)',
+        letterSpacing: 'var(--letter-spacing-wide)'
+      }}
+    >
       {children}
     </span>
   );

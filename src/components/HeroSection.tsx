@@ -2,9 +2,7 @@
 
 import React from 'react';
 import { Button } from './ui/Button';
-import { motion } from 'framer-motion';
 import { FiArrowDownCircle } from 'react-icons/fi'; // Modern icon for scroll indication
-import { GeistSans } from 'geist/font/sans';
 import { useHarmonicScroll } from '@/hooks/useHarmonicScroll';
 
 export function HeroSection() {
@@ -16,102 +14,89 @@ export function HeroSection() {
   };
 
   return (
-    <section className="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden w-full px-4">
+    <section id="home" className="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden w-full px-4">
       {/* Sophisticated minimal background */}
-      <div 
+      <div
         className="absolute inset-0 -z-10"
         style={{
-          background: 'radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.1) 0%, transparent 50%)',
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.08) 0%, transparent 55%)',
           opacity: 1
         }}
       />
       
       {/* Elegant ambient orb - single, refined */}
-      <div className="absolute inset-0 -z-10 opacity-40">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 -z-10 opacity-30">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[460px] h-[460px] bg-primary/10 rounded-full blur-3xl" />
       </div>
       
       <div className="container max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Refined intro badge - sophisticated and minimal */}
-        <motion.div
-          className="mb-10 inline-flex items-center gap-2.5 rounded-full border border-primary/10 bg-primary/5 px-6 py-2.5 text-sm backdrop-blur-xl"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5 }}
+        <div
+          className="mb-8 inline-flex items-center gap-2.5 rounded-full glass-border bg-primary/5 px-5 py-2 backdrop-blur-xl font-mono"
+          style={{
+            fontSize: 'var(--font-size-sm)',
+            letterSpacing: '-0.01em'
+          }}
         >
           <span className="relative h-2 w-2 rounded-full bg-primary">
-            <span className="absolute inset-0 rounded-full bg-primary animate-ping opacity-50" />
+            <span className="absolute inset-0 rounded-full bg-primary opacity-65" />
           </span>
-          <span className="font-medium text-foreground/90">Data Science • Analytics • AI</span>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
-          <motion.h1 
-            className={`text-center mb-6 text-foreground ${GeistSans.className}`}
+          <span className="font-medium text-foreground/90">Data science • Analytics • AI</span>
+        </div>
+        <div>
+          <h1
+            className="text-center mb-6 text-foreground font-[var(--font-display)]"
             style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
-              letterSpacing: '-0.03em',
-              fontWeight: 700,
-              lineHeight: 1.15
+              fontSize: 'clamp(2.75rem, 6vw, 5rem)',
+              letterSpacing: 'var(--letter-spacing-tighter)',
+              fontWeight: 'var(--font-weight-bold)',
+              lineHeight: 'var(--line-height-tight)',
+              textWrap: 'balance'
             }}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            Hello, and welcome to my portfolio!
-          </motion.h1>
+            Naeem — a data-focused builder
+          </h1>
           
           {/* Refined accent line - elegant and minimal */}
-          <motion.div 
-            className="relative h-0.5 w-24 mx-auto mt-6 mb-8"
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          <div
+            className="relative w-24 mx-auto mt-6 mb-8"
           >
-            <div className="h-full bg-gradient-to-r from-transparent via-primary to-transparent rounded-full opacity-60" />
-          </motion.div>
+            <div className="divider" />
+          </div>
           
-          <motion.p 
-            className="text-base md:text-lg max-w-2xl mx-auto mb-12 text-foreground/70 leading-relaxed text-center text-balance font-light"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          <p
+            className="max-w-2xl mx-auto mb-10 text-foreground/75 text-center text-balance font-light"
+            style={{
+              fontSize: 'clamp(1.0625rem, 1.5vw, 1.1875rem)',
+              lineHeight: 'var(--line-height-relaxed)',
+              letterSpacing: 'var(--letter-spacing-wide)'
+            }}
           >
-            My name is Naeem, I love to transform data into actionable insights. 
-            Passionate about Data Analysis, Data Science, Artificial Intelligence, Business Intelligence, statistics, and state of the art technologies.
-          </motion.p>
+            I explore data, build models, and turn insight into impact. Interested in analytics, data science, AI, and the systems that ship them.
+          </p>
           
-          <motion.div 
+          <div
             className="flex flex-col sm:flex-row gap-5 justify-center items-center mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <Button href="#projects" size="lg" variant="primary" className="w-full sm:w-auto">
-              Explore My Work
+              View projects
             </Button>
             <Button href="#contact" variant="outline" size="lg" className="w-full sm:w-auto">
-              Get In Touch
+              Contact
             </Button>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </div>
       
       {/* Refined Scroll Indicator - elegant and minimal */}
-      <motion.a 
+      <a
         href="#about"
         onClick={handleScrollClick}
-        className="absolute bottom-12 inset-x-0 mx-auto flex items-center justify-center text-foreground/50 no-underline"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.7, ease: "easeOut" }}
+        className="absolute bottom-12 inset-x-0 mx-auto flex items-center justify-center text-foreground/50 no-underline transition-opacity hover:text-foreground"
         aria-label="Scroll to about section"
       >
-        <FiArrowDownCircle size={28} className="animate-bounce" />
-      </motion.a>
+        <FiArrowDownCircle size={28} />
+      </a>
     </section>
   );
 }

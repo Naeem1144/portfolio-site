@@ -3,9 +3,8 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from './ui/Button';
-import { Card, CardContent, CardTitle } from './ui/Card'; // Only keeping used components
+import { Card, CardContent, CardTitle, CardFooter, CardHeader } from './ui/Card';
 import { FaGithub, FaLinkedin, FaFileDownload, FaEnvelope } from 'react-icons/fa';
-import { motion } from 'framer-motion';
 
 interface ProfileCardProps {
   profile: {
@@ -22,18 +21,24 @@ interface ProfileCardProps {
 
 export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
   const skeletonCard = (
-    <Card className="w-full max-w-sm mx-auto custom-card h-full">
-      <CardContent className="animate-pulse flex flex-col items-center p-6 h-full">
-        <div className="rounded-full bg-foreground/10 h-32 w-32 mb-5"></div>
-        <div className="h-7 bg-foreground/10 rounded w-3/4 mb-3"></div>
-        <div className="h-4 bg-foreground/10 rounded w-full mb-2"></div>
-        <div className="h-4 bg-foreground/10 rounded w-5/6 mb-5"></div>
-        <div className="flex gap-3 mt-4 w-full justify-center">
-          <div className="h-10 w-10 rounded-md bg-foreground/10"></div>
-          <div className="h-10 w-10 rounded-md bg-foreground/10"></div>
-          <div className="h-10 w-10 rounded-md bg-foreground/10"></div>
+    <Card className="w-full max-w-sm mx-auto custom-card h-full overflow-hidden">
+      <div className="h-20 w-full bg-primary/10 relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/15 via-accent/10 to-transparent" />
+      </div>
+      <CardContent className="animate-pulse flex flex-col items-center p-6 pt-0 h-full">
+        <div className="-mt-12 mb-4 rounded-full bg-foreground/10 h-28 w-28" />
+        <div className="h-6 bg-foreground/10 rounded w-2/3 mb-2"></div>
+        <div className="h-4 bg-foreground/10 rounded w-1/2 mb-4"></div>
+        <div className="grid grid-cols-2 gap-3 w-full mt-2">
+          <div className="h-14 rounded-xl bg-foreground/10"></div>
+          <div className="h-14 rounded-xl bg-foreground/10"></div>
         </div>
-        <div className="h-11 bg-foreground/10 rounded-md w-full mt-6"></div>
+        <div className="flex gap-3 mt-5 w-full justify-center">
+          <div className="h-11 w-11 rounded-lg bg-foreground/10"></div>
+          <div className="h-11 w-11 rounded-lg bg-foreground/10"></div>
+          <div className="h-11 w-11 rounded-lg bg-foreground/10"></div>
+        </div>
+        <div className="h-11 bg-foreground/10 rounded-lg w-full mt-6"></div>
       </CardContent>
     </Card>
   );
@@ -53,79 +58,89 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95, y: 20 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="w-full h-full"
-    >
-      <Card 
-        className="overflow-hidden custom-card h-full flex flex-col"
-        hoverable={false}
-      >
-        <CardContent className="p-6 flex flex-col items-center text-center relative z-10">
-          <div className="relative w-32 h-32 mb-6 rounded-full overflow-hidden border-2 border-primary/15">
-            <Image 
+    <div className="w-full h-full">
+      <Card className="custom-card h-full overflow-hidden flex flex-col" hoverable={false}>
+        <CardHeader className="p-0 relative">
+          <div className="relative h-24 w-full">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/15 via-accent/10 to-transparent" />
+            <div className="absolute inset-0 bg-grid-pattern opacity-25" />
+          </div>
+        </CardHeader>
+
+        <CardContent className="p-6 pt-0 flex flex-col items-center text-center relative z-10">
+          <div className="relative -mt-12 w-28 h-28 rounded-full overflow-hidden border border-[rgba(var(--primary-rgb),0.25)] shadow-[0_10px_30px_-10px_rgba(var(--primary-rgb),0.35)]">
+            <Image
               src={profile.avatarUrl}
               alt={`${profile.name}'s avatar`}
               fill
               className="object-cover"
-              sizes="128px"
+              sizes="112px"
               priority
             />
           </div>
-          
-          <CardTitle className="!text-2xl md:!text-2xl mb-2">{profile.name}</CardTitle>
+
+          <CardTitle className="!text-2xl md:!text-2xl mt-4">{profile.name}</CardTitle>
           {profile.location && (
-            <p className="text-sm text-foreground/50 mb-4">{profile.location}</p>
+            <p className="text-sm text-foreground/55 mt-1">{profile.location}</p>
           )}
-          
+
+          {profile.bio && (
+            <p className="mt-4 text-foreground/75 text-sm leading-relaxed line-clamp-3 max-w-xs">
+              {profile.bio}
+            </p>
+          )}
+
           {(profile.followers !== undefined || profile.following !== undefined) && (
-            <div className="flex gap-8 text-sm text-foreground/60 mb-8">
+            <div className="grid grid-cols-2 gap-3 w-full mt-6">
               {profile.followers !== undefined && (
-                <div className="text-center">
-                  <span className="font-semibold block text-base text-foreground">{profile.followers}</span> 
-                  <span className="text-xs">Followers</span>
+                <div className="glass-border rounded-xl px-4 py-3 text-left">
+                  <span className="block text-[10px] uppercase tracking-widest text-foreground/60">Followers</span>
+                  <span className="block text-lg font-semibold text-foreground">{profile.followers}</span>
                 </div>
               )}
               {profile.following !== undefined && (
-                <div className="text-center">
-                  <span className="font-semibold block text-base text-foreground">{profile.following}</span> 
-                  <span className="text-xs">Following</span>
+                <div className="glass-border rounded-xl px-4 py-3 text-left">
+                  <span className="block text-[10px] uppercase tracking-widest text-foreground/60">Following</span>
+                  <span className="block text-lg font-semibold text-foreground">{profile.following}</span>
                 </div>
               )}
             </div>
           )}
-          
-          <div className="flex gap-3 justify-center mb-6">
-            <a 
-              href={profile.htmlUrl} 
-              target="_blank" 
+
+          <div className="flex gap-3 justify-center mt-6">
+            <a
+              href={profile.htmlUrl}
+              target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub Profile"
-              className="w-11 h-11 rounded-lg border border-primary/10 bg-primary/5 flex items-center justify-center no-underline"
+              className="w-11 h-11 rounded-lg border border-subtle bg-primary/5 flex items-center justify-center no-underline"
+              title="GitHub"
             >
               <FaGithub className="w-5 h-5 text-primary" />
             </a>
-            <a 
-              href="https://www.linkedin.com/in/naeemnagori/" 
-              target="_blank" 
+            <a
+              href="https://www.linkedin.com/in/naeemnagori/"
+              target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn Profile"
-              className="w-11 h-11 rounded-lg border border-primary/10 bg-primary/5 flex items-center justify-center no-underline"
+              className="w-11 h-11 rounded-lg border border-subtle bg-primary/5 flex items-center justify-center no-underline"
+              title="LinkedIn"
             >
               <FaLinkedin className="w-5 h-5 text-primary" />
             </a>
-            <a 
-              href="mailto:aknaeem246@gmail.com" 
+            <a
+              href="mailto:aknaeem246@gmail.com"
               aria-label="Send Email"
-              className="w-11 h-11 rounded-lg border border-primary/10 bg-primary/5 flex items-center justify-center no-underline"
+              className="w-11 h-11 rounded-lg border border-subtle bg-primary/5 flex items-center justify-center no-underline"
+              title="Email"
             >
               <FaEnvelope className="w-5 h-5 text-primary" />
             </a>
           </div>
+        </CardContent>
 
-          <Button 
+        <CardFooter className="px-6">
+          <Button
             href="/Naeem_Resume.pdf"
             download={true}
             variant="primary"
@@ -134,8 +149,8 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
           >
             <FaFileDownload className="mr-2" /> Download Resume
           </Button>
-        </CardContent>
+        </CardFooter>
       </Card>
-    </motion.div>
+    </div>
   );
 }

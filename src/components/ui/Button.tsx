@@ -17,6 +17,7 @@ interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
   ariaLabel?: string; // For accessibility
+  mono?: boolean; // Use monospace font
 }
 
 export function Button({
@@ -32,24 +33,46 @@ export function Button({
   type = 'button',
   disabled = false,
   ariaLabel,
+  mono = false,
 }: ButtonProps) {
   const { scrollToSection } = useHarmonicScroll();
   
   // Base styles using refined utility classes from globals.css
-  const baseClasses = "btn inline-flex items-center justify-center rounded-md font-medium transition-all duration-250 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1 disabled:opacity-60 disabled:pointer-events-none tracking-wide";
+  const baseClasses = `btn inline-flex items-center justify-center rounded-lg font-medium transition-opacity ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1 disabled:opacity-60 disabled:pointer-events-none ${mono ? 'font-mono' : ''}`;
 
   const variantClasses = {
     primary: "btn-primary",
     outline: "btn-outline",
     secondary: "btn-secondary",
     ghost: "btn-ghost",
-    link: "text-primary underline-offset-4 hover:underline hover:text-opacity-90",
-  };
+    link: "text-[var(--brand-secondary)] underline underline-offset-4",
+  } as const;
+  
+  // Improved size classes with better typography
   const sizeClasses = {
-    sm: "h-9 px-4 text-sm",
-    md: "h-11 px-5 py-2.5 text-base",
-    lg: "h-12 px-7 py-3 text-lg",
+    sm: "h-9 px-4",
+    md: "h-11 px-5",
+    lg: "h-12 px-7",
     icon: "h-11 w-11 flex items-center justify-center",
+  };
+  
+  const sizeStyles = {
+    sm: {
+      fontSize: 'var(--font-size-sm)',
+      letterSpacing: mono ? '-0.01em' : 'var(--letter-spacing-wide)'
+    },
+    md: {
+      fontSize: 'var(--font-size-base)',
+      letterSpacing: mono ? '-0.01em' : 'var(--letter-spacing-wide)'
+    },
+    lg: {
+      fontSize: 'clamp(var(--font-size-base), 1.5vw, var(--font-size-md))',
+      letterSpacing: mono ? '-0.01em' : 'var(--letter-spacing-wide)'
+    },
+    icon: {
+      fontSize: 'var(--font-size-base)',
+      letterSpacing: 'var(--letter-spacing-normal)'
+    }
   };
 
   const combinedClasses = `
@@ -61,6 +84,7 @@ export function Button({
 
   const commonProps = {
     className: combinedClasses,
+    style: sizeStyles[size],
     disabled,
     "aria-label": ariaLabel,
   };

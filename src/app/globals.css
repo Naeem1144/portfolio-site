@@ -44,7 +44,7 @@
   /* Dark Theme - Sophisticated Professional Design */
   --background-dark: #0a0c10; /* Ultra-refined black */
   --foreground-dark: #e5e7eb; /* Elegant off-white */
-  --primary-dark: #6366f1; /* Refined indigo */
+  --primary-dark: #2a2f37; /* Grayish black */
   --secondary-dark: #94a3b8; /* Sophisticated slate */
   --accent-dark: #8b5cf6; /* Luxurious violet */
   --card-bg-dark: #13151a; /* Elevated card surface */
@@ -52,7 +52,7 @@
   --shadow-dark: rgba(0, 0, 0, 0.6); /* Deep elegant shadows */
   
   /* RGB Values for CSS color functions in dark theme */
-  --primary-dark-rgb: 99, 102, 241; /* RGB for refined indigo */
+  --primary-dark-rgb: 42, 47, 55; /* RGB for grayish black */
   --accent-dark-rgb: 139, 92, 246; /* RGB for luxurious violet */
   --secondary-dark-rgb: 148, 163, 184; /* RGB for sophisticated slate */
   
@@ -66,13 +66,17 @@
   --gold-dark: #fbbf24; /* Sophisticated amber */
   --gold-dark-rgb: 251, 191, 36;
   
+  /* Brand secondary (teal) to complement grayish primary */
+  --brand-secondary: #45b2b2;
+  --brand-secondary-rgb: 69, 178, 178;
+  
   /* Additional Dark Theme Colors - Refined Gradation */
-  --primary-dark-50: #0f1219; /* Ultra deep indigo */
-  --primary-dark-100: #1a1d35; /* Very deep indigo */
-  --primary-dark-200: #2a2f5a; /* Deep indigo */
-  --primary-dark-300: #3f4681; /* Medium indigo */
-  --primary-dark-700: #818cf8; /* Bright refined indigo */
-  --primary-dark-800: #a5b4fc; /* Very bright indigo */
+  --primary-dark-50: #0e1013; /* Ultra deep gray */
+  --primary-dark-100: #151820; /* Very deep gray */
+  --primary-dark-200: #1d2129; /* Deep gray */
+  --primary-dark-300: #252a33; /* Medium gray */
+  --primary-dark-700: #3c434f; /* Lighter gray */
+  --primary-dark-800: #4a5360; /* Lightest gray */
   --accent-dark-50: #1a1425; /* Ultra deep violet */
   --accent-dark-100: #2d2140; /* Very deep violet */
   --accent-dark-200: #4c3675; /* Deep violet */
@@ -84,8 +88,11 @@
 
   /* Neutral (used by both themes or overridden) */
   --font-sans: "Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "Fira Code", "Courier New", monospace;
+  --font-mono: "Fira Code", "Courier New", "Consolas", "Monaco", monospace;
   --font-display: var(--font-sans);
+  
+  /* Monospace font feature settings */
+  --font-mono-features: "kern" 1, "liga" 1, "calt" 1, "ss01" 1, "cv02" 1;
   
   /* Consistent spacing variables - unchanged */
   --space-1: 0.25rem;   /* 4px */
@@ -101,18 +108,18 @@
   --space-20: 5rem;     /* 80px */
   --space-24: 6rem;     /* 96px */
   
-  /* Typography scale - unchanged */
-  --font-size-xs: 0.75rem;     /* 12px */
-  --font-size-sm: 0.875rem;    /* 14px */
-  --font-size-base: 1rem;      /* 16px */
-  --font-size-md: 1.125rem;    /* 18px - added for more granular control */
-  --font-size-lg: 1.25rem;     /* 20px */
-  --font-size-xl: 1.5rem;      /* 24px */
-  --font-size-2xl: 1.875rem;   /* 30px */
-  --font-size-3xl: 2.25rem;    /* 36px */
-  --font-size-4xl: 3rem;       /* 48px */
-  --font-size-5xl: 3.75rem;    /* 60px */
-  --font-size-6xl: 4.5rem;     /* 72px */
+  /* Typography scale - refined for better readability */
+  --font-size-xs: 0.8125rem;   /* 13px - slightly larger for better legibility */
+  --font-size-sm: 0.9375rem;   /* 15px - improved base small size */
+  --font-size-base: 1.0625rem; /* 17px - optimal for body text readability */
+  --font-size-md: 1.1875rem;   /* 19px - better progression */
+  --font-size-lg: 1.375rem;    /* 22px - improved for subheadings */
+  --font-size-xl: 1.625rem;    /* 26px - better visual hierarchy */
+  --font-size-2xl: 2rem;       /* 32px - improved scaling */
+  --font-size-3xl: 2.5rem;     /* 40px - better progression */
+  --font-size-4xl: 3.25rem;    /* 52px - more impactful hero text */
+  --font-size-5xl: 4rem;       /* 64px - larger hero sizes */
+  --font-size-6xl: 5rem;       /* 80px - maximum impact */
   
   /* Font weights - unchanged */
   --font-weight-light: 300;
@@ -121,20 +128,21 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   
-  /* Line heights - unchanged */
+  /* Line heights - optimized for readability */
   --line-height-none: 1;
-  --line-height-tight: 1.2;
-  --line-height-snug: 1.375;
-  --line-height-normal: 1.5;
-  --line-height-relaxed: 1.625;
-  --line-height-loose: 2;
+  --line-height-tight: 1.25;     /* Better for large headings */
+  --line-height-snug: 1.4;       /* Improved for subheadings */
+  --line-height-normal: 1.6;     /* Optimal for body text */
+  --line-height-relaxed: 1.75;   /* Enhanced readability for long form */
+  --line-height-loose: 2;        /* Unchanged */
   
-  /* Letter spacing - unchanged */
-  --letter-spacing-tighter: -0.05em;
-  --letter-spacing-tight: -0.025em;
-  --letter-spacing-normal: 0em;
-  --letter-spacing-wide: 0.025em;
-  --letter-spacing-wider: 0.05em;
+  /* Letter spacing - refined for better aesthetics */
+  --letter-spacing-tighter: -0.04em;  /* Less extreme for large text */
+  --letter-spacing-tight: -0.02em;    /* Subtle tightening for headings */
+  --letter-spacing-normal: 0em;       /* Unchanged */
+  --letter-spacing-wide: 0.015em;     /* Subtle spacing for body text */
+  --letter-spacing-wider: 0.04em;     /* Improved for all-caps or small text */
+  --letter-spacing-widest: 0.1em;     /* For labels and small caps */
 }
 
 /* Default to dark theme variables always */
@@ -158,6 +166,8 @@
   --green-rgb: var(--green-dark-rgb);
   --gold: var(--gold-dark);
   --gold-rgb: var(--gold-dark-rgb);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-subtle-strong: rgba(255, 255, 255, 0.16);
 }
 
 body {
@@ -169,7 +179,8 @@ body {
   font-size: var(--font-size-base);
   position: relative;
   font-weight: var(--font-weight-normal);
-  font-feature-settings: "kern", "liga", "calt";
+  letter-spacing: var(--letter-spacing-wide);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -189,7 +200,7 @@ body::before {
   height: 100%;
   pointer-events: none;
   z-index: -1;
-  opacity: 0.4;
+  opacity: 0.25;
   background: radial-gradient(ellipse at 50% 0%, rgba(var(--primary-rgb), 0.08) 0%, transparent 50%),
               radial-gradient(ellipse at 100% 50%, rgba(var(--accent-rgb), 0.05) 0%, transparent 50%),
               radial-gradient(ellipse at 0% 50%, rgba(var(--secondary-rgb), 0.05) 0%, transparent 50%);
@@ -214,6 +225,84 @@ body::after {
   background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
   background-size: 24px 24px, 24px 24px;
   background-position: 0 0, 0 0;
+}
+
+/* Performance lite mode overrides */
+.perf-lite body::before,
+.perf-lite body::after {
+  display: none;
+}
+.perf-lite .bg-grid-pattern {
+  background-image: none;
+}
+.perf-lite .custom-card {
+  backdrop-filter: none;
+  box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.3);
+}
+.perf-lite .btn,
+.perf-lite .btn-outline,
+.perf-lite .btn-primary,
+.perf-lite .btn-secondary,
+.perf-lite .btn-accent {
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.perf-lite .animate-bounce,
+.perf-lite [class*="animate-"],
+.perf-lite [style*="animation"] {
+  animation: none !important;
+}
+.perf-lite [style*="backdrop-filter"],
+.perf-lite .backdrop-blur-2xl,
+.perf-lite .backdrop-blur-xl,
+.perf-lite .backdrop-blur-md,
+.perf-lite .backdrop-blur-sm {
+  backdrop-filter: none !important;
+}
+.perf-lite .motion-reduce\:transform-none {
+  transform: none !important;
+}
+
+/* Unified divider line matching glass border aesthetics */
+.divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--brand-secondary-rgb), 0.16), transparent);
+  opacity: 0.6;
+}
+
+/* Unified glass border utility to match card outlines */
+.glass-border {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.border-subtle {
+  border: 1px solid var(--border-subtle);
+}
+
+.border-subtle-strong {
+  border: 1px solid var(--border-subtle-strong);
+}
+
+.pill-surface {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--foreground);
+}
+
+/* Input variant with glass border and subtle background */
+.glass-input {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.glass-input:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: none;
 }
 
 /* Shimmer animation used by skeletons */
@@ -243,20 +332,24 @@ body::after {
 }
 
 
-/* Sophisticated card styling - elegant and refined */
+/* Sophisticated glassmorphic card - elegant minimal design */
 .custom-card {
-  background: linear-gradient(135deg, rgba(var(--card-bg-dark, 19, 21, 26), 0.95) 0%, rgba(var(--card-bg-dark, 19, 21, 26), 0.85) 100%);
-  border: 1px solid rgba(var(--primary-rgb), 0.08);
-  border-radius: 1.25rem;
-  box-shadow: 
-    0 10px 40px -10px rgba(0, 0, 0, 0.5),
-    0 2px 8px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(24px);
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.04) 0%, 
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  box-shadow:
+    0 8px 32px -8px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px) saturate(120%);
   overflow: hidden;
   position: relative;
 }
 
+/* Subtle top highlight for depth */
 .custom-card::before {
   content: '';
   position: absolute;
@@ -264,27 +357,39 @@ body::after {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.15), transparent);
-  opacity: 0.3;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.08), 
+    transparent
+  );
+  opacity: 0.5;
 }
 
-/* Card header accent line */
+/* Minimal accent line - optional subtle top border */
 .custom-card .card-accent-line {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
-  background: linear-gradient(to right, var(--primary), var(--accent));
-  opacity: 0.7;
+  height: 1px;
+  background: linear-gradient(to right, 
+    transparent, 
+    rgba(255, 255, 255, 0.12), 
+    transparent
+  );
+  opacity: 0.4;
 }
 
-/* Card content divider */
+/* Card content divider - refined */
 .custom-card .card-divider {
-  width: 80%;
+  width: 100%;
   height: 1px;
-  margin: 0.5rem auto;
-  background: linear-gradient(to right, transparent, rgba(var(--primary-rgb), 0.3), transparent);
+  margin: 1rem 0;
+  background: linear-gradient(to right, 
+    transparent, 
+    rgba(255, 255, 255, 0.08), 
+    transparent
+  );
   opacity: 0.5;
 }
 
@@ -312,16 +417,15 @@ body::after {
 /* Refined primary button - no hover effects */
 .btn-primary {
   background: linear-gradient(135deg, 
-    rgba(var(--primary-rgb), 0.95) 0%,
-    rgba(var(--primary-rgb), 0.85) 100%
+    rgba(var(--primary-rgb), 0.85) 0%,
+    rgba(var(--primary-rgb), 0.75) 100%
   );
   color: white;
-  border: 1px solid rgba(var(--primary-rgb), 0.2);
-  box-shadow: 
-    0 4px 12px rgba(var(--primary-rgb), 0.2),
-    0 2px 4px rgba(0, 0, 0, 0.2),
+  border: 1px solid rgba(var(--primary-rgb), 0.16);
+  box-shadow:
+    0 4px 10px rgba(var(--primary-rgb), 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary::before {
@@ -343,16 +447,15 @@ body::after {
 /* Refined accent button - elegant and static */
 .btn-accent {
   background: linear-gradient(135deg, 
-    rgba(var(--accent-rgb), 0.95) 0%,
-    rgba(var(--accent-rgb), 0.85) 100%
+    rgba(var(--accent-rgb), 0.85) 0%,
+    rgba(var(--accent-rgb), 0.75) 100%
   );
   color: white;
-  border: 1px solid rgba(var(--accent-rgb), 0.2);
-  box-shadow: 
-    0 4px 12px rgba(var(--accent-rgb), 0.2),
-    0 2px 4px rgba(0, 0, 0, 0.2),
+  border: 1px solid rgba(var(--accent-rgb), 0.16);
+  box-shadow:
+    0 4px 10px rgba(var(--accent-rgb), 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .btn-accent::before {
@@ -373,11 +476,11 @@ body::after {
 
 /* Elegant outlined button - sophisticated and static */
 .btn-outline {
-  background: rgba(var(--primary-rgb), 0.04);
+  background: rgba(var(--brand-secondary-rgb), 0.06);
   color: var(--foreground);
-  border: 1px solid rgba(var(--primary-rgb), 0.15);
-  box-shadow: 
-    0 3px 10px rgba(0, 0, 0, 0.15),
+  border: 1px solid rgba(var(--brand-secondary-rgb), 0.18);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
   position: relative;
   z-index: 1;
@@ -390,8 +493,8 @@ body::after {
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, 
-    rgba(var(--primary-rgb), 0.08) 0%, 
-    rgba(var(--primary-rgb), 0.04) 100%
+    rgba(var(--brand-secondary-rgb), 0.1) 0%, 
+    rgba(var(--brand-secondary-rgb), 0.06) 100%
   );
   z-index: -1;
   pointer-events: none;
@@ -404,15 +507,23 @@ body::after {
 /* Secondary button - subtle and elegant */
 .btn-secondary {
   background: linear-gradient(135deg, 
-    rgba(var(--secondary-rgb), 0.15) 0%,
-    rgba(var(--secondary-rgb), 0.1) 100%
+    rgba(var(--secondary-rgb), 0.12) 0%,
+    rgba(var(--secondary-rgb), 0.08) 100%
   );
   color: var(--foreground);
-  border: 1px solid rgba(var(--secondary-rgb), 0.15);
-  box-shadow: 
-    0 3px 10px rgba(0, 0, 0, 0.15),
+  border: 1px solid rgba(var(--secondary-rgb), 0.12);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(16px);
+}
+
+/* Ghost button - ultra minimal */
+.btn-ghost {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid transparent;
+  box-shadow: none;
 }
 
 .btn-secondary::before {
@@ -552,32 +663,47 @@ body::after {
 }
 
 /* Sophisticated heading styles - refined and elegant */
-h1, h2, h3 {
+h1, h2, h3, h4, h5, h6 {
   color: var(--foreground);
-  margin-top: var(--space-6);
-  margin-bottom: var(--space-4);
-  line-height: 1.3;
-  letter-spacing: -0.025em;
-  font-weight: 700;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  text-wrap: balance;
 }
 
 /* Specific heading styles */
 h1 {
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
-  line-height: 1.1;
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tighter);
+  margin-top: var(--space-8);
   margin-bottom: var(--space-6);
 }
 
 h2 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
-  margin-top: var(--space-8);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-5);
 }
 
 h3 {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-normal);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-3);
 }
 
 /* Handle consecutive headings */
@@ -585,41 +711,112 @@ h1 + h2, h2 + h3 {
   margin-top: var(--space-2); /* Reduce spacing between consecutive headings */
 }
 
-/* Basic paragraph styles for better spacing */
+/* Paragraph styles for better readability */
 p {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
+  line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-wide);
+  text-wrap: pretty;
+  max-width: 75ch;
 }
 
-/* Responsive heading styles for mobile */
+/* For lead/intro paragraphs */
+.lead {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-normal);
+  font-weight: var(--font-weight-light);
+  color: var(--foreground);
+  opacity: 0.85;
+}
+
+/* Monospace utility classes */
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: var(--font-mono-features);
+  font-variant-ligatures: normal;
+}
+
+/* Monospace text with refined spacing */
+.text-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: var(--font-mono-features);
+  letter-spacing: -0.01em;
+}
+
+/* Code-style text */
+.code-text {
+  font-family: var(--font-mono);
+  font-feature-settings: var(--font-mono-features);
+  background: rgba(var(--primary-rgb), 0.1);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  letter-spacing: -0.01em;
+}
+
+/* Responsive typography for tablets */
 @media (max-width: 768px) {
+  body {
+    font-size: 1rem;
+  }
+  
   h1 {
     font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-5);
+    line-height: 1.2;
+  }
+  
+  h2 {
+    font-size: var(--font-size-2xl);
+    margin-top: var(--space-8);
     margin-bottom: var(--space-4);
+  }
+  
+  h3 {
+    font-size: var(--font-size-lg);
+    margin-top: var(--space-5);
+  }
+  
+  h4 {
+    font-size: var(--font-size-md);
+  }
+  
+  p {
+    margin-bottom: var(--space-4);
+  }
+}
+
+/* Responsive typography for mobile */
+@media (max-width: 480px) {
+  body {
+    font-size: 0.9375rem;
+  }
+  
+  h1 {
+    font-size: var(--font-size-2xl);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
   
   h2 {
     font-size: var(--font-size-xl);
     margin-top: var(--space-6);
-  }
-  
-  h3 {
-    font-size: var(--font-size-lg);
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: var(--font-size-2xl);
-    line-height: 1.2;
-  }
-  
-  h2 {
-    font-size: var(--font-size-lg);
-    margin-top: var(--space-5);
+    margin-bottom: var(--space-3);
   }
   
   h3 {
     font-size: var(--font-size-md);
+    margin-top: var(--space-4);
+  }
+  
+  h4 {
+    font-size: var(--font-size-base);
+  }
+  
+  p {
+    margin-bottom: var(--space-3);
+    line-height: 1.65;
   }
 }
 
