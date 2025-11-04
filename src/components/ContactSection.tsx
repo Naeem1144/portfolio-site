@@ -71,6 +71,9 @@ export function ContactSection() {
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
+      
+      // Reset error status after a few seconds
+      timeoutRef.current = setTimeout(() => setSubmitStatus('idle'), 7000);
     } finally {
       setIsSubmitting(false);
     }

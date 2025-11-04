@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Button } from './ui/Button';
 import { FaGithub, FaBars, FaTimes, FaFileAlt } from 'react-icons/fa';
@@ -11,18 +11,17 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const { scrollToSection } = useHarmonicScroll();
+  const rafIdRef = useRef<number | null>(null);
   
   useEffect(() => {
-    let rafId: number | null = null;
-    
     const handleScroll = () => {
       // Cancel any pending animation frame
-      if (rafId) {
-        cancelAnimationFrame(rafId);
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
       }
       
       // Use requestAnimationFrame to throttle scroll events for better performance
-      rafId = requestAnimationFrame(() => {
+      rafIdRef.current = requestAnimationFrame(() => {
         setIsScrolled(window.scrollY > 20);
         
         // Calculate active section for highlighting nav items
@@ -50,8 +49,8 @@ export function Header() {
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (rafId) {
-        cancelAnimationFrame(rafId);
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
       }
     };
   }, []);

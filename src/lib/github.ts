@@ -128,28 +128,21 @@ interface RepoData {
 
 // Helper function to process and format repository data
 function processRepos(repos: RepoData[]) {
-  // Single pass: filter non-forks and excluded repos, then sort by stars
-  const filtered = repos.reduce<RepoData[]>((acc, repo) => {
-    if (!repo.fork && !isRepoExcluded(repo.name)) {
-      acc.push(repo);
-    }
-    return acc;
-  }, []);
-  
-  // Sort by stars in descending order
-  filtered.sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0));
-  
-  // Take top 6 and map to our format
-  return filtered.slice(0, 6).map(repo => ({
-    name: repo.name,
-    description: repo.description || '',
-    htmlUrl: repo.html_url,
-    stars: repo.stargazers_count,
-    forks: repo.forks_count,
-    language: repo.language,
-    homepage: repo.homepage || '',
-    topics: repo.topics ?? [],
-  }));
+  // Filter first for better readability and performance on typical repo counts
+  return repos
+    .filter(repo => !repo.fork && !isRepoExcluded(repo.name))
+    .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
+    .slice(0, 6)
+    .map(repo => ({
+      name: repo.name,
+      description: repo.description || '',
+      htmlUrl: repo.html_url,
+      stars: repo.stargazers_count,
+      forks: repo.forks_count,
+      language: repo.language,
+      homepage: repo.homepage || '',
+      topics: repo.topics ?? [],
+    }));
 }
 
 // Helper function to fetch repos with a specific client
