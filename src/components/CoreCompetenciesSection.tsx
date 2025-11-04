@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Card, CardContent } from './ui/Card';
+import { CheckIcon } from './ui/CheckIcon';
 
 interface SkillItem {
   name: string;
@@ -146,19 +147,7 @@ export function CoreCompetenciesSection() {
                     key={item.name}
                     className="flex items-start text-foreground/75"
                   >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                    <CheckIcon className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60" size={16} />
                     <span 
                       className="flex-grow font-mono"
                       style={{
@@ -200,19 +189,7 @@ export function CoreCompetenciesSection() {
                     key={item.name}
                     className="flex items-start text-foreground/75"
                   >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                    <CheckIcon className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60" size={16} />
                     <span 
                       className="flex-grow font-mono"
                       style={{
@@ -254,19 +231,7 @@ export function CoreCompetenciesSection() {
                     key={item.name}
                     className="flex items-start text-foreground/75"
                   >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                    <CheckIcon className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60" size={16} />
                     <span 
                       className="flex-grow font-mono"
                       style={{
@@ -308,19 +273,7 @@ export function CoreCompetenciesSection() {
                     key={item.name}
                     className="flex items-start text-foreground/75"
                   >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                    <CheckIcon className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60" size={16} />
                     <span 
                       className="flex-grow font-mono"
                       style={{
@@ -362,19 +315,7 @@ export function CoreCompetenciesSection() {
                     key={item.name}
                     className="flex items-start text-foreground/75"
                   >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                    <CheckIcon className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60" size={16} />
                     <span 
                       className="flex-grow font-mono"
                       style={{
@@ -416,19 +357,7 @@ export function CoreCompetenciesSection() {
                     key={item.name}
                     className="flex items-start text-foreground/75"
                   >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                    <CheckIcon className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60" size={16} />
                     <span 
                       className="flex-grow font-mono"
                       style={{

@@ -17,14 +17,18 @@ export function smoothScrollTo(elementId: string) {
   const dampingRatio = 0.8; // Less than 1 creates a subtle bouncy effect
   const naturalFrequency = 12;
 
+  // Pre-calculate constant values to avoid repeated calculations
+  const dampedFrequency = Math.sqrt(1 - dampingRatio * dampingRatio) * naturalFrequency;
+  const dampingCoefficient = dampingRatio * naturalFrequency;
+  const dampingRatioNormalized = dampingRatio / Math.sqrt(1 - dampingRatio * dampingRatio);
+
   // Harmonic oscillator function for a spring-like animation
   function springAnimation(t: number): number {
     // Calculate position based on damped spring formula
     if (t >= 1) return 1;
-    const decay = Math.exp(-dampingRatio * naturalFrequency * t);
-    return 1 - decay * (Math.cos(Math.sqrt(1 - dampingRatio * dampingRatio) * naturalFrequency * t) + 
-                         (dampingRatio / Math.sqrt(1 - dampingRatio * dampingRatio)) * 
-                         Math.sin(Math.sqrt(1 - dampingRatio * dampingRatio) * naturalFrequency * t));
+    const decay = Math.exp(-dampingCoefficient * t);
+    return 1 - decay * (Math.cos(dampedFrequency * t) + 
+                         dampingRatioNormalized * Math.sin(dampedFrequency * t));
   }
 
   function step(timestamp: number) {
