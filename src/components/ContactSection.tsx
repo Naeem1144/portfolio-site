@@ -11,6 +11,9 @@ interface FormData {
   message: string;
 }
 
+// Duration in milliseconds before auto-resetting the submit status
+const STATUS_RESET_TIMEOUT = 7000;
+
 export function ContactSection() {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -67,13 +70,13 @@ export function ContactSection() {
       setFormData({ name: '', email: '', message: '' });
       
       // Reset success status after a few seconds
-      timeoutRef.current = setTimeout(() => setSubmitStatus('idle'), 7000);
+      timeoutRef.current = setTimeout(() => setSubmitStatus('idle'), STATUS_RESET_TIMEOUT);
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
       
       // Reset error status after a few seconds
-      timeoutRef.current = setTimeout(() => setSubmitStatus('idle'), 7000);
+      timeoutRef.current = setTimeout(() => setSubmitStatus('idle'), STATUS_RESET_TIMEOUT);
     } finally {
       setIsSubmitting(false);
     }
