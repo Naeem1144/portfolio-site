@@ -88,21 +88,22 @@ interface GraphQLResponse {
 
 // Helper function to handle auth retry logic
 async function withAuthRetry<T>(
-  authenticatedFn: () => Promise<T>,
-  publicFn: () => Promise<T>,
+  authenticatedFn: (client: Octokit) => Promise<T>,
+  publicFn: (client: Octokit) => Promise<T>,
   errorContext: string
 ): Promise<T | null> {
   const authClient = getAuthenticatedOctokit();
+  const publicClient = getPublicOctokit();
   
   try {
-    return await (authClient ? authenticatedFn() : publicFn());
+    return await (authClient ? authenticatedFn(authClient) : publicFn(publicClient));
   } catch (error: unknown) {
     const errorWithStatus = error as { status?: number };
     if ((errorWithStatus?.status === 401 || errorWithStatus?.status === 403) && authClient) {
       console.warn(`${errorContext} failed with provided token. Retrying without authentication.`);
       
       try {
-        return await publicFn();
+        return await publicFn(publicClient);
       } catch (publicError) {
         console.error(`${errorContext} without authentication:`, publicError);
         return null;
@@ -117,8 +118,7 @@ async function withAuthRetry<T>(
 // Function to fetch user profile data
 export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
   return withAuthRetry(
-    async () => {
-      const client = getAuthenticatedOctokit()!;
+    async (client) => {
       const { data } = await client.users.getByUsername({ username });
       return {
         name: data.name || username,
@@ -134,8 +134,7 @@ export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
         htmlUrl: data.html_url,
       };
     },
-    async () => {
-      const client = getPublicOctokit();
+    async (client) => {
       const { data } = await client.users.getByUsername({ username });
       return {
         name: data.name || username,
@@ -176,8 +175,7 @@ async function fetchFallbackRepos() {
   };
 
   const result = await withAuthRetry(
-    async () => {
-      const client = getAuthenticatedOctokit()!;
+    async (client) => {
       const { data } = await client.repos.listForUser({
         username,
         type: 'owner',
@@ -189,8 +187,7 @@ async function fetchFallbackRepos() {
       });
       return processRepos(data);
     },
-    async () => {
-      const client = getPublicOctokit();
+    async (client) => {
       const { data } = await client.repos.listForUser({
         username,
         type: 'owner',
