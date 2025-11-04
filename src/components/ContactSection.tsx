@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState, useEffect, useRef, FormEvent, ChangeEvent } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'; // Using Card sub-components
 import { Button } from './ui/Button';
 import { FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
@@ -20,6 +20,16 @@ export function ContactSection() {
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
   
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -32,6 +42,11 @@ export function ContactSection() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
+    
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     
     try {
       const response = await fetch('/api/contact', {
@@ -50,15 +65,14 @@ export function ContactSection() {
       
       setSubmitStatus('success');
       setFormData({ name: '', email: '', message: '' });
+      
+      // Reset success status after a few seconds with cleanup
+      timeoutRef.current = setTimeout(() => setSubmitStatus('idle'), 7000);
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
-      // Reset success status after a few seconds
-      if (submitStatus === 'success') {
-        setTimeout(() => setSubmitStatus('idle'), 7000);
-      }
     }
   };
 

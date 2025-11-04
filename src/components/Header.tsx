@@ -13,30 +13,49 @@ export function Header() {
   const { scrollToSection } = useHarmonicScroll();
   
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-      
-      // Calculate active section for highlighting nav items
-      const sections = ['contact', 'projects', 'about', 'home'];
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (!element) continue;
-        
-        const rect = element.getBoundingClientRect();
-        if (section === 'home' && window.scrollY < 100) {
-          setActiveSection('home');
-          break;
-        }
-        
-        if (rect.top <= 150 && rect.bottom >= 150) {
-          setActiveSection(section);
-          break;
-        }
+    // Cache section elements to avoid repeated DOM queries
+    const sectionElements = new Map<string, HTMLElement>();
+    const sections = ['contact', 'projects', 'about', 'home'];
+    
+    sections.forEach(section => {
+      const element = document.getElementById(section);
+      if (element) {
+        sectionElements.set(section, element);
       }
+    });
 
+    let ticking = false;
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          
+          // Calculate active section for highlighting nav items
+          for (const section of sections) {
+            const element = sectionElements.get(section);
+            if (!element) continue;
+            
+            const rect = element.getBoundingClientRect();
+            if (section === 'home' && window.scrollY < 100) {
+              setActiveSection('home');
+              break;
+            }
+            
+            if (rect.top <= 150 && rect.bottom >= 150) {
+              setActiveSection(section);
+              break;
+            }
+          }
+          
+          ticking = false;
+        });
+        
+        ticking = true;
+      }
     };
     
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
     return () => {
