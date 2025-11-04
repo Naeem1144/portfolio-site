@@ -13,34 +13,46 @@ export function Header() {
   const { scrollToSection } = useHarmonicScroll();
   
   useEffect(() => {
+    let rafId: number | null = null;
+    
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-      
-      // Calculate active section for highlighting nav items
-      const sections = ['contact', 'projects', 'about', 'home'];
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (!element) continue;
-        
-        const rect = element.getBoundingClientRect();
-        if (section === 'home' && window.scrollY < 100) {
-          setActiveSection('home');
-          break;
-        }
-        
-        if (rect.top <= 150 && rect.bottom >= 150) {
-          setActiveSection(section);
-          break;
-        }
+      // Cancel any pending animation frame
+      if (rafId) {
+        cancelAnimationFrame(rafId);
       }
-
+      
+      // Use requestAnimationFrame to throttle scroll events for better performance
+      rafId = requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 20);
+        
+        // Calculate active section for highlighting nav items
+        const sections = ['contact', 'projects', 'about', 'home'];
+        for (const section of sections) {
+          const element = document.getElementById(section);
+          if (!element) continue;
+          
+          const rect = element.getBoundingClientRect();
+          if (section === 'home' && window.scrollY < 100) {
+            setActiveSection('home');
+            break;
+          }
+          
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      });
     };
     
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
     };
   }, []);
   

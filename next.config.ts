@@ -9,6 +9,13 @@ const nextConfig: NextConfig = {
         pathname: '**',
       },
     ],
+    // Optimize image loading with formats and sizes
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 86400, // Cache images for 24 hours
+  },
+  // Enable experimental optimizations
+  experimental: {
+    optimizePackageImports: ['react-icons', 'framer-motion', 'lucide-react'],
   },
   async headers() {
     return [
