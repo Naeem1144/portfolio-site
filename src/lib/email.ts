@@ -8,6 +8,37 @@ interface EmailData {
   replyTo?: string;
 }
 
+// Cache the transporter to avoid recreating it on every email send
+let cachedTransporter: nodemailer.Transporter | null = null;
+
+function getTransporter() {
+  if (cachedTransporter) {
+    return cachedTransporter;
+  }
+
+  const senderEmail = process.env.EMAIL_ADDRESS;
+  
+  if (!senderEmail || !process.env.EMAIL_PASSWORD) {
+    throw new Error('Email configuration missing');
+  }
+  
+  cachedTransporter = nodemailer.createTransport({
+    service: process.env.EMAIL_SERVICE || 'gmail',
+    auth: {
+      user: senderEmail,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+    // For custom SMTP configuration:
+    ...(process.env.EMAIL_HOST ? {
+      host: process.env.EMAIL_HOST,
+      port: parseInt(process.env.EMAIL_PORT || '587'),
+      secure: process.env.EMAIL_SECURE === 'true',
+    } : {})
+  });
+  
+  return cachedTransporter;
+}
+
 export async function sendEmail(data: EmailData): Promise<boolean> {
   try {
     const { to, subject, text, html, replyTo } = data;
@@ -20,20 +51,8 @@ export async function sendEmail(data: EmailData): Promise<boolean> {
       throw new Error('Email configuration missing');
     }
     
-    // Create transporter based on environment variables
-    const transporter = nodemailer.createTransport({
-      service: process.env.EMAIL_SERVICE || 'gmail',
-      auth: {
-        user: senderEmail,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-      // For custom SMTP configuration:
-      ...(process.env.EMAIL_HOST ? {
-        host: process.env.EMAIL_HOST,
-        port: parseInt(process.env.EMAIL_PORT || '587'),
-        secure: process.env.EMAIL_SECURE === 'true',
-      } : {})
-    });
+    // Get or create transporter
+    const transporter = getTransporter();
     
     // Set up email data
     const mailOptions = {

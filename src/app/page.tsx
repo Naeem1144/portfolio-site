@@ -12,9 +12,15 @@ import { Footer } from '@/components/Footer';
 import { fetchGitHubProfile, fetchPinnedRepos } from '@/lib/github';
 import { ScrollRestoration, Container, Section } from '@/components/ScrollRestoration';
 
+// Cache GitHub data for 1 hour (3600 seconds)
+export const revalidate = 3600;
+
 export default async function Home() {
-  const profile = await fetchGitHubProfile();
-  const repos = await fetchPinnedRepos();
+  // Fetch data in parallel for better performance
+  const [profile, repos] = await Promise.all([
+    fetchGitHubProfile(),
+    fetchPinnedRepos()
+  ]);
   
   return (
     <>

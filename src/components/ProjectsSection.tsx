@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { memo } from 'react';
 import {
   Card,
   CardContent,
@@ -28,7 +28,7 @@ interface ProjectsProps {
   isLoading?: boolean;
 }
 
-export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps) {
+function ProjectsSectionComponent({ repos = [], isLoading = false }: ProjectsProps) {
   const renderSkeletons = () => (
     Array.from({ length: 3 }).map((_, i) => (
       <div key={`skeleton-${i}`}>
@@ -214,3 +214,6 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
     </div>
   );
 }
+
+// Memoize the component to prevent unnecessary re-renders
+export const ProjectsSection = memo(ProjectsSectionComponent);

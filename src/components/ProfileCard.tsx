@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { memo } from 'react';
 import Image from 'next/image';
 import { Button } from './ui/Button';
 import { Card, CardContent, CardTitle, CardFooter, CardHeader } from './ui/Card';
@@ -19,7 +19,7 @@ interface ProfileCardProps {
   isLoading?: boolean;
 }
 
-export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
+function ProfileCardComponent({ profile, isLoading = false }: ProfileCardProps) {
   const skeletonCard = (
     <Card className="w-full max-w-sm mx-auto custom-card h-full overflow-hidden">
       <div className="h-20 w-full bg-primary/10 relative">
@@ -154,3 +154,6 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
     </div>
   );
 }
+
+// Memoize the component to prevent unnecessary re-renders
+export const ProfileCard = memo(ProfileCardComponent);

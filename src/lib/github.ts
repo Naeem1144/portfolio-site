@@ -68,51 +68,41 @@ interface GraphQLResponse {
   };
 }
 
-// Function to fetch user profile data
+// Helper function to fetch user data with a specific client
+async function fetchUserData(client: Octokit) {
+  const { data } = await client.users.getByUsername({
+    username,
+  });
+
+  return {
+    name: data.name || username,
+    bio: data.bio || '',
+    avatarUrl: data.avatar_url,
+    followers: data.followers,
+    following: data.following,
+    location: data.location || '',
+    company: data.company || '',
+    blog: data.blog || '',
+    twitterUsername: data.twitter_username || '',
+    publicRepos: data.public_repos,
+    htmlUrl: data.html_url,
+  };
+}
+
+// Function to fetch user profile data with caching
+// Cache revalidates every 1 hour (3600 seconds)
 export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
   const client = authenticatedOctokit ?? publicOctokit;
 
   try {
-    const { data } = await client.users.getByUsername({
-      username,
-    });
-
-    return {
-      name: data.name || username,
-      bio: data.bio || '',
-      avatarUrl: data.avatar_url,
-      followers: data.followers,
-      following: data.following,
-      location: data.location || '',
-      company: data.company || '',
-      blog: data.blog || '',
-      twitterUsername: data.twitter_username || '',
-      publicRepos: data.public_repos,
-      htmlUrl: data.html_url,
-    };
+    return await fetchUserData(client);
   } catch (error: unknown) {
     const errorWithStatus = error as { status?: number };
     if ((errorWithStatus?.status === 401 || errorWithStatus?.status === 403) && authenticatedOctokit) {
       console.warn('GitHub profile request failed with provided token. Retrying without authentication.');
 
       try {
-        const { data } = await publicOctokit.users.getByUsername({
-          username,
-        });
-
-        return {
-          name: data.name || username,
-          bio: data.bio || '',
-          avatarUrl: data.avatar_url,
-          followers: data.followers,
-          following: data.following,
-          location: data.location || '',
-          company: data.company || '',
-          blog: data.blog || '',
-          twitterUsername: data.twitter_username || '',
-          publicRepos: data.public_repos,
-          htmlUrl: data.html_url,
-        };
+        return await fetchUserData(publicOctokit);
       } catch (publicError) {
         console.error('Error fetching GitHub profile without authentication:', publicError);
         return null;
@@ -124,68 +114,70 @@ export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
   }
 }
 
+interface RepoData {
+  fork: boolean;
+  name: string;
+  stargazers_count: number;
+  description: string | null;
+  html_url: string;
+  forks_count: number;
+  language: string | null;
+  homepage: string | null;
+  topics: string[];
+}
+
+// Helper function to process and format repository data
+function processRepos(repos: RepoData[]) {
+  // Single pass: filter non-forks and excluded repos, then sort by stars
+  const filtered = repos.reduce<RepoData[]>((acc, repo) => {
+    if (!repo.fork && !isRepoExcluded(repo.name)) {
+      acc.push(repo);
+    }
+    return acc;
+  }, []);
+  
+  // Sort by stars in descending order
+  filtered.sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0));
+  
+  // Take top 6 and map to our format
+  return filtered.slice(0, 6).map(repo => ({
+    name: repo.name,
+    description: repo.description || '',
+    htmlUrl: repo.html_url,
+    stars: repo.stargazers_count,
+    forks: repo.forks_count,
+    language: repo.language,
+    homepage: repo.homepage || '',
+    topics: repo.topics ?? [],
+  }));
+}
+
+// Helper function to fetch repos with a specific client
+async function fetchReposData(client: Octokit) {
+  const { data } = await client.repos.listForUser({
+    username,
+    type: 'owner',
+    per_page: 100,
+    sort: 'updated',
+    mediaType: {
+      previews: ['mercy'],
+    },
+  });
+  return processRepos(data);
+}
+
 async function fetchFallbackRepos() {
   const client = authenticatedOctokit ?? publicOctokit;
 
   try {
-    const { data } = await client.repos.listForUser({
-      username,
-      type: 'owner',
-      per_page: 100,
-      sort: 'updated',
-      mediaType: {
-        previews: ['mercy'],
-      },
-    });
-
-    const topRepos = data
-      .filter(repo => !repo.fork)
-      .filter(repo => !isRepoExcluded(repo.name))
-      .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
-      .slice(0, 6);
-
-    return topRepos.map(repo => ({
-      name: repo.name,
-      description: repo.description || '',
-      htmlUrl: repo.html_url,
-      stars: repo.stargazers_count,
-      forks: repo.forks_count,
-      language: repo.language,
-      homepage: repo.homepage || '',
-      topics: repo.topics ?? [],
-    }));
+    return await fetchReposData(client);
   } catch (error: unknown) {
     const errorWithStatus = error as { status?: number };
     if ((errorWithStatus?.status === 401 || errorWithStatus?.status === 403) && authenticatedOctokit) {
       console.warn('GitHub REST API returned an authorization error. Retrying without authentication.');
 
       try {
-        const { data } = await publicOctokit.repos.listForUser({
-          username,
-          type: 'owner',
-          per_page: 100,
-          sort: 'updated',
-          mediaType: {
-            previews: ['mercy'],
-          },
-        });
-
-        const topRepos = data
-          .filter(repo => !repo.fork)
-          .filter(repo => !isRepoExcluded(repo.name))
-          .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
-          .slice(0, 6);
-
-        return topRepos.map(repo => ({
-          name: repo.name,
-          description: repo.description || '',
-          htmlUrl: repo.html_url,
-          stars: repo.stargazers_count,
-          forks: repo.forks_count,
-          language: repo.language,
-          homepage: repo.homepage || '',
-          topics: repo.topics ?? [],
-        }));
+        return await fetchReposData(publicOctokit);
       } catch (publicError) {
         console.error('Error fetching fallback GitHub repos without authentication:', publicError);
         return [];
