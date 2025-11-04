@@ -117,39 +117,26 @@ async function withAuthRetry<T>(
 
 // Function to fetch user profile data
 export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
+  const fetchProfile = async (client: Octokit): Promise<GitHubProfile> => {
+    const { data } = await client.users.getByUsername({ username });
+    return {
+      name: data.name || username,
+      bio: data.bio || '',
+      avatarUrl: data.avatar_url,
+      followers: data.followers,
+      following: data.following,
+      location: data.location || '',
+      company: data.company || '',
+      blog: data.blog || '',
+      twitterUsername: data.twitter_username || '',
+      publicRepos: data.public_repos,
+      htmlUrl: data.html_url,
+    };
+  };
+
   return withAuthRetry(
-    async (client) => {
-      const { data } = await client.users.getByUsername({ username });
-      return {
-        name: data.name || username,
-        bio: data.bio || '',
-        avatarUrl: data.avatar_url,
-        followers: data.followers,
-        following: data.following,
-        location: data.location || '',
-        company: data.company || '',
-        blog: data.blog || '',
-        twitterUsername: data.twitter_username || '',
-        publicRepos: data.public_repos,
-        htmlUrl: data.html_url,
-      };
-    },
-    async (client) => {
-      const { data } = await client.users.getByUsername({ username });
-      return {
-        name: data.name || username,
-        bio: data.bio || '',
-        avatarUrl: data.avatar_url,
-        followers: data.followers,
-        following: data.following,
-        location: data.location || '',
-        company: data.company || '',
-        blog: data.blog || '',
-        twitterUsername: data.twitter_username || '',
-        publicRepos: data.public_repos,
-        htmlUrl: data.html_url,
-      };
-    },
+    fetchProfile,
+    fetchProfile,
     'Error fetching GitHub profile'
   );
 }
@@ -174,31 +161,22 @@ async function fetchFallbackRepos() {
     }));
   };
 
+  const fetchRepos = async (client: Octokit) => {
+    const { data } = await client.repos.listForUser({
+      username,
+      type: 'owner',
+      per_page: 100,
+      sort: 'updated',
+      mediaType: {
+        previews: ['mercy'],
+      },
+    });
+    return processRepos(data);
+  };
+
   const result = await withAuthRetry(
-    async (client) => {
-      const { data } = await client.repos.listForUser({
-        username,
-        type: 'owner',
-        per_page: 100,
-        sort: 'updated',
-        mediaType: {
-          previews: ['mercy'],
-        },
-      });
-      return processRepos(data);
-    },
-    async (client) => {
-      const { data } = await client.repos.listForUser({
-        username,
-        type: 'owner',
-        per_page: 100,
-        sort: 'updated',
-        mediaType: {
-          previews: ['mercy'],
-        },
-      });
-      return processRepos(data);
-    },
+    fetchRepos,
+    fetchRepos,
     'Error fetching fallback GitHub repos'
   );
 
