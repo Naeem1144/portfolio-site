@@ -30,12 +30,15 @@ export default async function Home() {
           </div>
           <Container>
             <div className="flex flex-col gap-3">
-              <div className="flex flex-col items-center justify-center mt-32 mb-12">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">About Me</h2>
-                <p className="text-base md:text-lg text-foreground/60 text-center font-light max-w-xl">
-                  A glimpse into my journey, skills, and what drives my passion for technology and data.
+              <div className="flex flex-col items-center justify-center mt-32 mb-12 text-center gap-4">
+                <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 border border-white/10 shadow-soft">
+                  <span className="h-2 w-2 rounded-full bg-primary" aria-hidden />
+                  <span className="text-sm font-medium text-foreground/80">Who I am beyond the resume</span>
+                </div>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">About Naeem</h2>
+                <p className="text-base md:text-lg text-foreground/65 text-center font-normal max-w-2xl leading-relaxed">
+                  A practitioner who pairs curiosity with discipline—comfortable in the details of data pipelines and the clarity of stakeholder conversations.
                 </p>
-                <div className="mt-6 w-24 mx-auto divider" />
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start lg:items-stretch">
                 <div className="lg:col-span-1 h-full">

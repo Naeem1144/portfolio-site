@@ -63,37 +63,32 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
 
   return (
     <div className="w-full">
-      <div className="flex flex-col items-center justify-center mt-28 mb-10">
-        <h2 
-          className="font-bold text-foreground mb-4 text-center"
-          style={{
-            fontSize: 'clamp(2rem, 4vw, 2.5rem)',
-            lineHeight: 'var(--line-height-tight)',
-            letterSpacing: 'var(--letter-spacing-tight)',
-            textWrap: 'balance'
-          }}
-        >
-          Featured Projects
-        </h2>
-        <p 
-          className="text-foreground/65 text-center font-light max-w-xl"
-          style={{
-            fontSize: 'var(--font-size-md)',
-            lineHeight: 'var(--line-height-relaxed)',
-            letterSpacing: 'var(--letter-spacing-wide)'
-          }}
-        >
-          A curated selection of my work, showcasing my skills in action.
-        </p>
-        {/* Refined decorative line */}
-        <div 
-          className="mt-5 w-20 divider mx-auto"
-        />
+      <div className="flex flex-col items-center justify-center mt-28 mb-12 text-center gap-4">
+        <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 border border-white/10 shadow-soft">
+          <span className="h-2 w-2 rounded-full bg-primary" aria-hidden />
+          <span className="text-sm font-medium text-foreground/80">Built with care and shipped with users in mind</span>
+        </div>
+        <div className="space-y-3">
+          <h2
+            className="font-bold text-foreground text-center"
+            style={{
+              fontSize: 'clamp(2.25rem, 4vw, 2.75rem)',
+              lineHeight: 'var(--line-height-tight)',
+              letterSpacing: 'var(--letter-spacing-tight)',
+              textWrap: 'balance'
+            }}
+          >
+            Selected projects
+          </h2>
+          <p className="text-foreground/65 text-center max-w-2xl text-lg leading-relaxed">
+            Highlights that demonstrate how I handle end-to-end workflows—scoping problems, building models, and presenting clear outcomes.
+          </p>
+        </div>
       </div>
-      
+
       <div className="mt-2">
         {isLoading ? (
-          <div 
+          <div
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
           >
             {renderSkeletons()}
@@ -137,42 +132,47 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
             </Card>
           </div>
         ) : (
-          <div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
           >
             {repos.map((repo) => (
               <div key={repo.name} className="flex">
                 <Card className="h-full flex flex-col custom-card overflow-hidden">
-                  <CardHeader className="relative z-10">
-                    <div className="flex justify-between items-start mb-3 relative">
-                      <CardTitle 
-                        className="!mb-1 break-all font-mono"
-                        style={{
-                          fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
-                          lineHeight: 'var(--line-height-snug)',
-                          letterSpacing: '-0.01em'
-                        }}
-                      >
-                        {repo.name}
-                      </CardTitle>
+                  <CardHeader className="relative z-10 pb-3">
+                    <div className="flex items-start justify-between gap-3 mb-3">
+                      <div>
+                        <CardTitle
+                          className="!mb-1 break-all font-mono"
+                          style={{
+                            fontSize: 'clamp(1rem, 1.5vw, 1.125rem)',
+                            lineHeight: 'var(--line-height-snug)',
+                            letterSpacing: '-0.01em'
+                          }}
+                        >
+                          {repo.name}
+                        </CardTitle>
+                        <CardDescription
+                          className="text-foreground/65"
+                          style={{
+                            fontSize: 'var(--font-size-sm)',
+                            lineHeight: 'var(--line-height-relaxed)',
+                            letterSpacing: 'var(--letter-spacing-wide)'
+                          }}
+                        >
+                          {repo.description || 'No description provided for this project.'}
+                        </CardDescription>
+                      </div>
+                      <div className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary border border-primary/20">
+                        {repo.language || 'Code'}
+                      </div>
                     </div>
-                    <CardDescription 
-                      className="min-h-[3em] text-foreground/65"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    >
-                      {repo.description || 'No description provided for this project.'}
-                    </CardDescription>
                   </CardHeader>
                   <CardContent className="flex-grow relative z-10">
                     {repo.topics && repo.topics.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-2">
+                      <div className="flex flex-wrap gap-2 mb-4">
                         {repo.topics.slice(0, 4).map(topic => (
-                          <span 
-                            key={topic} 
+                          <span
+                            key={topic}
                             className="pill-surface text-foreground/70 px-3 py-1.5 rounded-full font-mono border-subtle"
                             style={{
                               fontSize: 'var(--font-size-xs)',
@@ -184,10 +184,14 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
                         ))}
                       </div>
                     )}
+                    <div className="flex items-center gap-4 text-sm text-foreground/60">
+                      <span className="inline-flex items-center gap-1"><FaGithub /> {repo.stars ?? 0} stars</span>
+                      <span className="inline-flex items-center gap-1"><FaExternalLinkAlt /> {repo.forks ?? 0} forks</span>
+                    </div>
                   </CardContent>
                   <CardFooter className="flex flex-col sm:flex-row gap-3 relative pt-5 z-10">
-                    <Button 
-                      href={repo.htmlUrl} 
+                    <Button
+                      href={repo.htmlUrl}
                       target="_blank"
                       variant="primary"
                       className="w-full sm:flex-1"
@@ -195,7 +199,7 @@ export function ProjectsSection({ repos = [], isLoading = false }: ProjectsProps
                       <FaGithub className="mr-2" /> GitHub
                     </Button>
                     {repo.homepage && (
-                      <Button 
+                      <Button
                         href={repo.homepage}
                         target="_blank"
                         variant="outline"
