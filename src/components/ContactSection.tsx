@@ -117,9 +117,11 @@ export function ContactSection() {
               </CardTitle>
             </CardHeader>
             <CardContent className="flex-1 flex flex-col p-6 md:p-8 pt-0 relative z-10">
+              <div aria-live="polite" aria-atomic="true">
               {submitStatus === 'success' && (
                 <div 
                   className="flex items-start p-4 mb-6 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-300/30 dark:border-green-700/30"
+                  role="alert"
                 >
                   <FaCheckCircle className="text-green-500 dark:text-green-400 mr-3 mt-1 flex-shrink-0" size={20} />
                   <div>
@@ -148,6 +150,7 @@ export function ContactSection() {
               {submitStatus === 'error' && (
                 <div 
                   className="flex items-start p-4 mb-6 rounded-md bg-red-50 dark:bg-red-900/30 border border-red-300/30 dark:border-red-700/30"
+                  role="alert"
                 >
                   <FaExclamationCircle className="text-red-500 dark:text-red-400 mr-3 mt-1 flex-shrink-0" size={20} />
                   <div>
@@ -173,6 +176,7 @@ export function ContactSection() {
                   </div>
                 </div>
               )}
+              </div>
               
               <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
                 <div className="space-y-6 flex-1">
