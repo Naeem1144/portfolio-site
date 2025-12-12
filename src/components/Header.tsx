@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from './ui/Button';
-import { FaGithub, FaBars, FaTimes } from 'react-icons/fa';
+import { FaGithub, FaBars, FaTimes, FaFileAlt } from 'react-icons/fa';
 import { useHarmonicScroll } from '@/hooks/useHarmonicScroll';
 
 export function Header() {
@@ -14,8 +14,9 @@ export function Header() {
   
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 20);
       
+      // Calculate active section for highlighting nav items
       const sections = ['contact', 'projects', 'about', 'home'];
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -32,6 +33,7 @@ export function Header() {
           break;
         }
       }
+
     };
     
     window.addEventListener('scroll', handleScroll);
@@ -49,131 +51,172 @@ export function Header() {
     { name: 'Contact', href: '#contact', id: 'contact' },
   ];
 
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+
+  // Handle harmonic scrolling for navigation items
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     if (href === '#') {
+      // Scroll to top with animation
       scrollToSection('home');
     } else {
+      // Extract the ID without the #
       const id = href.substring(1);
       scrollToSection(id);
     }
     
+    // Close mobile menu if open
     if (isMobileMenuOpen) {
       setIsMobileMenuOpen(false);
     }
   };
 
   return (
-    <>
-      {/* Floating Dynamic Header */}
-      <header
-        className={`
-          fixed top-4 left-0 right-0 z-50 transition-all duration-300 ease-out flex justify-center
-        `}
-      >
-        <div
-          className={`
-            flex items-center justify-between
-            transition-all duration-300 ease-out
-            ${isScrolled
-              ? 'w-[90%] max-w-4xl rounded-full glass-panel px-6 py-3 shadow-lg'
-              : 'w-full max-w-7xl px-6 py-4 bg-transparent border-transparent'}
-          `}
-        >
-          {/* Logo */}
-          <Link href="/" className="flex items-center no-underline z-10">
-            <span className="font-bold text-foreground font-mono text-lg tracking-tight">
+    <header
+      className={`
+        fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out
+        ${isScrolled || isMobileMenuOpen ? 'bg-background/65 backdrop-blur-2xl border-b border-white/5' : 'bg-transparent border-b border-transparent'}
+      `}
+      style={{
+        backdropFilter: isScrolled || isMobileMenuOpen ? 'blur(20px) saturate(140%)' : 'none',
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          <Link href="/" className="flex items-center no-underline">
+            <span
+              className="font-bold text-foreground font-mono"
+              style={{
+                fontSize: 'clamp(1.25rem, 2vw, 1.625rem)',
+                letterSpacing: '-0.02em'
+              }}
+            >
               Naeem
             </span>
           </Link>
           
-          {/* Desktop Nav - Centered */}
-          <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-1">
-            <div className={`
-              flex items-center p-1 rounded-full transition-all duration-300
-              ${isScrolled ? 'bg-transparent' : 'glass-panel px-3 py-1.5'}
-            `}>
+          {/* Desktop navigation */}
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2" role="navigation" aria-label="Primary">
+            <div
+              className="flex space-x-1 lg:space-x-2"
+            >
               {navItems.map((item) => (
                 <a 
                   key={item.name} 
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
                   className={`
-                    px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200
+                    relative px-4 py-2 rounded-lg font-medium font-mono
+                    text-foreground/80 no-underline
                     ${activeSection === item.id 
-                      ? 'bg-foreground text-background font-semibold shadow-sm'
-                      : 'text-muted-foreground hover:text-foreground hover:bg-white/5'}
+                      ? 'bg-primary/10 text-foreground'
+                      : ''}
                   `}
+                  style={{
+                    fontSize: 'var(--font-size-sm)',
+                    letterSpacing: '-0.01em'
+                  }}
+                  aria-current={activeSection === item.id ? 'page' : undefined}
                 >
                   {item.name}
                 </a>
               ))}
             </div>
-          </nav>
 
-          {/* Right Actions */}
-          <div className="hidden md:flex items-center gap-2 z-10">
-            <Button
-              href="/Naeem_Resume.pdf"
-              target="_blank"
-              variant="outline"
-              size="sm"
-              className="h-9 px-4 rounded-full text-xs font-medium border-border/40 hover:bg-white/5 hover:text-foreground"
-            >
-              Resume
-            </Button>
-            <Button
-              href="https://github.com/Naeem1144"
-              target="_blank"
-              variant="primary" // This will use primary color
-              size="sm"
-              className="h-9 px-4 rounded-full text-xs font-medium bg-foreground text-background hover:bg-foreground/90"
-              ariaLabel="GitHub profile"
-            >
-              <FaGithub className="mr-2" /> GitHub
-            </Button>
-          </div>
+            <div className="flex items-center">
+              <Button
+                href="/Naeem_Resume.pdf"
+                target="_blank"
+                variant="outline"
+                size="sm"
+                className="ml-2"
+              >
+                <FaFileAlt className="mr-2" /> Resume
+              </Button>
+              <Button
+                href="https://github.com/Naeem1144"
+                target="_blank"
+                variant="primary"
+                size="sm"
+                className="ml-2"
+                ariaLabel="GitHub profile"
+              >
+                <FaGithub className="mr-2" /> GitHub
+              </Button>
+            </div>
+          </nav>
           
-          {/* Mobile Menu Toggle */}
+          {/* Mobile menu button */}
           <button 
-            className="md:hidden p-2 text-foreground rounded-full hover:bg-white/10"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-foreground/70 rounded-md"
+            onClick={toggleMobileMenu}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
         </div>
-      </header>
+      </div>
       
-      {/* Mobile Menu Overlay */}
+      {/* Mobile menu */}
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl md:hidden pt-24 px-6 flex flex-col items-center animate-in fade-in duration-200">
-          <nav className="flex flex-col items-center gap-6 w-full max-w-sm">
+        <div
+          className="md:hidden bg-background/85 backdrop-blur-2xl absolute top-full left-1/2 -translate-x-1/2 w-[85%] max-w-[300px] rounded-xl border border-primary/8"
+          style={{ backdropFilter: 'blur(24px)' }}
+        >
+          <nav
+            className="flex flex-col items-center space-y-1 py-3"
+          >
             {navItems.map((item) => (
-              <a
+              <div
                 key={item.name}
-                href={item.href}
-                onClick={(e) => handleNavClick(e, item.href)}
-                className={`
-                  text-2xl font-medium tracking-tight
-                  ${activeSection === item.id ? 'text-foreground' : 'text-muted-foreground'}
-                `}
+                className="w-full"
               >
-                {item.name}
-              </a>
+                <a
+                  href={item.href}
+                  onClick={(e) => handleNavClick(e, item.href)}
+                  className={`
+                    flex justify-center py-2.5 px-4 mx-2 rounded-lg font-mono
+                    text-foreground/80 no-underline
+                    ${activeSection === item.id
+                      ? 'bg-primary/10 text-foreground font-medium'
+                      : ''}
+                  `}
+                  style={{
+                    fontSize: 'var(--font-size-base)',
+                    letterSpacing: '-0.01em'
+                  }}
+                >
+                  {item.name}
+                </a>
+              </div>
             ))}
-            <div className="w-12 h-[1px] bg-border my-4" />
-            <div className="flex gap-4 w-full justify-center">
-              <Button href="/Naeem_Resume.pdf" target="_blank" variant="outline" className="w-full justify-center">
-                Resume
+            <div
+              className="w-full flex flex-col items-center gap-2 mt-1 pt-1"
+            >
+              <Button
+                href="/Naeem_Resume.pdf"
+                target="_blank"
+                variant="outline"
+                size="sm"
+                className="w-[calc(100%-1rem)]"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <FaFileAlt className="mr-2" /> Resume
               </Button>
-              <Button href="https://github.com/Naeem1144" target="_blank" variant="primary" className="w-full justify-center bg-foreground text-background">
-                GitHub
+              <Button
+                href="https://github.com/Naeem1144"
+                target="_blank"
+                variant="primary"
+                size="sm"
+                className="w-[calc(100%-1rem)]"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <FaGithub className="mr-2" /> GitHub
               </Button>
             </div>
           </nav>
         </div>
       )}
-    </>
+    </header>
   );
 }

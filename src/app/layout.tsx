@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Fira_Code } from "next/font/google";
-import "./globals.css";
 import { GeistSans } from 'geist/font/sans';
 import { PerformanceMode } from '@/components/PerformanceMode';
 
@@ -41,6 +40,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={GeistSans.className}>
+      <head>
+        <link rel="stylesheet" href="/styles.css" />
+      </head>
       <body
         className={`${firaCode.variable} antialiased theme-ultra-dark`}
         suppressHydrationWarning

@@ -1,130 +1,915 @@
 @import "tailwindcss";
 
-@theme {
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-
-  @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
-  }
-  @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
-  }
-}
-
 :root {
-  /* Minimal Dark Theme (Zinc/Slate base) */
-  --background: 240 10% 3.9%;   /* #09090b - Zinc 950 */
-  --foreground: 0 0% 98%;       /* #fafafa - Zinc 50 */
-  
-  --card: 240 10% 3.9%;         /* Match bg for cleaner look, or slightly lighter */
-  --card-foreground: 0 0% 98%;
-  
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  
-  --primary: 0 0% 98%;          /* White primary for stark contrast */
-  --primary-foreground: 240 5.9% 10%;
-  
-  --secondary: 240 3.7% 15.9%;  /* Zinc 800 */
-  --secondary-foreground: 0 0% 98%;
-  
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%; /* Zinc 400 */
-  
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-  
-  --radius: 0.5rem;
+  /* Sophisticated Minimal Dark Theme - Timeless Elegance */
+  --background-light: #0f1116; /* Deep sophisticated black */
+  --foreground-light: #e8e9ed; /* Refined white text */
+  --primary-light: #6b7feb; /* Elegant indigo */
+  --secondary-light: #8b92ab; /* Subtle gray-blue */
+  --accent-light: #7c65c1; /* Sophisticated purple */
+  --card-bg-light: #16181f; /* Elevated card background */
+  --card-border-light: #252834; /* Refined subtle border */
+  --shadow-light: rgba(0, 0, 0, 0.4); /* Soft elegant shadows */
+
+  /* RGB Values for CSS color functions */
+  --primary-light-rgb: 107, 127, 235; /* RGB values for elegant indigo */
+  --accent-light-rgb: 124, 101, 193; /* RGB values for sophisticated purple */
+  --secondary-light-rgb: 139, 146, 171; /* RGB values for subtle gray-blue */
+
+  /* Additional color palette - refined and sophisticated */
+  --teal-light: #5fb3b3; /* Muted teal */
+  --teal-light-rgb: 95, 179, 179;
+  --purple-light: #b295ff; /* Soft purple */
+  --purple-light-rgb: 178, 149, 255;
+  --green-light: #88c0a4; /* Sage green */
+  --green-light-rgb: 136, 192, 164;
+  --gold-light: #d4af7a; /* Refined gold */
+  --gold-light-rgb: 212, 175, 122;
+
+  /* Additional Light Theme Colors - Elegant gradation */
+  --primary-light-50: #1a1d2e; /* Very deep indigo */
+  --primary-light-100: #242940; /* Deep indigo */
+  --primary-light-200: #3a4166; /* Medium indigo */
+  --primary-light-300: #505aa3; /* Light indigo */
+  --primary-light-700: #8598f0; /* Bright indigo */
+  --primary-light-800: #a0b0f5; /* Very bright indigo */
+  --accent-light-50: #2a243d; /* Deep purple */
+  --accent-light-100: #3c3555; /* Dark purple */
+  --accent-light-200: #564a7a; /* Medium purple */
+  --accent-light-700: #9883d5; /* Bright purple */
+  --neutral-light-100: #1a1c23; /* Very dark gray */
+  --neutral-light-200: #22242d; /* Dark gray */
+  --neutral-light-300: #2d3039; /* Medium gray */
+
+  /* Dark Theme - Sophisticated Professional Design */
+  --background-dark: #0a0c10; /* Ultra-refined black */
+  --foreground-dark: #e5e7eb; /* Elegant off-white */
+  --primary-dark: #2a2f37; /* Grayish black */
+  --secondary-dark: #94a3b8; /* Sophisticated slate */
+  --accent-dark: #8b5cf6; /* Luxurious violet */
+  --card-bg-dark: #13151a; /* Elevated card surface */
+  --card-border-dark: #1f2430; /* Subtle refined border */
+  --shadow-dark: rgba(0, 0, 0, 0.6); /* Deep elegant shadows */
+
+  /* RGB Values for CSS color functions in dark theme */
+  --primary-dark-rgb: 42, 47, 55; /* RGB for grayish black */
+  --accent-dark-rgb: 139, 92, 246; /* RGB for luxurious violet */
+  --secondary-dark-rgb: 148, 163, 184; /* RGB for sophisticated slate */
+
+  /* Additional color palette for dark mode - refined elegance */
+  --teal-dark: #2dd4bf; /* Refined teal */
+  --teal-dark-rgb: 45, 212, 191;
+  --purple-dark: #a78bfa; /* Elegant purple */
+  --purple-dark-rgb: 167, 139, 250;
+  --green-dark: #34d399; /* Refined emerald */
+  --green-dark-rgb: 52, 211, 153;
+  --gold-dark: #fbbf24; /* Sophisticated amber */
+  --gold-dark-rgb: 251, 191, 36;
+
+  /* Brand secondary (teal) to complement grayish primary */
+  --brand-secondary: #45b2b2;
+  --brand-secondary-rgb: 69, 178, 178;
+
+  /* Additional Dark Theme Colors - Refined Gradation */
+  --primary-dark-50: #0e1013; /* Ultra deep gray */
+  --primary-dark-100: #151820; /* Very deep gray */
+  --primary-dark-200: #1d2129; /* Deep gray */
+  --primary-dark-300: #252a33; /* Medium gray */
+  --primary-dark-700: #3c434f; /* Lighter gray */
+  --primary-dark-800: #4a5360; /* Lightest gray */
+  --accent-dark-50: #1a1425; /* Ultra deep violet */
+  --accent-dark-100: #2d2140; /* Very deep violet */
+  --accent-dark-200: #4c3675; /* Deep violet */
+  --accent-dark-700: #c4b5fd; /* Bright violet */
+  --accent-dark-800: #ddd6fe; /* Very bright violet */
+  --neutral-dark-100: #0d0f14; /* Ultra refined gray */
+  --neutral-dark-200: #161821; /* Very dark gray */
+  --neutral-dark-300: #1e2028; /* Dark gray */
+
+  /* Neutral (used by both themes or overridden) */
+  --font-sans: "Geist Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Fira Code", "Courier New", "Consolas", "Monaco", monospace;
+  --font-display: var(--font-sans);
+
+  /* Monospace font feature settings */
+  --font-mono-features: "kern" 1, "liga" 1, "calt" 1, "ss01" 1, "cv02" 1;
+
+  /* Consistent spacing variables - unchanged */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* Typography scale - refined for better readability */
+  --font-size-xs: 0.8125rem;   /* 13px - slightly larger for better legibility */
+  --font-size-sm: 0.9375rem;   /* 15px - improved base small size */
+  --font-size-base: 1.0625rem; /* 17px - optimal for body text readability */
+  --font-size-md: 1.1875rem;   /* 19px - better progression */
+  --font-size-lg: 1.375rem;    /* 22px - improved for subheadings */
+  --font-size-xl: 1.625rem;    /* 26px - better visual hierarchy */
+  --font-size-2xl: 2rem;       /* 32px - improved scaling */
+  --font-size-3xl: 2.5rem;     /* 40px - better progression */
+  --font-size-4xl: 3.25rem;    /* 52px - more impactful hero text */
+  --font-size-5xl: 4rem;       /* 64px - larger hero sizes */
+  --font-size-6xl: 5rem;       /* 80px - maximum impact */
+
+  /* Font weights - unchanged */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Line heights - optimized for readability */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;     /* Better for large headings */
+  --line-height-snug: 1.4;       /* Improved for subheadings */
+  --line-height-normal: 1.6;     /* Optimal for body text */
+  --line-height-relaxed: 1.75;   /* Enhanced readability for long form */
+  --line-height-loose: 2;        /* Unchanged */
+
+  /* Letter spacing - refined for better aesthetics */
+  --letter-spacing-tighter: -0.04em;  /* Less extreme for large text */
+  --letter-spacing-tight: -0.02em;    /* Subtle tightening for headings */
+  --letter-spacing-normal: 0em;       /* Unchanged */
+  --letter-spacing-wide: 0.015em;     /* Subtle spacing for body text */
+  --letter-spacing-wider: 0.04em;     /* Improved for all-caps or small text */
+  --letter-spacing-widest: 0.1em;     /* For labels and small caps */
 }
 
+/* Default to dark theme variables always */
+:root {
+  --background: var(--background-dark);
+  --foreground: var(--foreground-dark);
+  --primary: var(--primary-dark);
+  --secondary: var(--secondary-dark);
+  --accent: var(--accent-dark);
+  --card-bg: var(--card-bg-dark);
+  --card-border: var(--card-border-dark);
+  --shadow: var(--shadow-dark);
+  --primary-rgb: var(--primary-dark-rgb);
+  --accent-rgb: var(--accent-dark-rgb);
+  --secondary-rgb: var(--secondary-dark-rgb);
+  --teal: var(--teal-dark);
+  --teal-rgb: var(--teal-dark-rgb);
+  --purple: var(--purple-dark);
+  --purple-rgb: var(--purple-dark-rgb);
+  --green: var(--green-dark);
+  --green-rgb: var(--green-dark-rgb);
+  --gold: var(--gold-dark);
+  --gold-rgb: var(--gold-dark-rgb);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-subtle-strong: rgba(255, 255, 255, 0.16);
+}
 
-/* Global Resets & Typography */
 body {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  font-family: var(--font-sans), sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: var(--line-height-normal);
+  font-size: var(--font-size-base);
+  position: relative;
+  font-weight: var(--font-weight-normal);
+  letter-spacing: var(--letter-spacing-wide);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 99px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+html {
+  scroll-behavior: smooth;
 }
 
-/* Utility Classes for "Glass" but cleaner */
-.glass-panel {
-  background: rgba(24, 24, 27, 0.6); /* Zinc 900 @ 60% */
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Subtle Gradient Text */
-.text-gradient-subtle {
-  background: linear-gradient(to bottom right, #ffffff, #a1a1aa);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Container Utility */
-.container-width {
+/* Sophisticated minimal background with subtle gradient */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.25;
+  background: radial-gradient(ellipse at 50% 0%, rgba(var(--primary-rgb), 0.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 100% 50%, rgba(var(--accent-rgb), 0.05) 0%, transparent 50%),
+              radial-gradient(ellipse at 0% 50%, rgba(var(--secondary-rgb), 0.05) 0%, transparent 50%);
+}
+
+/* Elegant subtle ambient glow */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 60%;
+  background: radial-gradient(ellipse at top, rgba(var(--primary-rgb), 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Utility pattern background class used in multiple sections */
+.bg-grid-pattern {
+  background-image: linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px;
+  background-position: 0 0, 0 0;
+}
+
+/* Performance lite mode overrides */
+.perf-lite body::before,
+.perf-lite body::after {
+  display: none;
+}
+.perf-lite .bg-grid-pattern {
+  background-image: none;
+}
+.perf-lite .custom-card {
+  backdrop-filter: none;
+  box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.3);
+}
+.perf-lite .btn,
+.perf-lite .btn-outline,
+.perf-lite .btn-primary,
+.perf-lite .btn-secondary,
+.perf-lite .btn-accent {
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.perf-lite .animate-bounce,
+.perf-lite [class*="animate-"],
+.perf-lite [style*="animation"] {
+  animation: none !important;
+}
+.perf-lite [style*="backdrop-filter"],
+.perf-lite .backdrop-blur-2xl,
+.perf-lite .backdrop-blur-xl,
+.perf-lite .backdrop-blur-md,
+.perf-lite .backdrop-blur-sm {
+  backdrop-filter: none !important;
+}
+.perf-lite .motion-reduce\:transform-none {
+  transform: none !important;
+}
+
+/* Unified divider line matching glass border aesthetics */
+.divider {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, rgba(var(--brand-secondary-rgb), 0.16), transparent);
+  opacity: 0.6;
+}
+
+/* Unified glass border utility to match card outlines */
+.glass-border {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.border-subtle {
+  border: 1px solid var(--border-subtle);
+}
+
+.border-subtle-strong {
+  border: 1px solid var(--border-subtle-strong);
+}
+
+.pill-surface {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--foreground);
+}
+
+/* Input variant with glass border and subtle background */
+.glass-input {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(8px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.glass-input:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+}
+
+/* Shimmer animation used by skeletons */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.shimmer-animation {
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* Floating particles/ornaments */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* Sophisticated glassmorphic card - elegant minimal design */
+.custom-card {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1rem;
+  box-shadow:
+    0 8px 32px -8px rgba(0, 0, 0, 0.3),
+    0 1px 2px rgba(0, 0, 0, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(20px) saturate(120%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Subtle top highlight for depth */
+.custom-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  opacity: 0.5;
+}
+
+/* Minimal accent line - optional subtle top border */
+.custom-card .card-accent-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+  opacity: 0.4;
+}
+
+/* Card content divider - refined */
+.custom-card .card-divider {
+  width: 100%;
+  height: 1px;
+  margin: 1rem 0;
+  background: linear-gradient(to right,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  opacity: 0.5;
+}
+
+/* Sophisticated button styling - elegant and refined */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  padding: 0.75rem 1.75rem;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  border-radius: 0.875rem;
+  cursor: pointer;
+  overflow: hidden;
+  text-decoration: none;
+  user-select: none;
+  outline: none;
+  letter-spacing: 0.02em;
+  isolation: isolate;
+  transition: opacity 0.2s ease;
+}
+
+/* Refined primary button - no hover effects */
+.btn-primary {
+  background: linear-gradient(135deg,
+    rgba(var(--primary-rgb), 0.85) 0%,
+    rgba(var(--primary-rgb), 0.75) 100%
+  );
+  color: white;
+  border: 1px solid rgba(var(--primary-rgb), 0.16);
+  box-shadow:
+    0 4px 10px rgba(var(--primary-rgb), 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.btn-primary:active {
+  opacity: 0.9;
+}
+
+/* Refined accent button - elegant and static */
+.btn-accent {
+  background: linear-gradient(135deg,
+    rgba(var(--accent-rgb), 0.85) 0%,
+    rgba(var(--accent-rgb), 0.75) 100%
+  );
+  color: white;
+  border: 1px solid rgba(var(--accent-rgb), 0.16);
+  box-shadow:
+    0 4px 10px rgba(var(--accent-rgb), 0.18),
+    0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.btn-accent::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.01) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.btn-accent:active {
+  opacity: 0.9;
+}
+
+/* Elegant outlined button - sophisticated and static */
+.btn-outline {
+  background: rgba(var(--brand-secondary-rgb), 0.06);
+  color: var(--foreground);
+  border: 1px solid rgba(var(--brand-secondary-rgb), 0.18);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  backdrop-filter: blur(16px);
+}
+
+.btn-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(var(--brand-secondary-rgb), 0.1) 0%,
+    rgba(var(--brand-secondary-rgb), 0.06) 100%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+.btn-outline:active {
+  opacity: 0.9;
+}
+
+/* Secondary button - subtle and elegant */
+.btn-secondary {
+  background: linear-gradient(135deg,
+    rgba(var(--secondary-rgb), 0.12) 0%,
+    rgba(var(--secondary-rgb), 0.08) 100%
+  );
+  color: var(--foreground);
+  border: 1px solid rgba(var(--secondary-rgb), 0.12);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+}
+
+/* Ghost button - ultra minimal */
+.btn-ghost {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+.btn-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.02) 0%,
+    rgba(255, 255, 255, 0.005) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+.btn-secondary:active {
+  opacity: 0.9;
+}
+
+/* Disabled state for all buttons */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.3);
+}
+
+/* Focus state for accessibility */
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow:
+    0 0 0 4px rgba(var(--primary-rgb), 0.2),
+    0 4px 12px rgba(var(--primary-rgb), 0.15);
+}
+
+/* Shimmer animation utility used for skeleton overlays */
+.shimmer-animation {
+  background-size: 200% 100% !important;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Loading state for buttons */
+.btn.loading {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: button-loading-spinner 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes button-loading-spinner {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+/* Premium fade-in animation for sections */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth scale animation */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hero section gradient flow animation */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Shimmer effect animation */
+@keyframes shimmer {
+  0% { opacity: 0.5; transform: scale(0.98); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.5; transform: scale(0.98); }
+}
+
+/* Float animation for particles */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(10px, -10px) scale(1.05); }
+  50% { transform: translate(-5px, 10px) scale(0.95); }
+  75% { transform: translate(-10px, -5px) scale(1.02); }
+}
+
+/* Glass effect background for sections */
+.bg-glass-dark {
+  background: rgba(var(--background), 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Light variant for glass backgrounds (used on loading overlay) */
+.bg-glass-light {
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* Sophisticated heading styles - refined and elegant */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--foreground);
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  text-wrap: balance;
+}
+
+/* Specific heading styles */
+h1 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tighter);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-6);
+}
+
+h2 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-top: var(--space-10);
+  margin-bottom: var(--space-5);
+}
+
+h3 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
+}
+
+h4 {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-normal);
+  margin-top: var(--space-5);
+  margin-bottom: var(--space-3);
+}
+
+/* Handle consecutive headings */
+h1 + h2, h2 + h3 {
+  margin-top: var(--space-2); /* Reduce spacing between consecutive headings */
+}
+
+/* Paragraph styles for better readability */
+p {
+  margin-bottom: var(--space-5);
+  line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-wide);
+  text-wrap: pretty;
+  max-width: 75ch;
+}
+
+/* For lead/intro paragraphs */
+.lead {
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-relaxed);
+  letter-spacing: var(--letter-spacing-normal);
+  font-weight: var(--font-weight-light);
+  color: var(--foreground);
+  opacity: 0.85;
+}
+
+/* Monospace utility classes */
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: var(--font-mono-features);
+  font-variant-ligatures: normal;
+}
+
+/* Monospace text with refined spacing */
+.text-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: var(--font-mono-features);
+  letter-spacing: -0.01em;
+}
+
+/* Code-style text */
+.code-text {
+  font-family: var(--font-mono);
+  font-feature-settings: var(--font-mono-features);
+  background: rgba(var(--primary-rgb), 0.1);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  letter-spacing: -0.01em;
+}
+
+/* Responsive typography for tablets */
+@media (max-width: 768px) {
+  body {
+    font-size: 1rem;
+  }
+  
+  h1 {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-5);
+    line-height: 1.2;
+  }
+  
+  h2 {
+    font-size: var(--font-size-2xl);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+  
+  h3 {
+    font-size: var(--font-size-lg);
+    margin-top: var(--space-5);
+  }
+  
+  h4 {
+    font-size: var(--font-size-md);
+  }
+  
+  p {
+    margin-bottom: var(--space-4);
+  }
+}
+
+/* Responsive typography for mobile */
+@media (max-width: 480px) {
+  body {
+    font-size: 0.9375rem;
+  }
+  
+  h1 {
+    font-size: var(--font-size-2xl);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  
+  h2 {
+    font-size: var(--font-size-xl);
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+  }
+  
+  h3 {
+    font-size: var(--font-size-md);
+    margin-top: var(--space-4);
+  }
+  
+  h4 {
+    font-size: var(--font-size-base);
+  }
+
+  p {
+    margin-bottom: var(--space-3);
+    line-height: 1.65;
+  }
+}
+
+/* Update scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-dark-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark-300);
+}
+
+/* Handle section headings in components with custom styles */
+[class*="Section"] h2,
+[class*="section"] h2 {
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-6);
+  line-height: 1.1;
+}
+
+[class*="Section"] h3,
+[class*="section"] h3,
+[class*="Section"] h4,
+[class*="section"] h4 {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
+  line-height: 1.3;
+}
+
+/* Fix for cards with headings */
+.custom-card h3,
+.custom-card h4 {
+  margin-top: 0 !important; /* Override the default margin for card headings */
+}
+
+/* Add more vertical space between sections */
+section {
+  margin-bottom: var(--space-16);
+}
+
+/* Fix background-clip for all gradient text elements */
+[class*="bg-clip-text"],
+[class*="bg-gradient"] {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+/* Additional spacing for mobile */
+@media (max-width: 640px) {
+  [class*="Section"] h2,
+  [class*="section"] h2 {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+
+  section {
+    margin-bottom: var(--space-10);
+  }
+}
+
+/* Fix for the hero section scroll indicator */
+section a[href="#about"] {
+  position: absolute;
+  bottom: 2rem !important;
+  opacity: 1 !important;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: var(--foreground);
+}
+
+/* Animation for the bounce effect */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce {
+  animation: bounce 2s infinite;
 }
