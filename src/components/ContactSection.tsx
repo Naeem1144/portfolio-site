@@ -119,9 +119,11 @@ export function ContactSection() {
             <CardContent className="flex-1 flex flex-col p-6 md:p-8 pt-0 relative z-10">
               {submitStatus === 'success' && (
                 <div 
+                  role="alert"
+                  aria-live="polite"
                   className="flex items-start p-4 mb-6 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-300/30 dark:border-green-700/30"
                 >
-                  <FaCheckCircle className="text-green-500 dark:text-green-400 mr-3 mt-1 flex-shrink-0" size={20} />
+                  <FaCheckCircle className="text-green-500 dark:text-green-400 mr-3 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
                   <div>
                     <h4 
                       className="font-semibold text-green-700 dark:text-green-300"
@@ -147,9 +149,11 @@ export function ContactSection() {
               )}
               {submitStatus === 'error' && (
                 <div 
+                  role="alert"
+                  aria-live="assertive"
                   className="flex items-start p-4 mb-6 rounded-md bg-red-50 dark:bg-red-900/30 border border-red-300/30 dark:border-red-700/30"
                 >
-                  <FaExclamationCircle className="text-red-500 dark:text-red-400 mr-3 mt-1 flex-shrink-0" size={20} />
+                  <FaExclamationCircle className="text-red-500 dark:text-red-400 mr-3 mt-1 flex-shrink-0" size={20} aria-hidden="true" />
                   <div>
                     <h4 
                       className="font-semibold text-red-700 dark:text-red-300"
@@ -185,7 +189,7 @@ export function ContactSection() {
                         letterSpacing: 'var(--letter-spacing-wide)'
                       }}
                     >
-                      Full Name
+                      Full Name <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="text"
@@ -212,7 +216,7 @@ export function ContactSection() {
                         letterSpacing: 'var(--letter-spacing-wide)'
                       }}
                     >
-                      Email Address
+                      Email Address <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="email"
@@ -239,7 +243,7 @@ export function ContactSection() {
                         letterSpacing: 'var(--letter-spacing-wide)'
                       }}
                     >
-                      Message
+                      Message <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>
                     </label>
                     <textarea
                       id="message"
