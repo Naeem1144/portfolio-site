@@ -1,0 +1,138 @@
+
+> portfolio-site@0.1.0 dev /app
+> next dev
+
+   ▲ Next.js 15.5.9
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.2:3000
+
+ ✓ Starting...
+ ✓ Ready in 3.1s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 1278ms (114 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 15.2s (1549 modules)
+GET /users/Naeem1144 - 403 with id 8C90:15BD4A:33A3F:E1FB9:693F1181 in 315ms
+Error fetching GitHub profile: Error [HttpError]: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting
+    at <unknown> (HttpError: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting)
+    at async fetchGitHubProfile (src/lib/github.ts:76:22)
+    at async Home (src/app/page.tsx:16:19)
+  74 |
+  75 |   try {
+> 76 |     const { data } = await client.users.getByUsername({
+     |                      ^
+  77 |       username,
+  78 |     });
+  79 | {
+  status: 403,
+  request: [Object],
+  response: [Object]
+}
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+GET /users/Naeem1144/repos?type=owner&per_page=100&sort=updated - 403 with id 8C91:204C41:39D1C:FA370:693F1182 in 827ms
+Error fetching fallback GitHub repos: Error [HttpError]: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting
+    at <unknown> (HttpError: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting)
+    at async fetchFallbackRepos (src/lib/github.ts:131:22)
+    at async Home (src/app/page.tsx:17:17)
+  129 |
+  130 |   try {
+> 131 |     const { data } = await client.repos.listForUser({
+      |                      ^
+  132 |       username,
+  133 |       type: 'owner',
+  134 |       per_page: 100, {
+  status: 403,
+  request: [Object],
+  response: [Object]
+}
+ GET / 200 in 17837ms
+ ○ Compiling /api/contact ...
+ ✓ Compiled /api/contact in 1563ms (1600 modules)
+Error sending email: Error: Recipient email not configured
+    at createContactEmail (src/lib/email.ts:61:11)
+    at POST (src/app/api/contact/route.ts:17:41)
+  59 |
+  60 |   if (!recipientEmail) {
+> 61 |     throw new Error('Recipient email not configured');
+     |           ^
+  62 |   }
+  63 |
+  64 |   return {
+ POST /api/contact 500 in 2016ms
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 510ms
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 1361ms
+ ⨯ [Error: aborted]
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 4.1s (1858 modules)
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 1196ms
+GET /users/Naeem1144 - 403 with id 8C90:15BD4A:5E5A7:1993C7:693F1241 in 122ms
+Error fetching GitHub profile: Error [HttpError]: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting
+    at <unknown> (HttpError: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting)
+    at async fetchGitHubProfile (src/lib/github.ts:76:22)
+    at async Home (src/app/page.tsx:16:19)
+  74 |
+  75 |   try {
+> 76 |     const { data } = await client.users.getByUsername({
+     |                      ^
+  77 |       username,
+  78 |     });
+  79 | {
+  status: 403,
+  request: [Object],
+  response: [Object]
+}
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+GET /users/Naeem1144/repos?type=owner&per_page=100&sort=updated - 403 with id 8C91:204C41:6602E:1B7EC8:693F1241 in 95ms
+Error fetching fallback GitHub repos: Error [HttpError]: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting
+    at <unknown> (HttpError: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting)
+    at async fetchFallbackRepos (src/lib/github.ts:131:22)
+    at async Home (src/app/page.tsx:17:17)
+  129 |
+  130 |   try {
+> 131 |     const { data } = await client.repos.listForUser({
+      |                      ^
+  132 |       username,
+  133 |       type: 'owner',
+  134 |       per_page: 100, {
+  status: 403,
+  request: [Object],
+  response: [Object]
+}
+ GET / 200 in 446ms
+GET /users/Naeem1144 - 403 with id 8C92:2225B8:0E1D:3CAB:693F1270 in 124ms
+Error fetching GitHub profile: Error [HttpError]: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting
+    at <unknown> (HttpError: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting)
+    at async fetchGitHubProfile (src/lib/github.ts:76:22)
+    at async Home (src/app/page.tsx:16:19)
+  74 |
+  75 |   try {
+> 76 |     const { data } = await client.users.getByUsername({
+     |                      ^
+  77 |       username,
+  78 |     });
+  79 | {
+  status: 403,
+  request: [Object],
+  response: [Object]
+}
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+GET /users/Naeem1144/repos?type=owner&per_page=100&sort=updated - 403 with id 8C93:2A1D20:84CFA:23B9F8:693F1270 in 96ms
+Error fetching fallback GitHub repos: Error [HttpError]: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting
+    at <unknown> (HttpError: API rate limit exceeded for 34.46.237.233. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.) - https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting)
+    at async fetchFallbackRepos (src/lib/github.ts:131:22)
+    at async Home (src/app/page.tsx:17:17)
+  129 |
+  130 |   try {
+> 131 |     const { data } = await client.repos.listForUser({
+      |                      ^
+  132 |       username,
+  133 |       type: 'owner',
+  134 |       per_page: 100, {
+  status: 403,
+  request: [Object],
+  response: [Object]
+}
+ GET / 200 in 428ms
