@@ -3,6 +3,7 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'; // Using Card sub-components
 import { Button } from './ui/Button';
+import { LoadingSpinner } from './ui/Loading';
 import { FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 interface FormData {
@@ -120,6 +121,8 @@ export function ContactSection() {
               {submitStatus === 'success' && (
                 <div 
                   className="flex items-start p-4 mb-6 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-300/30 dark:border-green-700/30"
+                  role="alert"
+                  aria-live="polite"
                 >
                   <FaCheckCircle className="text-green-500 dark:text-green-400 mr-3 mt-1 flex-shrink-0" size={20} />
                   <div>
@@ -148,6 +151,8 @@ export function ContactSection() {
               {submitStatus === 'error' && (
                 <div 
                   className="flex items-start p-4 mb-6 rounded-md bg-red-50 dark:bg-red-900/30 border border-red-300/30 dark:border-red-700/30"
+                  role="alert"
+                  aria-live="assertive"
                 >
                   <FaExclamationCircle className="text-red-500 dark:text-red-400 mr-3 mt-1 flex-shrink-0" size={20} />
                   <div>
@@ -174,7 +179,7 @@ export function ContactSection() {
                 </div>
               )}
               
-              <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
+              <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col" aria-busy={isSubmitting}>
                 <div className="space-y-6 flex-1">
                   <div className="group">
                     <label 
@@ -195,7 +200,7 @@ export function ContactSection() {
                       onChange={handleChange}
                       required
                       placeholder="Your Name"
-                      className="w-full px-4 py-3 rounded-lg glass-input outline-none"
+                      className="w-full px-4 py-3 rounded-lg glass-input outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                       style={{
                         fontSize: 'var(--font-size-base)',
                         letterSpacing: 'var(--letter-spacing-wide)'
@@ -222,7 +227,7 @@ export function ContactSection() {
                       onChange={handleChange}
                       required
                       placeholder="your.email@example.com"
-                      className="w-full px-4 py-3 rounded-lg glass-input outline-none"
+                      className="w-full px-4 py-3 rounded-lg glass-input outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                       style={{
                         fontSize: 'var(--font-size-base)',
                         letterSpacing: 'var(--letter-spacing-wide)'
@@ -249,7 +254,7 @@ export function ContactSection() {
                       required
                       rows={5}
                       placeholder="How can I help you?"
-                      className="w-full h-full min-h-[120px] px-4 py-3 rounded-lg glass-input outline-none resize-none"
+                      className="w-full h-full min-h-[120px] px-4 py-3 rounded-lg glass-input outline-none resize-none focus:ring-2 focus:ring-primary/50 transition-all"
                       style={{
                         fontSize: 'var(--font-size-base)',
                         letterSpacing: 'var(--letter-spacing-wide)',
@@ -266,25 +271,16 @@ export function ContactSection() {
                   className="w-full sm:w-auto mt-auto rounded-lg"
                   disabled={isSubmitting}
                 >
-                  <span className="flex items-center">
+                  <span className="flex items-center gap-2">
                   {isSubmitting ? (
-                    <span className="flex items-center">
-                      <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
-                        <span
-                          className="block h-3 w-3 rounded-full border-2"
-                          style={{
-                            borderColor: 'var(--border-subtle)',
-                            borderTopColor: 'rgba(var(--primary-rgb), 0.85)',
-                            animation: 'spin 0.8s linear infinite'
-                          }}
-                        />
-                      </span>
-                      Sending...
-                    </span>
+                    <>
+                      <LoadingSpinner size="sm" />
+                      <span>Sending...</span>
+                    </>
                   ) : (
                       <>
-                        <FaPaperPlane className="mr-2" /> 
-                        Send Message
+                        <FaPaperPlane />
+                        <span>Send Message</span>
                       </>
                   )}
                   </span>
