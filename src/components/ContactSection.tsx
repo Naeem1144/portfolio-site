@@ -11,6 +11,8 @@ interface FormData {
   message: string;
 }
 
+const MAX_MESSAGE_LENGTH = 1000;
+
 export function ContactSection() {
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -247,8 +249,10 @@ export function ContactSection() {
                       value={formData.message}
                       onChange={handleChange}
                       required
+                      maxLength={MAX_MESSAGE_LENGTH}
                       rows={5}
                       placeholder="How can I help you?"
+                      aria-describedby="message-counter"
                       className="w-full h-full min-h-[120px] px-4 py-3 rounded-lg glass-input outline-none resize-none"
                       style={{
                         fontSize: 'var(--font-size-base)',
@@ -256,6 +260,15 @@ export function ContactSection() {
                         lineHeight: 'var(--line-height-relaxed)'
                       }}
                     />
+                    <div
+                      id="message-counter"
+                      className={`text-right mt-1 transition-colors ${
+                        formData.message.length >= MAX_MESSAGE_LENGTH ? "text-red-500 font-medium" : "text-foreground/50"
+                      }`}
+                      style={{ fontSize: 'var(--font-size-xs)' }}
+                    >
+                      {formData.message.length} / {MAX_MESSAGE_LENGTH}
+                    </div>
                   </div>
                 </div>
                 
