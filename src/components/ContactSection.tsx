@@ -264,29 +264,12 @@ export function ContactSection() {
                   variant="primary" 
                   size="lg" 
                   className="w-full sm:w-auto mt-auto rounded-lg"
-                  disabled={isSubmitting}
+                  loading={isSubmitting}
+                  loadingText="Sending..."
                 >
                   <span className="flex items-center">
-                  {isSubmitting ? (
-                    <span className="flex items-center">
-                      <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
-                        <span
-                          className="block h-3 w-3 rounded-full border-2"
-                          style={{
-                            borderColor: 'var(--border-subtle)',
-                            borderTopColor: 'rgba(var(--primary-rgb), 0.85)',
-                            animation: 'spin 0.8s linear infinite'
-                          }}
-                        />
-                      </span>
-                      Sending...
-                    </span>
-                  ) : (
-                      <>
-                        <FaPaperPlane className="mr-2" /> 
-                        Send Message
-                      </>
-                  )}
+                    <FaPaperPlane className="mr-2" />
+                    Send Message
                   </span>
                 </Button>
               </form>

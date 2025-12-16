@@ -3,21 +3,24 @@
 import React from 'react';
 import Link from 'next/link';
 import { useHarmonicScroll } from '@/hooks/useHarmonicScroll';
+import { LoadingSpinner } from './Loading';
 
 interface ButtonProps {
   children: React.ReactNode;
   href?: string;
-  variant?: 'primary' | 'outline' | 'secondary' | 'ghost' | 'link'; // Added more common variants
-  size?: 'sm' | 'md' | 'lg' | 'icon'; // Added icon size
+  variant?: 'primary' | 'outline' | 'secondary' | 'ghost' | 'link';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
   className?: string;
   onClick?: () => void;
   target?: string;
-  rel?: string; // Added rel for external links
+  rel?: string;
   download?: boolean;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
-  ariaLabel?: string; // For accessibility
-  mono?: boolean; // Use monospace font
+  loading?: boolean;
+  loadingText?: string;
+  ariaLabel?: string;
+  mono?: boolean;
 }
 
 export function Button({
@@ -32,6 +35,8 @@ export function Button({
   download,
   type = 'button',
   disabled = false,
+  loading = false,
+  loadingText,
   ariaLabel,
   mono = false,
 }: ButtonProps) {
@@ -82,15 +87,33 @@ export function Button({
     ${className}
   `.trim();
 
-  const commonProps = {
+  // Props common to both button and anchor
+  const sharedProps = {
     className: combinedClasses,
     style: sizeStyles[size],
-    disabled,
     "aria-label": ariaLabel,
+    "aria-busy": loading ? true : undefined,
   };
 
-  // Handle internal link scrolling
+  const renderContent = () => {
+    if (loading) {
+      return (
+        <span className="flex items-center gap-2">
+          <LoadingSpinner size="xs" />
+          {loadingText || children}
+        </span>
+      );
+    }
+    return children;
+  };
+
+  // Handle click events, including preventing default when loading or disabled
   const handleClick = (e: React.MouseEvent) => {
+    if (loading || disabled) {
+      e.preventDefault();
+      return;
+    }
+
     if (onClick) {
       onClick();
     }
@@ -103,15 +126,20 @@ export function Button({
   };
 
   if (href) {
+    const linkProps = {
+      ...sharedProps,
+      "aria-disabled": disabled || loading ? true : undefined,
+    };
+
     // For internal hash links, use the harmonic scroll
     if (href.startsWith('#')) {
       return (
         <a 
           href={href}
           onClick={handleClick}
-          {...commonProps}
+          {...linkProps}
         >
-          {children}
+          {renderContent()}
         </a>
       );
     }
@@ -121,19 +149,24 @@ export function Button({
       <Link 
         href={href} 
         target={target}
-        rel={target === '_blank' ? 'noopener noreferrer' : rel} // Set rel for target blank
+        rel={target === '_blank' ? 'noopener noreferrer' : rel}
         download={download}
-        {...commonProps}
-        onClick={onClick}
+        {...linkProps}
+        onClick={handleClick}
       >
-        {children}
+        {renderContent()}
       </Link>
     );
   }
   
   return (
-    <button type={type} onClick={onClick} {...commonProps}>
-      {children}
+    <button
+      type={type}
+      onClick={handleClick}
+      disabled={disabled || loading}
+      {...sharedProps}
+    >
+      {renderContent()}
     </button>
   );
 }
