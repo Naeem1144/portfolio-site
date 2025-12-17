@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useHarmonicScroll } from '@/hooks/useHarmonicScroll';
+import { LoadingSpinner } from './Loading';
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -16,6 +17,8 @@ interface ButtonProps {
   download?: boolean;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
+  loading?: boolean;
+  loadingText?: string;
   ariaLabel?: string; // For accessibility
   mono?: boolean; // Use monospace font
 }
@@ -32,6 +35,8 @@ export function Button({
   download,
   type = 'button',
   disabled = false,
+  loading = false,
+  loadingText,
   ariaLabel,
   mono = false,
 }: ButtonProps) {
@@ -85,9 +90,21 @@ export function Button({
   const commonProps = {
     className: combinedClasses,
     style: sizeStyles[size],
-    disabled,
+    disabled: disabled || loading,
     "aria-label": ariaLabel,
+    "aria-busy": loading ? true : undefined,
   };
+
+  const spinnerSize = size === 'sm' ? 'sm' : 'md';
+
+  const content = loading ? (
+    <>
+      <LoadingSpinner size={spinnerSize} className="mr-2" />
+      {loadingText || children}
+    </>
+  ) : (
+    children
+  );
 
   // Handle internal link scrolling
   const handleClick = (e: React.MouseEvent) => {
@@ -111,7 +128,7 @@ export function Button({
           onClick={handleClick}
           {...commonProps}
         >
-          {children}
+          {content}
         </a>
       );
     }
@@ -126,14 +143,14 @@ export function Button({
         {...commonProps}
         onClick={onClick}
       >
-        {children}
+        {content}
       </Link>
     );
   }
   
   return (
     <button type={type} onClick={onClick} {...commonProps}>
-      {children}
+      {content}
     </button>
   );
 }
