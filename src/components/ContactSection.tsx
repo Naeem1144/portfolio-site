@@ -3,6 +3,7 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'; // Using Card sub-components
 import { Button } from './ui/Button';
+import { LoadingSpinner } from './ui/Loading';
 import { FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 interface FormData {
@@ -119,6 +120,7 @@ export function ContactSection() {
             <CardContent className="flex-1 flex flex-col p-6 md:p-8 pt-0 relative z-10">
               {submitStatus === 'success' && (
                 <div 
+                  role="status"
                   className="flex items-start p-4 mb-6 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-300/30 dark:border-green-700/30"
                 >
                   <FaCheckCircle className="text-green-500 dark:text-green-400 mr-3 mt-1 flex-shrink-0" size={20} />
@@ -147,6 +149,7 @@ export function ContactSection() {
               )}
               {submitStatus === 'error' && (
                 <div 
+                  role="alert"
                   className="flex items-start p-4 mb-6 rounded-md bg-red-50 dark:bg-red-900/30 border border-red-300/30 dark:border-red-700/30"
                 >
                   <FaExclamationCircle className="text-red-500 dark:text-red-400 mr-3 mt-1 flex-shrink-0" size={20} />
@@ -268,17 +271,8 @@ export function ContactSection() {
                 >
                   <span className="flex items-center">
                   {isSubmitting ? (
-                    <span className="flex items-center">
-                      <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
-                        <span
-                          className="block h-3 w-3 rounded-full border-2"
-                          style={{
-                            borderColor: 'var(--border-subtle)',
-                            borderTopColor: 'rgba(var(--primary-rgb), 0.85)',
-                            animation: 'spin 0.8s linear infinite'
-                          }}
-                        />
-                      </span>
+                    <span className="flex items-center gap-2">
+                      <LoadingSpinner size="sm" />
                       Sending...
                     </span>
                   ) : (
