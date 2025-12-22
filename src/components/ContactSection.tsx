@@ -189,6 +189,7 @@ export function ContactSection() {
                       }}
                     >
                       Full Name
+                      <span className="text-red-500/80 dark:text-red-400/80 ml-1" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="text"
@@ -216,6 +217,7 @@ export function ContactSection() {
                       }}
                     >
                       Email Address
+                      <span className="text-red-500/80 dark:text-red-400/80 ml-1" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="email"
@@ -233,17 +235,29 @@ export function ContactSection() {
                     />
                   </div>
                   
-                  <div className="group flex-1">
-                    <label 
-                      htmlFor="message" 
-                      className="block font-medium text-foreground/80 mb-2 transition-colors"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    >
-                      Message
-                    </label>
+                  <div className="group flex-1 flex flex-col">
+                    <div className="flex justify-between items-center mb-2">
+                      <label
+                        htmlFor="message"
+                        className="block font-medium text-foreground/80 transition-colors"
+                        style={{
+                          fontSize: 'var(--font-size-sm)',
+                          letterSpacing: 'var(--letter-spacing-wide)'
+                        }}
+                      >
+                        Message
+                        <span className="text-red-500/80 dark:text-red-400/80 ml-1" aria-hidden="true">*</span>
+                      </label>
+                      <span
+                        className={`text-xs transition-colors ${
+                          formData.message.length > 500
+                            ? 'text-red-500/80'
+                            : 'text-foreground/40'
+                        }`}
+                      >
+                        {formData.message.length} chars
+                      </span>
+                    </div>
                     <textarea
                       id="message"
                       name="message"
