@@ -5,27 +5,45 @@ const username = 'Naeem1144';
 
 const githubToken = process.env.GITHUB_TOKEN;
 
-const publicOctokit = new Octokit();
-const authenticatedOctokit = githubToken
-  ? new Octokit({
+// Lazy initialization of Octokit clients
+let publicOctokit: Octokit | null = null;
+let authenticatedOctokit: Octokit | null = null;
+let graphqlWithAuth: typeof graphql | null = null;
+
+function getPublicOctokit(): Octokit {
+  if (!publicOctokit) {
+    publicOctokit = new Octokit();
+  }
+  return publicOctokit;
+}
+
+function getAuthenticatedOctokit(): Octokit | null {
+  if (!githubToken) return null;
+  if (!authenticatedOctokit) {
+    authenticatedOctokit = new Octokit({
       auth: githubToken,
-    })
-  : null;
+    });
+  }
+  return authenticatedOctokit;
+}
+
+function getGraphqlWithAuth(): typeof graphql | null {
+  if (!githubToken) return null;
+  if (!graphqlWithAuth) {
+    graphqlWithAuth = graphql.defaults({
+      headers: {
+        authorization: `Bearer ${githubToken}`,
+      },
+    });
+  }
+  return graphqlWithAuth;
+}
 
 const EXCLUDED_REPOS = ['portfolio-site', 'Naeem1144'];
 
 function isRepoExcluded(name: string) {
   return EXCLUDED_REPOS.some(repo => repo.toLowerCase() === name.toLowerCase());
 }
-
-// Lazily create GraphQL client only when a token is configured
-const graphqlWithAuth = githubToken
-  ? graphql.defaults({
-      headers: {
-        authorization: `Bearer ${githubToken}`,
-      },
-    })
-  : null;
 
 interface GitHubProfile {
   name: string;
@@ -68,15 +86,39 @@ interface GraphQLResponse {
   };
 }
 
+// Helper function to handle auth retry logic
+async function withAuthRetry<T>(
+  authenticatedFn: (client: Octokit) => Promise<T>,
+  publicFn: (client: Octokit) => Promise<T>,
+  errorContext: string
+): Promise<T | null> {
+  const authClient = getAuthenticatedOctokit();
+  const publicClient = getPublicOctokit();
+  
+  try {
+    return await (authClient ? authenticatedFn(authClient) : publicFn(publicClient));
+  } catch (error: unknown) {
+    const errorWithStatus = error as { status?: number };
+    if ((errorWithStatus?.status === 401 || errorWithStatus?.status === 403) && authClient) {
+      console.warn(`${errorContext} failed with provided token. Retrying without authentication.`);
+      
+      try {
+        return await publicFn(publicClient);
+      } catch (publicError) {
+        console.error(`${errorContext} without authentication:`, publicError);
+        return null;
+      }
+    }
+    
+    console.error(`${errorContext}:`, error);
+    return null;
+  }
+}
+
 // Function to fetch user profile data
 export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
-  const client = authenticatedOctokit ?? publicOctokit;
-
-  try {
-    const { data } = await client.users.getByUsername({
-      username,
-    });
-
+  const fetchProfile = async (client: Octokit): Promise<GitHubProfile> => {
+    const { data } = await client.users.getByUsername({ username });
     return {
       name: data.name || username,
       bio: data.bio || '',
@@ -90,54 +132,17 @@ export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
       publicRepos: data.public_repos,
       htmlUrl: data.html_url,
     };
-  } catch (error: unknown) {
-    const errorWithStatus = error as { status?: number };
-    if ((errorWithStatus?.status === 401 || errorWithStatus?.status === 403) && authenticatedOctokit) {
-      console.warn('GitHub profile request failed with provided token. Retrying without authentication.');
+  };
 
-      try {
-        const { data } = await publicOctokit.users.getByUsername({
-          username,
-        });
-
-        return {
-          name: data.name || username,
-          bio: data.bio || '',
-          avatarUrl: data.avatar_url,
-          followers: data.followers,
-          following: data.following,
-          location: data.location || '',
-          company: data.company || '',
-          blog: data.blog || '',
-          twitterUsername: data.twitter_username || '',
-          publicRepos: data.public_repos,
-          htmlUrl: data.html_url,
-        };
-      } catch (publicError) {
-        console.error('Error fetching GitHub profile without authentication:', publicError);
-        return null;
-      }
-    }
-
-    console.error('Error fetching GitHub profile:', error);
-    return null;
-  }
+  return withAuthRetry(
+    fetchProfile,
+    fetchProfile,
+    'Error fetching GitHub profile'
+  );
 }
 
 async function fetchFallbackRepos() {
-  const client = authenticatedOctokit ?? publicOctokit;
-
-  try {
-    const { data } = await client.repos.listForUser({
-      username,
-      type: 'owner',
-      per_page: 100,
-      sort: 'updated',
-      mediaType: {
-        previews: ['mercy'],
-      },
-    });
-
+  const processRepos = (data: Awaited<ReturnType<Octokit['repos']['listForUser']>>['data']) => {
     const topRepos = data
       .filter(repo => !repo.fork)
       .filter(repo => !isRepoExcluded(repo.name))
@@ -154,52 +159,35 @@ async function fetchFallbackRepos() {
       homepage: repo.homepage || '',
       topics: repo.topics ?? [],
     }));
-  } catch (error: unknown) {
-    const errorWithStatus = error as { status?: number };
-    if ((errorWithStatus?.status === 401 || errorWithStatus?.status === 403) && authenticatedOctokit) {
-      console.warn('GitHub REST API returned an authorization error. Retrying without authentication.');
+  };
 
-      try {
-        const { data } = await publicOctokit.repos.listForUser({
-          username,
-          type: 'owner',
-          per_page: 100,
-          sort: 'updated',
-          mediaType: {
-            previews: ['mercy'],
-          },
-        });
+  const fetchRepos = async (client: Octokit) => {
+    const { data } = await client.repos.listForUser({
+      username,
+      type: 'owner',
+      per_page: 100,
+      sort: 'updated',
+      mediaType: {
+        previews: ['mercy'],
+      },
+    });
+    return processRepos(data);
+  };
 
-        const topRepos = data
-          .filter(repo => !repo.fork)
-          .filter(repo => !isRepoExcluded(repo.name))
-          .sort((a, b) => (b.stargazers_count ?? 0) - (a.stargazers_count ?? 0))
-          .slice(0, 6);
+  const result = await withAuthRetry(
+    fetchRepos,
+    fetchRepos,
+    'Error fetching fallback GitHub repos'
+  );
 
-        return topRepos.map(repo => ({
-          name: repo.name,
-          description: repo.description || '',
-          htmlUrl: repo.html_url,
-          stars: repo.stargazers_count,
-          forks: repo.forks_count,
-          language: repo.language,
-          homepage: repo.homepage || '',
-          topics: repo.topics ?? [],
-        }));
-      } catch (publicError) {
-        console.error('Error fetching fallback GitHub repos without authentication:', publicError);
-        return [];
-      }
-    }
-
-    console.error('Error fetching fallback GitHub repos:', error);
-    return [];
-  }
+  return result ?? [];
 }
 
 // Function to fetch pinned repositories using GraphQL when possible, otherwise fall back
 export async function fetchPinnedRepos() {
-  if (!graphqlWithAuth) {
+  const graphqlClient = getGraphqlWithAuth();
+  
+  if (!graphqlClient) {
     console.warn('GITHUB_TOKEN is not configured. Falling back to public repository data.');
     return fetchFallbackRepos();
   }
@@ -234,7 +222,7 @@ export async function fetchPinnedRepos() {
       }
     `;
 
-    const response = await graphqlWithAuth<GraphQLResponse>(query);
+    const response = await graphqlClient<GraphQLResponse>(query);
     const pinnedRepos = response.user.pinnedItems.nodes;
 
     return pinnedRepos
