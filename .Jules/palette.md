@@ -1,3 +1,3 @@
-## 2024-05-23 - Dynamic Form Feedback
-**Learning:** Dynamic success/error messages inserted into the DOM are not announced by screen readers unless they have appropriate roles.
-**Action:** Always add `role="alert"` to error containers and `role="status"` to success/notification containers to ensure immediate announcement.
+## 2024-05-24 - Missing Required Field Indicators
+**Learning:** Users with cognitive disabilities (and everyone else) benefit from explicit visual cues for required fields, even if the form logic enforces it. Relying solely on browser validation or color coding isn't enough.
+**Action:** Always include a visual indicator (like a red asterisk) for required fields, and ensure it's hidden from screen readers (`aria-hidden="true"`) if the input already has the `required` attribute to avoid redundancy.
