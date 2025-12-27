@@ -188,7 +188,7 @@ export function ContactSection() {
                         letterSpacing: 'var(--letter-spacing-wide)'
                       }}
                     >
-                      Full Name
+                      Full Name <span className="text-red-500 dark:text-red-400 ml-0.5" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="text"
@@ -215,7 +215,7 @@ export function ContactSection() {
                         letterSpacing: 'var(--letter-spacing-wide)'
                       }}
                     >
-                      Email Address
+                      Email Address <span className="text-red-500 dark:text-red-400 ml-0.5" aria-hidden="true">*</span>
                     </label>
                     <input
                       type="email"
@@ -242,7 +242,7 @@ export function ContactSection() {
                         letterSpacing: 'var(--letter-spacing-wide)'
                       }}
                     >
-                      Message
+                      Message <span className="text-red-500 dark:text-red-400 ml-0.5" aria-hidden="true">*</span>
                     </label>
                     <textarea
                       id="message"
