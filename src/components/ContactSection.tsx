@@ -3,7 +3,6 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'; // Using Card sub-components
 import { Button } from './ui/Button';
-import { LoadingSpinner } from './ui/Loading';
 import { FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 interface FormData {
@@ -267,21 +266,11 @@ export function ContactSection() {
                   variant="primary" 
                   size="lg" 
                   className="w-full sm:w-auto mt-auto rounded-lg"
-                  disabled={isSubmitting}
+                  loading={isSubmitting}
+                  loadingText="Sending..."
                 >
-                  <span className="flex items-center">
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <LoadingSpinner size="sm" />
-                      Sending...
-                    </span>
-                  ) : (
-                      <>
-                        <FaPaperPlane className="mr-2" /> 
-                        Send Message
-                      </>
-                  )}
-                  </span>
+                  <FaPaperPlane className="mr-2" />
+                  Send Message
                 </Button>
               </form>
             </CardContent>
