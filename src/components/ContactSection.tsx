@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { FaCheckCircle, FaExclamationCircle, FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 import { FiSend } from 'react-icons/fi';
 import { Button } from './ui/Button';
+import { LoadingSpinner } from './ui/Loading';
 
 interface FormData {
   name: string;
@@ -172,6 +173,7 @@ export function ContactSection() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-6 p-4 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20"
+                role="status"
               >
                 <div className="flex items-center gap-3">
                   <FaCheckCircle className="w-5 h-5 text-[var(--accent)] flex-shrink-0" />
@@ -188,6 +190,7 @@ export function ContactSection() {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20"
+                role="alert"
               >
                 <div className="flex items-center gap-3">
                   <FaExclamationCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
@@ -203,7 +206,7 @@ export function ContactSection() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-[var(--foreground)] mb-2">
-                    Name
+                    Name <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>
                   </label>
                   <input
                     type="text"
@@ -218,7 +221,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-[var(--foreground)] mb-2">
-                    Email
+                    Email <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>
                   </label>
                   <input
                     type="email"
@@ -236,7 +239,7 @@ export function ContactSection() {
               {/* Message */}
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-[var(--foreground)] mb-2">
-                  Message
+                  Message <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>
                 </label>
                 <textarea
                   id="message"
@@ -260,11 +263,7 @@ export function ContactSection() {
               >
                 {isSubmitting ? (
                   <>
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      className="w-4 h-4 border-2 border-[var(--background)] border-t-transparent rounded-full"
-                    />
+                    <LoadingSpinner size="sm" className="border-t-[var(--background)] border-[var(--background)]/30" />
                     Sending...
                   </>
                 ) : (
