@@ -1,52 +1,83 @@
 "use client";
 
 import React from 'react';
-import { Card, CardContent } from './ui/Card';
+import { motion } from 'framer-motion';
+import { FiTarget, FiBookOpen, FiAward } from 'react-icons/fi';
+
+const highlights = [
+  {
+    icon: FiTarget,
+    title: "Mission-Driven",
+    description: "Passionate about leveraging data to uncover insights, solve real-world challenges, and empower businesses with actionable intelligence."
+  },
+  {
+    icon: FiBookOpen,
+    title: "Continuous Learner",
+    description: "Started coding in C++ as a child, and since 2019, I've been dedicated to mastering data science through certifications, coursework, and hands-on projects."
+  },
+  {
+    icon: FiAward,
+    title: "Ready to Excel",
+    description: "While early in my career, I bring dedication, deep knowledge, and a relentless drive to deliver exceptional value and impactful outcomes."
+  }
+];
+
 export function MoreAboutMeSection() {
   return (
-    <div
-      className="w-full h-full"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
     >
-      <Card 
-        className="custom-card h-full flex flex-col overflow-hidden"
-      >
-        <CardContent className="flex-1 flex flex-col justify-center p-8 relative z-10">
-          <div className="space-y-6 relative">
-            <p 
-              className="text-foreground/70 font-light max-w-none mx-auto"
-              style={{
-                fontSize: 'var(--font-size-base)',
-                lineHeight: 'var(--line-height-relaxed)',
-                letterSpacing: 'var(--letter-spacing-wide)',
-                textWrap: 'pretty'
-              }}
-            >
-            As a 21-year-old aspiring data scientist and analyst, I am deeply passionate about leveraging data to uncover impactful insights, address real-world challenges, and empower businesses with actionable intelligence. My robust foundation in data science, programming, statistics, and mathematics equips me to tackle projects with analytical rigor and a commitment to delivering meaningful results.</p>
-            <div className="w-16 mx-auto divider opacity-50"></div>
-            <p 
-              className="text-foreground/70 font-light max-w-none mx-auto"
-              style={{
-                fontSize: 'var(--font-size-base)',
-                lineHeight: 'var(--line-height-relaxed)',
-                letterSpacing: 'var(--letter-spacing-wide)',
-                textWrap: 'pretty'
-              }}
-            >
-            My journey in technology began as a child, captivated by programming in C++ on my father&apos;s laptop. This early curiosity blossomed into a profound appreciation for the transformative power of technology and data. Since 2019, I have dedicated myself to continuous growth in the field, earning multiple certifications, engaging in advanced coursework, and immersing myself in hands-on projects across diverse real-world scenarios. By actively participating in the data science community, I consistently hone my skills and contribute to the field&apos;s advancement.</p>
-            <div className="w-16 mx-auto divider opacity-50"></div>
-            <p 
-              className="text-foreground/70 font-light max-w-none mx-auto"
-              style={{
-                fontSize: 'var(--font-size-base)',
-                lineHeight: 'var(--line-height-relaxed)',
-                letterSpacing: 'var(--letter-spacing-wide)',
-                textWrap: 'pretty'
-              }}
-            >
-            While I may not yet have extensive corporate experience, I bring an abundance of dedication, knowledge, and a relentless drive to excel. I am eager to contribute my expertise and enthusiasm to any organization, delivering exceptional value and impactful outcomes.</p>
+      <div className="card">
+        <div className="card-content p-6">
+          {/* Intro paragraph */}
+          <p className="text-[var(--foreground-muted)] leading-relaxed mb-6">
+            As a <span className="text-[var(--foreground)] font-medium">21-year-old aspiring data scientist</span>, 
+            I combine a robust foundation in programming, statistics, and mathematics with a genuine passion 
+            for turning complex data into meaningful stories. My journey began with childhood curiosity 
+            and has evolved into a dedicated pursuit of excellence in the field.
+          </p>
+
+          {/* Highlights */}
+          <div className="space-y-3">
+            {highlights.map((item, index) => (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 * (index + 1) }}
+                className="flex gap-3 p-3 rounded-xl bg-[var(--background-elevated)] border border-[var(--border)]"
+              >
+                <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-[var(--accent)]/10 
+                  flex items-center justify-center">
+                  <item.icon className="w-4 h-4 text-[var(--accent)]" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-[var(--foreground)] text-sm mb-0.5">
+                    {item.title}
+                  </h4>
+                  <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </CardContent>
-      </Card>
-    </div>
+
+          {/* Quote */}
+          <div className="mt-5 pt-5 border-t border-[var(--border)]">
+            <blockquote className="pl-3 border-l-2 border-[var(--accent)]">
+              <p className="text-sm italic text-[var(--foreground-muted)]">
+                &ldquo;I believe in the power of data to transform businesses and create meaningful impact. 
+                Every dataset tells a story waiting to be discovered.&rdquo;
+              </p>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 }

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/Card'; // Using Card sub-components
+import { motion } from 'framer-motion';
+import { FaCheckCircle, FaExclamationCircle, FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
+import { FiSend } from 'react-icons/fi';
 import { Button } from './ui/Button';
-import { LoadingSpinner } from './ui/Loading';
-import { FaPaperPlane, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
 
 interface FormData {
   name: string;
@@ -12,282 +12,272 @@ interface FormData {
   message: string;
 }
 
+const contactLinks = [
+  {
+    icon: FaEnvelope,
+    label: 'Email',
+    value: 'aknaeem246@gmail.com',
+    href: 'mailto:aknaeem246@gmail.com',
+  },
+  {
+    icon: FaLinkedin,
+    label: 'LinkedIn',
+    value: '/in/naeemnagori',
+    href: 'https://www.linkedin.com/in/naeemnagori/',
+  },
+  {
+    icon: FaGithub,
+    label: 'GitHub',
+    value: '/Naeem1144',
+    href: 'https://github.com/Naeem1144',
+  },
+];
+
 export function ContactSection() {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     message: '',
   });
-  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-  
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-  
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
-    
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Form submission error:', errorData);
-        throw new Error(errorData.error || 'Failed to send message');
-      }
-      
+      if (!response.ok) throw new Error('Failed to send message');
+
       setSubmitStatus('success');
       setFormData({ name: '', email: '', message: '' });
+      setTimeout(() => setSubmitStatus('idle'), 5000);
     } catch (error) {
       console.error('Error submitting form:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
-      // Reset success status after a few seconds
-      if (submitStatus === 'success') {
-        setTimeout(() => setSubmitStatus('idle'), 7000);
-      }
     }
   };
 
   return (
-    <div
-      className="w-full"
-    >
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[500px] h-[500px] bg-gradient-radial from-primary/10 via-accent/5 to-transparent rounded-full opacity-50 blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/2 transform translate-x-1/2 w-[400px] h-[400px] bg-gradient-radial from-accent/10 via-primary/5 to-transparent rounded-full opacity-50 blur-3xl"></div>
-      </div>
-
-      <div className="flex flex-col items-center justify-center mt-28 mb-10">
-        <h2 
-          className="font-bold text-foreground mb-4 text-center"
-          style={{
-            fontSize: 'clamp(2rem, 4vw, 2.5rem)',
-            lineHeight: 'var(--line-height-tight)',
-            letterSpacing: 'var(--letter-spacing-tight)',
-            textWrap: 'balance'
-          }}
+    <div className="w-full">
+      {/* Section Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="section-header mb-12"
+      >
+        <motion.span
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="badge badge-accent mb-4 inline-block"
         >
-          Let&apos;s Connect
-        </h2>
-        <p 
-          className="text-foreground/65 text-center font-light max-w-xl"
-          style={{
-            fontSize: 'var(--font-size-md)',
-            lineHeight: 'var(--line-height-relaxed)',
-            letterSpacing: 'var(--letter-spacing-wide)'
-          }}
-        >
-          Have a project in mind, a question, or just want to say hi? I&apos;d love to hear from you.
+          Get in Touch
+        </motion.span>
+        <h2 className="text-[var(--foreground)]">Let&apos;s Work Together</h2>
+        <p className="mx-auto">
+          Open to full-time roles, freelance projects, and exciting collaborations.
         </p>
-        <div 
-          className="mt-5 w-20 divider mx-auto"
-        />
-      </div>
-      
-      <div className="grid grid-cols-1 gap-3 items-stretch mt-3">
-        {/* Contact Form Card */}
-        <div 
-          className="h-full"
-        >
-          <Card className="custom-card overflow-hidden h-full flex flex-col">
-              <CardHeader className="!pb-2 !mb-4 p-6 md:p-8 relative z-10">
-              <CardTitle 
-                style={{
-                  fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-                  lineHeight: 'var(--line-height-tight)',
-                  letterSpacing: 'var(--letter-spacing-tight)'
-                }}
+      </motion.div>
+
+      {/* Main Grid */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.2 }}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start"
+      >
+        {/* Left - Contact Info */}
+        <div className="space-y-6">
+          {/* Intro */}
+          <div>
+            <h3 className="text-2xl font-semibold text-[var(--foreground)] mb-3">
+              Looking for a data scientist?
+            </h3>
+            <p className="text-[var(--foreground-muted)] leading-relaxed">
+              I&apos;m actively seeking opportunities where I can apply my skills in 
+              machine learning, deep learning, and data analytics to solve meaningful problems. 
+              Whether you&apos;re hiring or have a project in mind, I&apos;d love to connect.
+            </p>
+          </div>
+
+          {/* Location & Availability */}
+          <div className="flex flex-wrap gap-3">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--chrome)] border border-[var(--border)]">
+              <span className="text-lg">📍</span>
+              <span className="text-sm text-[var(--foreground-muted)]">Ontario, Canada</span>
+            </div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]"></span>
+              </span>
+              <span className="text-sm text-[var(--accent)] font-medium">Open to work</span>
+            </div>
+          </div>
+
+          {/* Contact Links */}
+          <div className="space-y-3 pt-2">
+            {contactLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target={link.href.startsWith('http') ? '_blank' : undefined}
+                rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                className="flex items-center gap-4 p-4 rounded-xl bg-[var(--background-card)] border border-[var(--border)]
+                  hover:border-[var(--accent)]/30 transition-all group"
               >
-                Send a Message
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col p-6 md:p-8 pt-0 relative z-10">
-              {submitStatus === 'success' && (
-                <div 
-                  role="status"
-                  className="flex items-start p-4 mb-6 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-300/30 dark:border-green-700/30"
-                >
-                  <FaCheckCircle className="text-green-500 dark:text-green-400 mr-3 mt-1 flex-shrink-0" size={20} />
-                  <div>
-                    <h4 
-                      className="font-semibold text-green-700 dark:text-green-300"
-                      style={{
-                        fontSize: 'var(--font-size-base)',
-                        letterSpacing: 'var(--letter-spacing-normal)'
-                      }}
-                    >
-                      Message Sent!
-                    </h4>
-                    <p 
-                      className="text-green-600 dark:text-green-400/90"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    >
-                      Thanks for reaching out. I&apos;ll get back to you as soon as possible.
-                    </p>
-                  </div>
+                <div className="w-10 h-10 rounded-lg bg-[var(--chrome)] flex items-center justify-center
+                  group-hover:bg-[var(--accent)]/10 transition-colors">
+                  <link.icon className="w-5 h-5 text-[var(--foreground-muted)] group-hover:text-[var(--accent)] transition-colors" />
                 </div>
-              )}
-              {submitStatus === 'error' && (
-                <div 
-                  role="alert"
-                  className="flex items-start p-4 mb-6 rounded-md bg-red-50 dark:bg-red-900/30 border border-red-300/30 dark:border-red-700/30"
-                >
-                  <FaExclamationCircle className="text-red-500 dark:text-red-400 mr-3 mt-1 flex-shrink-0" size={20} />
-                  <div>
-                    <h4 
-                      className="font-semibold text-red-700 dark:text-red-300"
-                      style={{
-                        fontSize: 'var(--font-size-base)',
-                        letterSpacing: 'var(--letter-spacing-normal)'
-                      }}
-                    >
-                      Oops! Something went wrong.
-                    </h4>
-                    <p 
-                      className="text-red-600 dark:text-red-400/90"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    >
-                      Please try submitting the form again, or reach out via one of my social channels.
-                    </p>
-                  </div>
+                <div className="flex-1">
+                  <p className="text-xs text-[var(--foreground-subtle)] uppercase tracking-wider">{link.label}</p>
+                  <p className="text-sm text-[var(--foreground)] font-medium">{link.value}</p>
                 </div>
-              )}
-              
-              <form onSubmit={handleSubmit} className="space-y-6 flex-1 flex flex-col">
-                <div className="space-y-6 flex-1">
-                  <div className="group">
-                    <label 
-                      htmlFor="name" 
-                      className="block font-medium text-foreground/80 mb-2 transition-colors"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    >
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your Name"
-                      className="w-full px-4 py-3 rounded-lg glass-input outline-none"
-                      style={{
-                        fontSize: 'var(--font-size-base)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    />
-                  </div>
-                  
-                  <div className="group">
-                    <label 
-                      htmlFor="email" 
-                      className="block font-medium text-foreground/80 mb-2 transition-colors"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    >
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="your.email@example.com"
-                      className="w-full px-4 py-3 rounded-lg glass-input outline-none"
-                      style={{
-                        fontSize: 'var(--font-size-base)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    />
-                  </div>
-                  
-                  <div className="group flex-1">
-                    <label 
-                      htmlFor="message" 
-                      className="block font-medium text-foreground/80 mb-2 transition-colors"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        letterSpacing: 'var(--letter-spacing-wide)'
-                      }}
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={5}
-                      placeholder="How can I help you?"
-                      className="w-full h-full min-h-[120px] px-4 py-3 rounded-lg glass-input outline-none resize-none"
-                      style={{
-                        fontSize: 'var(--font-size-base)',
-                        letterSpacing: 'var(--letter-spacing-wide)',
-                        lineHeight: 'var(--line-height-relaxed)'
-                      }}
-                    />
-                  </div>
-                </div>
-                
-                <Button 
-                  type="submit" 
-                  variant="primary" 
-                  size="lg" 
-                  className="w-full sm:w-auto mt-auto rounded-lg"
-                  disabled={isSubmitting}
-                >
-                  <span className="flex items-center">
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2">
-                      <LoadingSpinner size="sm" />
-                      Sending...
-                    </span>
-                  ) : (
-                      <>
-                        <FaPaperPlane className="mr-2" /> 
-                        Send Message
-                      </>
-                  )}
-                  </span>
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+                <svg className="w-4 h-4 text-[var(--foreground-subtle)] group-hover:text-[var(--accent)] transition-colors" 
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            ))}
+          </div>
         </div>
-      </div>
+
+        {/* Right - Form */}
+        <div className="card card-glow">
+          <div className="card-content p-6 md:p-8">
+            {/* Success Message */}
+            {submitStatus === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20"
+              >
+                <div className="flex items-center gap-3">
+                  <FaCheckCircle className="w-5 h-5 text-[var(--accent)] flex-shrink-0" />
+                  <p className="text-sm text-[var(--accent)]">
+                    Message sent! I&apos;ll get back to you soon.
+                  </p>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Error Message */}
+            {submitStatus === 'error' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20"
+              >
+                <div className="flex items-center gap-3">
+                  <FaExclamationCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                  <p className="text-sm text-red-400">
+                    Something went wrong. Please try again.
+                  </p>
+                </div>
+              </motion.div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Name & Email Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-[var(--foreground)] mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Your name"
+                    className="input"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-[var(--foreground)] mb-2">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="you@company.com"
+                    className="input"
+                  />
+                </div>
+              </div>
+
+              {/* Message */}
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-[var(--foreground)] mb-2">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={8}
+                  placeholder="Tell me about the role or project..."
+                  className="input resize-none"
+                />
+              </div>
+
+              {/* Submit */}
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-4 h-4 border-2 border-[var(--background)] border-t-transparent rounded-full"
+                    />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <FiSend className="w-4 h-4" />
+                    Send Message
+                  </>
+                )}
+              </Button>
+            </form>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }

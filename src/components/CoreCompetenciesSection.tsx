@@ -1,450 +1,179 @@
 "use client";
 
 import React from 'react';
-import { Card, CardContent } from './ui/Card';
-
-interface SkillItem {
-  name: string;
-  level?: string;
-}
+import { motion } from 'framer-motion';
+import { 
+  FiDatabase, 
+  FiCpu, 
+  FiCode,
+  FiBarChart2,
+  FiLayers,
+  FiBriefcase
+} from 'react-icons/fi';
 
 interface SkillCategory {
-  category: string;
-  items: SkillItem[];
+  title: string;
+  icon: React.ElementType;
   color: string;
+  skills: string[];
 }
 
-const skills: SkillCategory[] = [
+const skillCategories: SkillCategory[] = [
   {
-    category: 'Data Analysis',
-    items: [
-      { name: 'Python' },
-      { name: 'Power BI & Tableau' },
-      { name: 'Systems, Applications & Products in Data Processing (SAP)' },
-      { name: 'Advanced Excel' },
-      { name: 'Data Visualization' },
-      { name: 'Data Cleaning & Preprocessing' },
-      { name: 'Data Integration & ETL' },
-      { name: 'Data Modeling & Warehousing' },
-      { name: 'Data Storytelling' },
-
-    ],
-    color: 'from-blue-500/20 to-cyan-500/20 dark:from-blue-600/20 dark:to-cyan-600/20',
+    title: 'Data Analysis',
+    icon: FiBarChart2,
+    color: 'var(--accent)',
+    skills: [
+      'Python',
+      'Power BI & Tableau',
+      'SAP',
+      'Advanced Excel',
+      'Data Visualization',
+      'Data Cleaning & ETL',
+      'Data Modeling',
+      'Data Storytelling',
+    ]
   },
   {
-    category: 'Data Science',
-    items: [
-      { name: 'Deep Learning' },
-      { name: 'Machine Learning' },
-      { name: 'Natural Language Processing' },
-      { name: 'Time Series Analysis' },
-      { name: 'Predictive Modeling' },
-      { name: 'Feature Engineering' },
-      { name: 'Model Evaluation & Validation' },
-    ],
-    color: 'from-purple-500/20 to-pink-500/20 dark:from-purple-600/20 dark:to-pink-600/20',
+    title: 'Data Science',
+    icon: FiCpu,
+    color: 'var(--tertiary)',
+    skills: [
+      'Deep Learning',
+      'Machine Learning',
+      'NLP',
+      'Time Series Analysis',
+      'Predictive Modeling',
+      'Feature Engineering',
+      'Model Validation',
+    ]
   },
   {
-    category: 'AI & LLM',
-    items: [
-      { name: 'Large Language Models' },
-      { name: 'Agentic Workflows' },
-      { name: 'Retrieval  Augmented Generation' },
-      { name: 'Model Context Protocol' },
-      { name: 'Prompt Engineering' },
-      { name: 'Fine-tuning & Training' },
-    ],
-    color: 'from-emerald-500/20 to-teal-500/20 dark:from-emerald-600/20 dark:to-teal-600/20',
+    title: 'AI & LLMs',
+    icon: FiCode,
+    color: 'var(--secondary)',
+    skills: [
+      'Large Language Models',
+      'Agentic Workflows',
+      'RAG Systems',
+      'Model Context Protocol',
+      'Prompt Engineering',
+      'Fine-tuning',
+    ]
   },
   {
-    category: 'Databases',
-    items: [
-      { name: 'Structured Query Language (SQL)' },
-      { name: 'Relational Database Management Systems (RDBMS)' },
-      { name: 'Vector Databases' },
-    ],
-    color: 'from-orange-500/20 to-amber-500/20 dark:from-orange-600/20 dark:to-amber-600/20',
+    title: 'Databases',
+    icon: FiDatabase,
+    color: '#f472b6',
+    skills: [
+      'SQL',
+      'RDBMS',
+      'Vector Databases',
+    ]
   },
   {
-    category: 'Statistics',
-    items: [
-      { name: 'Descriptive & Inferential Statistics' },
-      { name: 'A/B Testing & Bayesian Statistics' },
-      { name: 'Conversion Optimization & Trend Analysis' },
-      { name: 'Customer Segmentation' },
-    ],
-    color: 'from-red-500/20 to-rose-500/20 dark:from-red-600/20 dark:to-rose-600/20',
+    title: 'Statistics',
+    icon: FiLayers,
+    color: '#a78bfa',
+    skills: [
+      'Descriptive & Inferential Statistics',
+      'A/B Testing & Bayesian Statistics',
+      'Conversion Optimization',
+      'Customer Segmentation',
+    ]
   },
   {
-    category: 'More Skills',
-    items: [
-      { name: 'Microsoft Office Suite' },
-      { name: 'Strategic Planning' },
-      { name: 'Analytical thinking' },
-      { name: 'Market Research & Analysis' },
-      { name: 'Reporting & Documentation' },
-      { name: 'Presentation Skills' },
-      { name: 'Collaboration & Clear Communication' },
-      { name: 'Trilingual: English, Hindi, Gujarati' },
-      { name: 'Web Development technologies (basic)' },
-      { name: 'Understanding of Business Processes, Finance and Marketing' },
-    ],
-    color: 'from-indigo-500/20 to-violet-500/20 dark:from-indigo-600/20 dark:to-violet-600/20',
-  },
+    title: 'Professional',
+    icon: FiBriefcase,
+    color: '#fb923c',
+    skills: [
+      'Strategic Planning',
+      'Analytical Thinking',
+      'Market Research',
+      'Documentation',
+      'Presentation Skills',
+      'Trilingual: English, Hindi, Gujarati',
+    ]
+  }
 ];
+
+function SkillCard({ category, index }: { category: SkillCategory; index: number }) {
+  const Icon = category.icon;
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="card group"
+    >
+      <div className="card-content">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-4">
+          <div 
+            className="w-10 h-10 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110"
+            style={{ backgroundColor: `${category.color}15` }}
+          >
+            <Icon className="w-5 h-5" style={{ color: category.color }} />
+          </div>
+          <h4 className="font-semibold text-[var(--foreground)]">{category.title}</h4>
+        </div>
+
+        {/* Skills */}
+        <ul className="space-y-2">
+          {category.skills.map((skill, i) => (
+            <motion.li
+              key={skill}
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1 + i * 0.03 }}
+              className="flex items-center gap-2 text-sm text-[var(--foreground-muted)]"
+            >
+              <span 
+                className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+                style={{ backgroundColor: category.color }}
+              />
+              <span className="font-mono text-xs">{skill}</span>
+            </motion.li>
+          ))}
+        </ul>
+      </div>
+    </motion.div>
+  );
+}
 
 export function CoreCompetenciesSection() {
   return (
     <div className="w-full">
-      <div className="flex flex-col items-center justify-center mt-28 mb-10">
-        <h2 
-          className="font-bold text-foreground mb-4 text-center"
-          style={{
-            fontSize: 'clamp(2rem, 4vw, 2.5rem)',
-            lineHeight: 'var(--line-height-tight)',
-            letterSpacing: 'var(--letter-spacing-tight)',
-            textWrap: 'balance'
-          }}
+      {/* Section Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="section-header mb-12"
+      >
+        <motion.span
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="badge badge-accent mb-4 inline-block"
         >
-          Core Competencies
-        </h2>
-        <p 
-          className="text-foreground/65 text-center font-light mt-2 max-w-xl"
-          style={{
-            fontSize: 'var(--font-size-md)',
-            lineHeight: 'var(--line-height-relaxed)',
-            letterSpacing: 'var(--letter-spacing-wide)'
-          }}
-        >
-          A comprehensive overview of my key skills and expertise
+          Expertise
+        </motion.span>
+        <h2 className="text-[var(--foreground)]">Core Competencies</h2>
+        <p className="mx-auto">
+          A comprehensive toolkit for turning data into decisions
         </p>
-        <div className="mt-5 w-20 divider mx-auto" />
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-3 w-full mt-3">
-        {/* Data Analysis - Featured Card */}
-        <div className="md:col-span-3 lg:col-span-4">
-          <Card className="custom-card h-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
-            
-            
-            <CardContent className="p-6 relative">
-              <h4 
-                className="font-semibold text-foreground mb-4"
-                style={{
-                  fontSize: 'var(--font-size-lg)',
-                  lineHeight: 'var(--line-height-snug)',
-                  letterSpacing: 'var(--letter-spacing-tight)'
-                }}
-              >
-                {skills[0].category}
-              </h4>
-              
-              <ul className="space-y-2.5">
-                {skills[0].items.map((item) => (
-                  <li
-                    key={item.name}
-                    className="flex items-start text-foreground/75"
-                  >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span 
-                      className="flex-grow font-mono"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: '-0.01em'
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Machine Learning - Tall Card */}
-        <div className="md:col-span-3 lg:col-span-4">
-          <Card className="custom-card h-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
-            
-            
-            <CardContent className="p-6 relative">
-              <h4 
-                className="font-semibold text-foreground mb-4"
-                style={{
-                  fontSize: 'var(--font-size-lg)',
-                  lineHeight: 'var(--line-height-snug)',
-                  letterSpacing: 'var(--letter-spacing-tight)'
-                }}
-              >
-                {skills[1].category}
-              </h4>
-              
-              <ul className="space-y-2.5">
-                {skills[1].items.map((item) => (
-                  <li
-                    key={item.name}
-                    className="flex items-start text-foreground/75"
-                  >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span 
-                      className="flex-grow font-mono"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: '-0.01em'
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* AI & LLM - Compact Card */}
-        <div className="md:col-span-3 lg:col-span-4">
-          <Card className="custom-card h-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
-            
-            
-            <CardContent className="p-6 relative">
-              <h4 
-                className="font-semibold text-foreground mb-4"
-                style={{
-                  fontSize: 'var(--font-size-lg)',
-                  lineHeight: 'var(--line-height-snug)',
-                  letterSpacing: 'var(--letter-spacing-tight)'
-                }}
-              >
-                {skills[2].category}
-              </h4>
-              
-              <ul className="space-y-2.5">
-                {skills[2].items.map((item) => (
-                  <li
-                    key={item.name}
-                    className="flex items-start text-foreground/75"
-                  >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span 
-                      className="flex-grow font-mono"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: '-0.01em'
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Databases - Small Card */}
-        <div className="md:col-span-2 lg:col-span-3">
-          <Card className="custom-card h-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
-            
-            
-            <CardContent className="p-6 relative">
-              <h4 
-                className="font-semibold text-foreground mb-4"
-                style={{
-                  fontSize: 'var(--font-size-lg)',
-                  lineHeight: 'var(--line-height-snug)',
-                  letterSpacing: 'var(--letter-spacing-tight)'
-                }}
-              >
-                {skills[3].category}
-              </h4>
-              
-              <ul className="space-y-2.5">
-                {skills[3].items.map((item) => (
-                  <li
-                    key={item.name}
-                    className="flex items-start text-foreground/75"
-                  >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span 
-                      className="flex-grow font-mono"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: '-0.01em'
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Statistics - Small Card */}
-        <div className="md:col-span-2 lg:col-span-3">
-          <Card className="custom-card h-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
-            
-            
-            <CardContent className="p-6 relative">
-              <h4 
-                className="font-semibold text-foreground mb-4"
-                style={{
-                  fontSize: 'var(--font-size-lg)',
-                  lineHeight: 'var(--line-height-snug)',
-                  letterSpacing: 'var(--letter-spacing-tight)'
-                }}
-              >
-                {skills[4].category}
-              </h4>
-              
-              <ul className="space-y-2.5">
-                {skills[4].items.map((item) => (
-                  <li
-                    key={item.name}
-                    className="flex items-start text-foreground/75"
-                  >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span 
-                      className="flex-grow font-mono"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: '-0.01em'
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Professional Skills - Wide Card */}
-        <div className="md:col-span-4 lg:col-span-6">
-          <Card className="custom-card h-full overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.01] to-transparent opacity-50"></div>
-            
-            
-            <CardContent className="p-6 relative">
-              <h4 
-                className="font-semibold text-foreground mb-4"
-                style={{
-                  fontSize: 'var(--font-size-lg)',
-                  lineHeight: 'var(--line-height-snug)',
-                  letterSpacing: 'var(--letter-spacing-tight)'
-                }}
-              >
-                {skills[5].category}
-              </h4>
-              
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                {skills[5].items.map((item) => (
-                  <li
-                    key={item.name}
-                    className="flex items-start text-foreground/75"
-                  >
-                    <svg 
-                      width="16" 
-                      height="16" 
-                      viewBox="0 0 24 24" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      className="mr-2.5 mt-0.5 flex-shrink-0 w-4 h-4 text-primary/60"
-                    >
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                    <span 
-                      className="flex-grow font-mono"
-                      style={{
-                        fontSize: 'var(--font-size-sm)',
-                        lineHeight: 'var(--line-height-relaxed)',
-                        letterSpacing: '-0.01em'
-                      }}
-                    >
-                      {item.name}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
+      {/* Skills Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {skillCategories.map((category, index) => (
+          <SkillCard key={category.title} category={category} index={index} />
+        ))}
       </div>
     </div>
   );

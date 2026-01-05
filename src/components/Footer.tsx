@@ -1,52 +1,43 @@
 "use client";
 
 import React from 'react';
-import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { FaHeart } from 'react-icons/fa';
 
 export function Footer() {
   const year = new Date().getFullYear();
+
   return (
-    <footer className="pt-14 pb-10 relative overflow-hidden mt-24">
-      {/* Refined top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/10 to-transparent" />
-      
-      {/* Elegant ambient background */}
-      <div className="absolute inset-0 bg-gradient-to-t from-background/30 to-transparent pointer-events-none" />
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="flex flex-col items-center gap-8">
-          <div className="flex items-center gap-3">
-            <a href="https://github.com/Naeem1144" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="p-2.5 rounded-lg bg-primary/5 border border-subtle text-foreground/60">
-              <FaGithub size={18} />
-            </a>
-            <a href="https://www.linkedin.com/in/naeemnagori/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="p-2.5 rounded-lg bg-primary/5 border border-subtle text-foreground/60">
-              <FaLinkedin size={18} />
-            </a>
-            <a href="mailto:aknaeem246@gmail.com" aria-label="Email" className="p-2.5 rounded-lg bg-primary/5 border border-subtle text-foreground/60">
-              <FaEnvelope size={18} />
-            </a>
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <p 
-              className="text-foreground/60 font-medium"
-              style={{
-                fontSize: 'var(--font-size-sm)',
-                letterSpacing: 'var(--letter-spacing-wide)'
-              }}
-            >
-              Naeem
+    <footer className="relative mt-20 py-12 border-t border-[var(--border)]">
+      {/* Top gradient accent */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)]/20 to-transparent" />
+
+      <div className="container mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex flex-col items-center gap-4"
+        >
+          {/* Logo */}
+          <a 
+            href="#home"
+            className="text-2xl font-bold"
+          >
+            <span className="text-[var(--foreground)]">N</span>
+            <span className="text-[var(--accent)]">.</span>
+          </a>
+
+          {/* Copyright */}
+          <div className="flex flex-col items-center gap-2 text-center">
+            <p className="text-sm text-[var(--foreground-muted)] flex items-center gap-1">
+              Built with <FaHeart className="w-3 h-3 text-red-400" /> by Naeem
             </p>
-            <p 
-              className="text-foreground/40"
-              style={{
-                fontSize: 'var(--font-size-xs)',
-                letterSpacing: 'var(--letter-spacing-wider)'
-              }}
-            >
+            <p className="text-xs text-[var(--foreground-subtle)]">
               © {year} All rights reserved.
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

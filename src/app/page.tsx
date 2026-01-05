@@ -2,58 +2,67 @@ import { Suspense } from 'react';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { ProjectsSection } from '@/components/ProjectsSection';
-// Remove old AboutSection import
-// import { AboutSection } from '@/components/AboutSection'; 
-import { MoreAboutMeSection } from '@/components/MoreAboutMeSection'; // Import new component
-import { CoreCompetenciesSection } from '@/components/CoreCompetenciesSection'; // Import new component
+import { MoreAboutMeSection } from '@/components/MoreAboutMeSection';
+import { CoreCompetenciesSection } from '@/components/CoreCompetenciesSection';
+import { CertificationsSection } from '@/components/CertificationsSection';
 import { ContactSection } from '@/components/ContactSection';
 import { ProfileCard } from '@/components/ProfileCard';
 import { Footer } from '@/components/Footer';
 import { fetchGitHubProfile, fetchPinnedRepos } from '@/lib/github';
-import { ScrollRestoration, Container, Section } from '@/components/ScrollRestoration';
+import { Container, Section } from '@/components/ScrollRestoration';
 
 export default async function Home() {
   const profile = await fetchGitHubProfile();
   const repos = await fetchPinnedRepos();
-  
+
   return (
     <>
-      <ScrollRestoration />
       <Header />
+      
       <main className="flex flex-col items-center w-full">
+        {/* Hero Section */}
         <HeroSection />
 
-        <Section id="about" className="overflow-hidden">
-          <div className="absolute inset-0 -z-10 opacity-30">
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
-            <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[120px]" />
-          </div>
+        {/* About Section */}
+        <Section id="about">
           <Container>
-            <div className="flex flex-col gap-3">
-              <div className="flex flex-col items-center justify-center mt-32 mb-12">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">About Me</h2>
-                <p className="text-base md:text-lg text-foreground/60 text-center font-light max-w-xl">
-                  A glimpse into my journey, skills, and what drives my passion for technology and data.
-                </p>
-                <div className="mt-6 w-24 mx-auto divider" />
+            {/* Section Header */}
+            <div className="section-header mb-12 text-center">
+              <span className="badge badge-accent mb-4 inline-block">About</span>
+              <h2 className="text-[var(--foreground)]">About Me</h2>
+              <p className="mx-auto">
+                A glimpse into my journey, skills, and passion for technology
+              </p>
+            </div>
+
+            {/* About Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Profile Card */}
+              <div className="lg:col-span-1">
+                <Suspense fallback={<ProfileCard profile={null} isLoading={true} />}>
+                  <ProfileCard profile={profile} />
+                </Suspense>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 items-start lg:items-stretch">
-                <div className="lg:col-span-1 h-full">
-                  <Suspense fallback={<ProfileCard profile={null} isLoading={true} />}>
-                    <ProfileCard profile={profile} />
-                  </Suspense>
-                </div>
-                <div className="lg:col-span-2 h-full">
-                  <MoreAboutMeSection />
-                </div>
+              
+              {/* More About Me */}
+              <div className="lg:col-span-2">
+                <MoreAboutMeSection />
               </div>
-              <div className="w-full">
-                <CoreCompetenciesSection /> 
-              </div>
+            </div>
+
+            {/* Skills Section */}
+            <div className="mt-16">
+              <CoreCompetenciesSection />
+            </div>
+
+            {/* Certifications Section */}
+            <div className="mt-16">
+              <CertificationsSection />
             </div>
           </Container>
         </Section>
 
+        {/* Projects Section */}
         <Section id="projects">
           <Container>
             <Suspense fallback={<ProjectsSection repos={[]} isLoading={true} />}>
@@ -62,6 +71,7 @@ export default async function Home() {
           </Container>
         </Section>
 
+        {/* Contact Section */}
         <Section id="contact">
           <Container>
             <ContactSection />
