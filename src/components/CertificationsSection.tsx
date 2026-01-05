@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiAward, FiCalendar, FiExternalLink } from 'react-icons/fi';
+import { FiAward, FiCalendar } from 'react-icons/fi';
 
 const certifications = [
   {
