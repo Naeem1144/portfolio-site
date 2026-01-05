@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion, HTMLMotionProps } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -47,10 +47,8 @@ export function Button({
 
   const classes = `btn ${variants[variant]} ${sizes[size]} ${className}`.trim();
 
-  const motionProps: Partial<HTMLMotionProps<"button" | "a">> = {
-    whileTap: disabled ? undefined : { scale: 0.98 },
-    transition: { duration: 0.15 },
-  };
+  const tapAnimation = disabled ? undefined : { scale: 0.98 };
+  const transitionConfig = { duration: 0.15 };
 
   // Handle scroll to section for hash links
   const handleClick = (e: React.MouseEvent) => {
@@ -68,7 +66,11 @@ export function Button({
     // External link or download
     if (href.startsWith('http') || href.startsWith('/') && !href.startsWith('#')) {
       return (
-        <motion.div {...motionProps} style={{ display: 'inline-block' }}>
+        <motion.div 
+          whileTap={tapAnimation} 
+          transition={transitionConfig} 
+          style={{ display: 'inline-block' }}
+        >
           <Link 
             href={href}
             target={target}
@@ -91,7 +93,8 @@ export function Button({
         onClick={handleClick}
         className={classes}
         aria-label={ariaLabel}
-        {...motionProps}
+        whileTap={tapAnimation}
+        transition={transitionConfig}
       >
         {children}
       </motion.a>
@@ -105,7 +108,8 @@ export function Button({
       className={classes}
       disabled={disabled}
       aria-label={ariaLabel}
-      {...motionProps}
+      whileTap={tapAnimation}
+      transition={transitionConfig}
     >
       {children}
     </motion.button>
