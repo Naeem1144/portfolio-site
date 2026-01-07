@@ -1,0 +1,41 @@
+
+> portfolio-site@0.1.0 dev /app
+> next dev
+
+   ▲ Next.js 15.5.9
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.2:3000
+
+ ✓ Starting...
+ ✓ Ready in 2s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 887ms (114 modules)
+ ○ Compiling / ...
+ ✓ Compiled / in 15s (1554 modules)
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 18609ms
+ ✓ Compiled in 504ms (680 modules)
+ ✓ Compiled in 538ms (680 modules)
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 1013ms
+ ✓ Compiled in 284ms (680 modules)
+ ✓ Compiled in 715ms (680 modules)
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 754ms
+ ✓ Compiled in 217ms (680 modules)
+ ✓ Compiled in 504ms (680 modules)
+ ✓ Compiled in 295ms (680 modules)
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 729ms
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ HEAD / 200 in 1459ms
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 758ms
+ ✓ Compiled in 1079ms (680 modules)
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 694ms
+ ✓ Compiled in 555ms (680 modules)
+GITHUB_TOKEN is not configured. Falling back to public repository data.
+ GET / 200 in 597ms
+ ✓ Compiled in 269ms (680 modules)
+ ✓ Compiled in 580ms (680 modules)
