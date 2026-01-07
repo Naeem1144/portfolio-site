@@ -155,7 +155,12 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden mx-4 mt-2 rounded-2xl glass border border-[var(--border)] overflow-hidden"
+            className="md:hidden mx-4 mt-2 rounded-2xl border border-[var(--border)] overflow-hidden"
+            style={{
+              background: 'rgba(10, 10, 10, 0.95)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+            }}
           >
             <nav className="p-4 flex flex-col gap-2">
               {navItems.map((item, index) => (
