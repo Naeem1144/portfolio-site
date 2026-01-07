@@ -110,7 +110,7 @@ export function ContactSection() {
         <div className="space-y-6">
           {/* Intro */}
           <div>
-            <h3 className="text-2xl font-semibold text-[var(--foreground)] mb-3">
+            <h3 className="text-xl sm:text-2xl font-semibold text-[var(--foreground)] mb-3">
               Looking for a data scientist?
             </h3>
             <p className="text-[var(--foreground-muted)] leading-relaxed">
@@ -121,17 +121,17 @@ export function ContactSection() {
           </div>
 
           {/* Location & Availability */}
-          <div className="flex flex-wrap gap-3">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--chrome)] border border-[var(--border)]">
-              <span className="text-lg">📍</span>
-              <span className="text-sm text-[var(--foreground-muted)]">Ontario, Canada</span>
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[var(--chrome)] border border-[var(--border)]">
+              <span className="text-base sm:text-lg">📍</span>
+              <span className="text-xs sm:text-sm text-[var(--foreground-muted)]">Ontario, Canada</span>
             </div>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]"></span>
               </span>
-              <span className="text-sm text-[var(--accent)] font-medium">Open to work</span>
+              <span className="text-xs sm:text-sm text-[var(--accent)] font-medium">Open to work</span>
             </div>
           </div>
 
@@ -165,7 +165,7 @@ export function ContactSection() {
 
         {/* Right - Form */}
         <div className="card card-glow">
-          <div className="card-content p-6 md:p-8">
+          <div className="card-content p-4 sm:p-6 md:p-8">
             {/* Success Message */}
             {submitStatus === 'success' && (
               <motion.div

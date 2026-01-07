@@ -110,14 +110,14 @@ function SkillCard({ category, index }: { category: SkillCategory; index: number
     >
       <div className="card-content">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
           <div 
-            className="w-10 h-10 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110 flex-shrink-0"
             style={{ backgroundColor: `${category.color}15` }}
           >
-            <Icon className="w-5 h-5" style={{ color: category.color }} />
+            <Icon className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: category.color }} />
           </div>
-          <h4 className="font-semibold text-[var(--foreground)]">{category.title}</h4>
+          <h4 className="font-semibold text-[var(--foreground)] text-sm sm:text-base">{category.title}</h4>
         </div>
 
         {/* Skills */}

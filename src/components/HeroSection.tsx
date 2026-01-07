@@ -134,17 +134,17 @@ function FloatingTag({
 
 // Floating tags configuration - curated skills (well-spaced)
 const floatingTags = [
-  // Left side - spread vertically
-  { icon: FiTerminal, label: 'Python', position: 'top-[18%] left-[3%] md:left-[6%]', delay: 0, floatDirection: 'up' as const },
-  { icon: FiDatabase, label: 'SQL', position: 'top-[40%] left-[2%] md:left-[4%]', delay: 0.4, floatDirection: 'right' as const },
-  { icon: FiBarChart2, label: 'Tableau', position: 'bottom-[35%] left-[3%] md:left-[5%]', delay: 0.8, floatDirection: 'up' as const },
-  { icon: FiActivity, label: 'Statistics', position: 'bottom-[18%] left-[5%] md:left-[8%]', delay: 1.2, floatDirection: 'down' as const },
+  // Left side - spread vertically (show fewer on mobile, hide some on sm)
+  { icon: FiTerminal, label: 'Python', position: 'top-[18%] left-[2%] sm:left-[3%] md:left-[6%] hidden sm:flex', delay: 0, floatDirection: 'up' as const },
+  { icon: FiDatabase, label: 'SQL', position: 'top-[35%] left-[1%] sm:left-[2%] md:left-[4%] hidden md:flex', delay: 0.4, floatDirection: 'right' as const },
+  { icon: FiBarChart2, label: 'Tableau', position: 'bottom-[35%] left-[2%] sm:left-[3%] md:left-[5%] hidden sm:flex', delay: 0.8, floatDirection: 'up' as const },
+  { icon: FiActivity, label: 'Statistics', position: 'bottom-[20%] left-[3%] sm:left-[5%] md:left-[8%] hidden md:flex', delay: 1.2, floatDirection: 'down' as const },
   
-  // Right side - spread vertically
-  { icon: FiCpu, label: 'Machine Learning', position: 'top-[15%] right-[2%] md:right-[5%]', delay: 0.2, floatDirection: 'down' as const },
-  { icon: FiLayers, label: 'Deep Learning', position: 'top-[38%] right-[3%] md:right-[6%]', delay: 0.6, floatDirection: 'left' as const },
-  { icon: FiCode, label: 'NLP', position: 'bottom-[38%] right-[2%] md:right-[4%]', delay: 1.0, floatDirection: 'up' as const },
-  { icon: FiZap, label: 'LLMs', position: 'bottom-[18%] right-[4%] md:right-[7%]', delay: 1.4, floatDirection: 'right' as const },
+  // Right side - spread vertically (show fewer on mobile)
+  { icon: FiCpu, label: 'Machine Learning', position: 'top-[18%] right-[1%] sm:right-[2%] md:right-[5%] hidden sm:flex', delay: 0.2, floatDirection: 'down' as const },
+  { icon: FiLayers, label: 'Deep Learning', position: 'top-[38%] right-[2%] sm:right-[3%] md:right-[6%] hidden md:flex', delay: 0.6, floatDirection: 'left' as const },
+  { icon: FiCode, label: 'NLP', position: 'bottom-[35%] right-[1%] sm:right-[2%] md:right-[4%] hidden sm:flex', delay: 1.0, floatDirection: 'up' as const },
+  { icon: FiZap, label: 'LLMs', position: 'bottom-[20%] right-[2%] sm:right-[4%] md:right-[7%] hidden md:flex', delay: 1.4, floatDirection: 'right' as const },
   
   // Inner ring (larger screens only) - more spread out
   { icon: FiTrendingUp, label: 'R Language', position: 'top-[28%] left-[18%] md:left-[20%] hidden lg:flex', delay: 0.3, floatDirection: 'up' as const },
@@ -204,21 +204,21 @@ export function HeroSection() {
       ))}
 
       {/* Main Content */}
-      <div className="container relative z-10 px-6">
+      <div className="container relative z-10 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto text-center">
           {/* Status Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 mb-8"
+            className="inline-flex items-center gap-2 mb-6 sm:mb-8"
           >
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20">
+            <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent)] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent)]"></span>
               </span>
-              <span className="text-sm font-medium text-[var(--accent)]">Available for opportunities</span>
+              <span className="text-xs sm:text-sm font-medium text-[var(--accent)]">Available for opportunities</span>
             </div>
           </motion.div>
 
@@ -240,9 +240,9 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mb-10"
+            className="mb-8 sm:mb-10"
           >
-            <p className="text-lg md:text-xl text-[var(--foreground-muted)] font-light tracking-tight">
+            <p className="text-base sm:text-lg md:text-xl text-[var(--foreground-muted)] font-light tracking-tight px-2 sm:px-0">
               I teach machines to see what <span className="text-[var(--accent)]">humans miss</span>.
             </p>
           </motion.div>

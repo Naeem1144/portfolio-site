@@ -68,14 +68,14 @@ function ProjectCard({ repo, index }: { repo: Repo; index: number }) {
       <div className="card h-full flex flex-col">
         <div className="card-content flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <FiFolder className="w-5 h-5 text-[var(--accent)]" />
-              <h3 className="font-semibold text-[var(--foreground)] font-mono text-sm truncate max-w-[200px]">
+          <div className="flex items-start justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2 min-w-0 flex-1">
+              <FiFolder className="w-5 h-5 text-[var(--accent)] flex-shrink-0" />
+              <h3 className="font-semibold text-[var(--foreground)] font-mono text-sm truncate">
                 {repo.name}
               </h3>
             </div>
-            <div className="flex items-center gap-3 text-[var(--foreground-subtle)] text-xs">
+            <div className="flex items-center gap-2 sm:gap-3 text-[var(--foreground-subtle)] text-xs flex-shrink-0">
               {repo.stars !== undefined && repo.stars > 0 && (
                 <span className="flex items-center gap-1">
                   <FiStar className="w-3.5 h-3.5" />

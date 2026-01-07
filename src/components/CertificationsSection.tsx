@@ -54,7 +54,7 @@ export function CertificationsSection() {
       </motion.div>
 
       {/* Certifications Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {certifications.map((cert, index) => (
           <motion.div
             key={cert.title}
@@ -64,33 +64,33 @@ export function CertificationsSection() {
             transition={{ delay: index * 0.1 }}
             className="card"
           >
-            <div className="card-content p-5">
+            <div className="card-content p-4 sm:p-5">
               {/* Icon & Year */}
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
                 <div 
-                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center"
                   style={{ backgroundColor: `${cert.color}15` }}
                 >
-                  <FiAward className="w-5 h-5" style={{ color: cert.color }} />
+                  <FiAward className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: cert.color }} />
                 </div>
                 <div className="flex items-center gap-1.5 text-xs text-[var(--foreground-subtle)]">
-                  <FiCalendar className="w-3.5 h-3.5" />
+                  <FiCalendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   <span>{cert.year}</span>
                 </div>
               </div>
 
               {/* Title */}
-              <h3 className="font-semibold text-[var(--foreground)] mb-1 leading-tight">
+              <h3 className="font-semibold text-[var(--foreground)] mb-1 leading-tight text-sm sm:text-base">
                 {cert.title}
               </h3>
 
               {/* Issuer */}
-              <p className="text-sm text-[var(--accent)] font-medium mb-3">
+              <p className="text-xs sm:text-sm text-[var(--accent)] font-medium mb-2 sm:mb-3">
                 {cert.issuer}
               </p>
 
               {/* Description */}
-              <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
+              <p className="text-xs sm:text-sm text-[var(--foreground-muted)] leading-relaxed">
                 {cert.description}
               </p>
             </div>

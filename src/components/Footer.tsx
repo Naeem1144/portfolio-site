@@ -8,16 +8,16 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-20 py-12 border-t border-[var(--border)]">
+    <footer className="relative mt-12 sm:mt-20 py-8 sm:py-12 border-t border-[var(--border)]">
       {/* Top gradient accent */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[var(--accent)]/20 to-transparent" />
 
-      <div className="container mx-auto px-6">
+      <div className="container mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-col items-center gap-4"
+          className="flex flex-col items-center gap-3 sm:gap-4"
         >
           {/* Logo */}
           <a 

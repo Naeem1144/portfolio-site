@@ -59,10 +59,10 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
       transition={{ duration: 0.5 }}
     >
       <div className="card">
-        <div className="card-content p-6 flex flex-col items-center text-center">
+        <div className="card-content p-4 sm:p-6 flex flex-col items-center text-center">
           {/* Avatar */}
-          <div className="relative mb-4">
-            <div className="w-24 h-24 rounded-2xl overflow-hidden border border-[var(--border)]">
+          <div className="relative mb-3 sm:mb-4">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border border-[var(--border)]">
               <Image
                 src={profile.avatarUrl}
                 alt={`${profile.name}'s avatar`}
@@ -72,11 +72,11 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
                 priority
               />
             </div>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-[var(--accent)] rounded-full border-2 border-[var(--background-card)]" />
+            <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-[var(--accent)] rounded-full border-2 border-[var(--background-card)]" />
           </div>
 
           {/* Name */}
-          <h3 className="text-xl font-bold text-[var(--foreground)] mb-1">
+          <h3 className="text-lg sm:text-xl font-bold text-[var(--foreground)] mb-1">
             {profile.name}
           </h3>
           

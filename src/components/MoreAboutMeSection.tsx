@@ -41,7 +41,7 @@ export function MoreAboutMeSection() {
           </p>
 
           {/* Highlights */}
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {highlights.map((item, index) => (
               <motion.div
                 key={item.title}
@@ -49,17 +49,17 @@ export function MoreAboutMeSection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 * (index + 1) }}
-                className="flex gap-3 p-3 rounded-xl bg-[var(--background-elevated)] border border-[var(--border)]"
+                className="flex gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-xl bg-[var(--background-elevated)] border border-[var(--border)]"
               >
-                <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-[var(--accent)]/10 
+                <div className="flex-shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[var(--accent)]/10 
                   flex items-center justify-center">
-                  <item.icon className="w-4 h-4 text-[var(--accent)]" />
+                  <item.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--accent)]" />
                 </div>
-                <div>
-                  <h4 className="font-semibold text-[var(--foreground)] text-sm mb-0.5">
+                <div className="min-w-0 flex-1">
+                  <h4 className="font-semibold text-[var(--foreground)] text-xs sm:text-sm mb-0.5">
                     {item.title}
                   </h4>
-                  <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[var(--foreground-muted)] leading-relaxed">
                     {item.description}
                   </p>
                 </div>
