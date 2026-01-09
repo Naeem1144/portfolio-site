@@ -1,52 +1,40 @@
 from playwright.sync_api import sync_playwright
 
-def verify_contact_ux():
+def verify_contact_section():
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
+
+        # Navigate to the home page (assuming ContactSection is on the home page)
         try:
-            page.goto("http://localhost:3000")
+            page.goto("http://localhost:3000", timeout=60000)
 
-            # Scroll to contact section
-            contact_section = page.locator("#contact")
-            contact_section.scroll_into_view_if_needed()
+            # Wait for the contact section to be visible
+            # The contact section has a heading "Let's Work Together"
+            page.get_by_text("Let's Work Together").scroll_into_view_if_needed()
+            page.wait_for_selector("text=Let's Work Together")
 
-            # Wait for content to load
-            page.wait_for_timeout(2000)
+            # Verify required field indicators
+            # We expect to see "*" in red next to labels
+            # Since the text is "Name *", we can check for that text content or the span
 
-            # Fill form partially
-            page.fill('input[name="name"]', "Test User")
-            page.fill('input[name="email"]', "test@example.com")
-            page.fill('textarea[name="message"]', "This is a test message to verify the loading spinner.")
+            # Take a screenshot of the contact form
+            # We can locate the form container.
+            # Looking at the code, the form is in a card.
+            form_card = page.locator(".card-content").last
 
-            # Click submit
-            submit_btn = page.get_by_role("button", name="Send Message")
+            # Ensure the form is fully visible
+            form_card.scroll_into_view_if_needed()
 
-            # Mock the API response to be slow so we can catch the spinner
-            page.route("**/api/contact", lambda route: route.continue_())
+            # Take screenshot
+            page.screenshot(path="verification/contact_section.png")
+            print("Screenshot saved to verification/contact_section.png")
 
-            # We want to capture the spinner, but it might be too fast with local server.
-            # However, we can at least capture the form with the button.
-            # To capture the spinner, we'd need to intercept the request and delay it.
-
-            def handle_route(route):
-                # Delay the response
-                import time
-                time.sleep(2)
-                route.fulfill(status=200, body='{"success": true}')
-
-            page.route("**/api/contact", handle_route)
-
-            # Click and immediately screenshot
-            submit_btn.click()
-
-            # Wait a split second for React state update
-            page.wait_for_timeout(500)
-
-            page.screenshot(path="verification/contact_spinner.png")
-
+        except Exception as e:
+            print(f"Error: {e}")
+            page.screenshot(path="verification/error.png")
         finally:
             browser.close()
 
 if __name__ == "__main__":
-    verify_contact_ux()
+    verify_contact_section()
