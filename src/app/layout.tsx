@@ -55,6 +55,9 @@ export default function RootLayout({
         }}
         suppressHydrationWarning
       >
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <div className="min-h-svh flex flex-col">
           {children}
         </div>

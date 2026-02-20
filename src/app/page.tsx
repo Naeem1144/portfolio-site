@@ -22,7 +22,7 @@ export default async function Home() {
     <>
       <Header />
       
-      <main className="flex flex-col items-center w-full">
+      <main id="main-content" tabIndex={-1} aria-label="Main content" className="flex flex-col items-center w-full">
         {/* Hero Section */}
         <HeroSection />
 

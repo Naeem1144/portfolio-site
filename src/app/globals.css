@@ -96,6 +96,34 @@ body {
   min-height: 100vh;
 }
 
+main:focus {
+  outline: none;
+}
+
+:where(a, button, [role="button"], input, textarea, select):focus-visible {
+  outline: 2px solid rgba(var(--accent-rgb), 0.9);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 0.75rem;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  background: var(--background-elevated);
+  color: var(--foreground);
+  text-decoration: none;
+  transform: translateY(-140%);
+  transition: transform var(--transition-fast);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 /* Animated gradient background */
 body::before {
   content: '';
@@ -186,6 +214,7 @@ p {
   outline: none;
   border: none;
   text-decoration: none;
+  min-height: 44px;
 }
 
 .btn:focus-visible {
@@ -295,10 +324,16 @@ p {
   z-index: 2;
 }
 
-.card-hoverable:hover {
-  border-color: rgba(var(--accent-rgb), 0.3);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg), 0 0 40px rgba(var(--accent-rgb), 0.1);
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  .card-hoverable:hover {
+    border-color: rgba(var(--accent-rgb), 0.3);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg), 0 0 40px rgba(var(--accent-rgb), 0.1);
+  }
 }
 
 .card-content {
@@ -424,6 +459,7 @@ textarea.input {
   position: relative;
   width: 100%;
   padding: var(--space-4xl) 0;
+  scroll-margin-top: 6.5rem;
 }
 
 .section-header {

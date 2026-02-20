@@ -59,6 +59,25 @@ export function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMobileMenuOpen]);
+
   const scrollToSection = (href: string) => {
     const id = href.replace('#', '');
     const element = document.getElementById(id);
@@ -102,30 +121,37 @@ export function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => (
-                <button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`
-                    relative px-4 py-2 text-sm font-medium transition-colors
-                    ${activeSection === item.href.replace('#', '')
-                      ? 'text-[var(--accent)]'
-                      : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
-                    }
-                  `}
-                >
-                  {item.name}
-                  {activeSection === item.href.replace('#', '') && (
-                    <motion.div
-                      layoutId="activeNav"
-                      className="absolute inset-0 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20"
-                      style={{ zIndex: -1 }}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                </button>
-              ))}
+            <nav className="hidden md:flex items-center gap-1" aria-label="Primary navigation">
+              {navItems.map((item) => {
+                const itemId = item.href.replace('#', '');
+                const isActive = activeSection === itemId;
+
+                return (
+                  <button
+                    key={item.name}
+                    type="button"
+                    onClick={() => scrollToSection(item.href)}
+                    aria-pressed={isActive}
+                    className={`
+                      relative px-4 py-2 text-sm font-medium transition-colors
+                      ${isActive
+                        ? 'text-[var(--accent)]'
+                        : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
+                      }
+                    `}
+                  >
+                    {item.name}
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeNav"
+                        className="absolute inset-0 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20"
+                        style={{ zIndex: -1 }}
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
             </nav>
 
             {/* Desktop CTA Buttons */}
@@ -133,6 +159,7 @@ export function Header() {
               <a
                 href="/Naeem_Resume.pdf"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-ghost btn-sm flex items-center gap-2"
               >
                 <FaFileAlt className="w-3.5 h-3.5" />
@@ -151,9 +178,12 @@ export function Header() {
 
             {/* Mobile Menu Button */}
             <button
+              type="button"
               className="md:hidden p-2 text-[var(--foreground-muted)]"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
               {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </button>
@@ -176,31 +206,39 @@ export function Header() {
               WebkitBackdropFilter: 'blur(24px)',
             }}
           >
-            <nav className="p-4 flex flex-col gap-2">
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.name}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`
-                    w-full py-3 px-4 text-left rounded-xl transition-colors
-                    ${activeSection === item.href.replace('#', '')
-                      ? 'bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20'
-                      : 'text-[var(--foreground-muted)] hover:bg-white/5'
-                    }
-                  `}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  {item.name}
-                </motion.button>
-              ))}
+            <nav id="mobile-navigation" className="p-4 flex flex-col gap-2" aria-label="Mobile navigation">
+              {navItems.map((item, index) => {
+                const itemId = item.href.replace('#', '');
+                const isActive = activeSection === itemId;
+
+                return (
+                  <motion.button
+                    key={item.name}
+                    type="button"
+                    onClick={() => scrollToSection(item.href)}
+                    aria-pressed={isActive}
+                    className={`
+                      w-full py-3 px-4 text-left rounded-xl transition-colors
+                      ${isActive
+                        ? 'bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20'
+                        : 'text-[var(--foreground-muted)] hover:bg-white/5'
+                      }
+                    `}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    {item.name}
+                  </motion.button>
+                );
+              })}
               
               <div className="h-px bg-[var(--border)] my-2" />
               
               <motion.a
                 href="/Naeem_Resume.pdf"
                 target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-outline w-full justify-center"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
