@@ -612,6 +612,19 @@ textarea.input {
   }
 }
 
+/* Reduce costly visual effects on mobile/touch devices */
+@media (max-width: 768px), (pointer: coarse) {
+  body::after {
+    display: none;
+  }
+
+  .glass,
+  .btn-outline {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 @media (min-width: 481px) and (max-width: 768px) {
   .section {
     padding: var(--space-3xl) 0;

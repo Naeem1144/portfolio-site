@@ -38,6 +38,7 @@ For production deployment, set these environment variables in your hosting platf
 The site includes the following security features:
 
 - Security headers added via Next.js middleware
+- Security headers added via Next.js config
 - XSS protection
 - Content Security Policy
 - MIME type sniffing protection

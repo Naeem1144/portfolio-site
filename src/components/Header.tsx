@@ -18,31 +18,45 @@ export function Header() {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
+    let frameId: number | null = null;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      if (frameId !== null) return;
 
-      // Determine active section
-      const sections = ['contact', 'projects', 'about', 'home'];
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (!element) continue;
+      frameId = window.requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const nextIsScrolled = y > 50;
 
-        if (section === 'home' && window.scrollY < 100) {
-          setActiveSection('home');
-          break;
+        setIsScrolled((current) => (current === nextIsScrolled ? current : nextIsScrolled));
+
+        let detectedSection = 'home';
+        if (y >= 100) {
+          for (const section of ['contact', 'projects', 'about']) {
+            const element = document.getElementById(section);
+            if (!element) continue;
+
+            const rect = element.getBoundingClientRect();
+            if (rect.top <= 150 && rect.bottom >= 150) {
+              detectedSection = section;
+              break;
+            }
+          }
         }
 
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= 150 && rect.bottom >= 150) {
-          setActiveSection(section);
-          break;
-        }
-      }
+        setActiveSection((current) => (current === detectedSection ? current : detectedSection));
+        frameId = null;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const scrollToSection = (href: string) => {

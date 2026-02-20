@@ -1,5 +1,3 @@
-"use client";
-
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
@@ -69,7 +67,7 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
                 width={96}
                 height={96}
                 className="object-cover w-full h-full"
-                priority
+                sizes="(max-width: 640px) 80px, 96px"
               />
             </div>
             <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 bg-[var(--accent)] rounded-full border-2 border-[var(--background-card)]" />
