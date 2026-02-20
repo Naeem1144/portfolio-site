@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { graphql } from '@octokit/graphql';
+import { unstable_cache } from 'next/cache';
 
 const username = 'Naeem1144';
 
@@ -68,8 +69,7 @@ interface GraphQLResponse {
   };
 }
 
-// Function to fetch user profile data
-export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
+async function fetchGitHubProfileUncached(): Promise<GitHubProfile | null> {
   const client = authenticatedOctokit ?? publicOctokit;
 
   try {
@@ -122,6 +122,16 @@ export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
     console.error('Error fetching GitHub profile:', error);
     return null;
   }
+}
+
+const getCachedGitHubProfile = unstable_cache(fetchGitHubProfileUncached, ['github-profile'], {
+  revalidate: 60 * 60,
+  tags: ['github-profile'],
+});
+
+// Function to fetch user profile data
+export async function fetchGitHubProfile(): Promise<GitHubProfile | null> {
+  return getCachedGitHubProfile();
 }
 
 async function fetchFallbackRepos() {
@@ -197,8 +207,7 @@ async function fetchFallbackRepos() {
   }
 }
 
-// Function to fetch pinned repositories using GraphQL when possible, otherwise fall back
-export async function fetchPinnedRepos() {
+async function fetchPinnedReposUncached() {
   if (!graphqlWithAuth) {
     console.warn('GITHUB_TOKEN is not configured. Falling back to public repository data.');
     return fetchFallbackRepos();
@@ -259,4 +268,14 @@ export async function fetchPinnedRepos() {
     console.error('Error fetching pinned GitHub repos:', error);
     return [];
   }
+}
+
+const getCachedPinnedRepos = unstable_cache(fetchPinnedReposUncached, ['github-pinned-repos'], {
+  revalidate: 60 * 60,
+  tags: ['github-pinned-repos'],
+});
+
+// Function to fetch pinned repositories using GraphQL when possible, otherwise fall back
+export async function fetchPinnedRepos() {
+  return getCachedPinnedRepos();
 }

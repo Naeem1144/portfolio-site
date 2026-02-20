@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { ProjectsSection } from '@/components/ProjectsSection';
@@ -11,15 +10,19 @@ import { Footer } from '@/components/Footer';
 import { fetchGitHubProfile, fetchPinnedRepos } from '@/lib/github';
 import { Container, Section } from '@/components/ScrollRestoration';
 
+export const revalidate = 3600;
+
 export default async function Home() {
-  const profile = await fetchGitHubProfile();
-  const repos = await fetchPinnedRepos();
+  const [profile, repos] = await Promise.all([
+    fetchGitHubProfile(),
+    fetchPinnedRepos(),
+  ]);
 
   return (
     <>
       <Header />
       
-      <main className="flex flex-col items-center w-full">
+      <main id="main-content" tabIndex={-1} aria-label="Main content" className="flex flex-col items-center w-full">
         {/* Hero Section */}
         <HeroSection />
 
@@ -39,9 +42,7 @@ export default async function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Profile Card */}
               <div className="lg:col-span-1">
-                <Suspense fallback={<ProfileCard profile={null} isLoading={true} />}>
-                  <ProfileCard profile={profile} />
-                </Suspense>
+                <ProfileCard profile={profile} />
               </div>
               
               {/* More About Me */}
@@ -65,9 +66,7 @@ export default async function Home() {
         {/* Projects Section */}
         <Section id="projects">
           <Container>
-            <Suspense fallback={<ProjectsSection repos={[]} isLoading={true} />}>
-              <ProjectsSection repos={repos} />
-            </Suspense>
+            <ProjectsSection repos={repos} />
           </Container>
         </Section>
 

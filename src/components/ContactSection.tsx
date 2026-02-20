@@ -166,37 +166,39 @@ export function ContactSection() {
         {/* Right - Form */}
         <div className="card card-glow">
           <div className="card-content p-4 sm:p-6 md:p-8">
-            {/* Success Message */}
-            {submitStatus === 'success' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20"
-              >
-                <div className="flex items-center gap-3">
-                  <FaCheckCircle className="w-5 h-5 text-[var(--accent)] flex-shrink-0" />
-                  <p className="text-sm text-[var(--accent)]">
-                    Message sent! I&apos;ll get back to you soon.
-                  </p>
-                </div>
-              </motion.div>
-            )}
+            <div aria-live="polite" aria-atomic="true">
+              {/* Success Message */}
+              {submitStatus === 'success' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-4 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20"
+                >
+                  <div className="flex items-center gap-3">
+                    <FaCheckCircle className="w-5 h-5 text-[var(--accent)] flex-shrink-0" />
+                    <p className="text-sm text-[var(--accent)]">
+                      Message sent! I&apos;ll get back to you soon.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
 
-            {/* Error Message */}
-            {submitStatus === 'error' && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20"
-              >
-                <div className="flex items-center gap-3">
-                  <FaExclamationCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                  <p className="text-sm text-red-400">
-                    Something went wrong. Please try again.
-                  </p>
-                </div>
-              </motion.div>
-            )}
+              {/* Error Message */}
+              {submitStatus === 'error' && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20"
+                >
+                  <div className="flex items-center gap-3">
+                    <FaExclamationCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                    <p className="text-sm text-red-400">
+                      Something went wrong. Please try again.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Name & Email Row */}
@@ -213,6 +215,8 @@ export function ContactSection() {
                     onChange={handleChange}
                     required
                     placeholder="Your name"
+                    autoComplete="name"
+                    maxLength={80}
                     className="input"
                   />
                 </div>
@@ -228,6 +232,8 @@ export function ContactSection() {
                     onChange={handleChange}
                     required
                     placeholder="you@company.com"
+                    autoComplete="email"
+                    inputMode="email"
                     className="input"
                   />
                 </div>
@@ -246,8 +252,12 @@ export function ContactSection() {
                   required
                   rows={8}
                   placeholder="Tell me about the role or project..."
+                  maxLength={2000}
                   className="input resize-none"
                 />
+                <p className="mt-2 text-xs text-[var(--foreground-subtle)]">
+                  Include your goals, timeline, and expected scope for a faster response.
+                </p>
               </div>
 
               {/* Submit */}
