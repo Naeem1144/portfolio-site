@@ -23,20 +23,20 @@ export const viewport: Viewport = {
   minimumScale: 1,
   userScalable: true,
   viewportFit: "cover",
-  themeColor: '#050505',
+  themeColor: '#09090b',
 };
 
 export const metadata: Metadata = {
-  title: "Naeem — Data Scientist & Developer",
-  description: "Portfolio of Naeem, a data scientist and developer building intelligent solutions with AI, analytics, and modern web technologies.",
+  title: "Naeem — Data Science, Analytics, Machine Learning & AI",
+  description: "Portfolio of Naeem, focused on data science, data analytics, machine learning, and AI-driven problem solving.",
   icons: [
     { rel: 'icon', url: '/favicon.svg?v=3', type: 'image/svg+xml' },
     { rel: 'apple-touch-icon', url: '/favicon.svg?v=3' },
     { rel: 'shortcut icon', url: '/favicon.svg?v=3' }
   ],
   openGraph: {
-    title: "Naeem — Data Scientist & Developer",
-    description: "Building intelligent solutions with AI, analytics, and modern web technologies.",
+    title: "Naeem — Data Science, Analytics, Machine Learning & AI",
+    description: "Focused on data science, data analytics, machine learning, and AI-driven problem solving.",
     type: "website",
   },
 };

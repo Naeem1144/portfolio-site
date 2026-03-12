@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { FiAward, FiCalendar } from 'react-icons/fi';
 
 const certifications = [
   {
@@ -10,21 +9,18 @@ const certifications = [
     issuer: "Coursera",
     year: "2025",
     description: "Completed rigorous training covering the data lifecycle, analysis, visualization, and tools including SQL, R, and Tableau.",
-    color: "var(--accent)",
   },
   {
     title: "Data Science Certification",
     issuer: "Udemy",
     year: "2024",
     description: "Comprehensive training in data analysis, visualization, machine learning, deep neural networks, NLP, MLOps, Python, and related frameworks.",
-    color: "var(--tertiary)",
   },
   {
     title: "Data Analyst Certificate",
     issuer: "TOPS Technologies",
     year: "2023",
     description: "Completed 6 months of rigorous on-site training covering Python, statistics, Excel, Tableau, SQL, project building, and problem solving.",
-    color: "var(--secondary)",
   },
 ];
 
@@ -33,64 +29,42 @@ export function CertificationsSection() {
     <div className="w-full">
       {/* Section Header */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="section-header mb-10"
       >
-        <motion.span
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="badge badge-accent mb-4 inline-block"
-        >
-          Credentials
-        </motion.span>
         <h2 className="text-[var(--foreground)]">Certifications</h2>
         <p className="mx-auto">
           Professional certifications that validate my expertise
         </p>
       </motion.div>
 
-      {/* Certifications Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Timeline-style stacked list */}
+      <div className="border-t border-[var(--border)]">
         {certifications.map((cert, index) => (
           <motion.div
             key={cert.title}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
-            className="card"
+            transition={{ delay: index * 0.08 }}
+            className="grid grid-cols-1 sm:grid-cols-[80px_1fr] gap-1 sm:gap-8 py-5 border-b border-[var(--border)]"
           >
-            <div className="card-content p-4 sm:p-5">
-              {/* Icon & Year */}
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <div 
-                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center"
-                  style={{ backgroundColor: `${cert.color}15` }}
-                >
-                  <FiAward className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: cert.color }} />
-                </div>
-                <div className="flex items-center gap-1.5 text-xs text-[var(--foreground-subtle)]">
-                  <FiCalendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                  <span>{cert.year}</span>
-                </div>
-              </div>
+            {/* Year */}
+            <span className="font-mono text-sm text-[var(--foreground-subtle)] tabular-nums">
+              {cert.year}
+            </span>
 
-              {/* Title */}
-              <h3 className="font-semibold text-[var(--foreground)] mb-1 leading-tight text-sm sm:text-base">
+            {/* Details */}
+            <div>
+              <h3 className="font-medium text-[var(--foreground)] text-sm leading-relaxed mb-0.5">
                 {cert.title}
               </h3>
-
-              {/* Issuer */}
-              <p className="text-xs sm:text-sm text-[var(--accent)] font-medium mb-2 sm:mb-3">
+              <p className="text-xs text-[var(--foreground-subtle)] mb-2">
                 {cert.issuer}
               </p>
-
-              {/* Description */}
-              <p className="text-xs sm:text-sm text-[var(--foreground-muted)] leading-relaxed">
+              <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
                 {cert.description}
               </p>
             </div>

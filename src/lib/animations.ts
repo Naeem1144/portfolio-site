@@ -128,11 +128,11 @@ export const heroCTA = {
 export const cardHover = {
   rest: { 
     y: 0,
-    transition: { duration: 0.3, ease: "easeOut" }
+    transition: { duration: 0.2, ease: "easeOut" }
   },
   hover: { 
-    y: -8,
-    transition: { duration: 0.3, ease: "easeOut" }
+    y: -2,
+    transition: { duration: 0.2, ease: "easeOut" }
   }
 };
 
@@ -167,31 +167,15 @@ export const letterAnimation = {
   })
 };
 
-// Floating animation for decorative elements
-export const floatingAnimation = {
-  animate: {
-    y: [-10, 10, -10],
-    transition: {
-      duration: 4,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
-  }
-};
-
-// Glow pulse animation
-export const glowPulse = {
-  animate: {
-    boxShadow: [
-      "0 0 20px rgba(0, 255, 170, 0.2)",
-      "0 0 40px rgba(0, 255, 170, 0.4)",
-      "0 0 20px rgba(0, 255, 170, 0.2)"
-    ],
-    transition: {
-      duration: 2,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }
+// Card hover animation - refined
+export const cardHoverSubtle = {
+  rest: { 
+    y: 0,
+    transition: { duration: 0.2, ease: "easeOut" }
+  },
+  hover: { 
+    y: -2,
+    transition: { duration: 0.2, ease: "easeOut" }
   }
 };
 

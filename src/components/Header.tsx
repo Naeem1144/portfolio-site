@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGithub, FaBars, FaTimes, FaFileAlt } from 'react-icons/fa';
+import { FaGithub } from 'react-icons/fa';
+import { FiMenu, FiX, FiFileText } from 'react-icons/fi';
 
 const navItems = [
   { name: 'Home', href: '#home' },
@@ -21,7 +22,6 @@ export function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
 
-      // Determine active section
       const sections = ['contact', 'projects', 'about', 'home'];
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -56,48 +56,45 @@ export function Header() {
 
   return (
     <motion.header
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5, ease: [0.25, 0.4, 0.25, 1] }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
       className={`
-        fixed top-0 left-0 right-0 z-50 transition-all duration-300
-        ${isScrolled ? 'py-3' : 'py-5'}
+        fixed top-0 left-0 right-0 z-50 transition-all duration-200
+        ${isScrolled ? 'py-2.5' : 'py-4'}
       `}
     >
       <div 
-        className="mx-4 md:mx-8 rounded-2xl transition-all duration-300 border"
+        className="mx-4 md:mx-8 rounded-xl transition-all duration-200"
         style={{
-          background: isScrolled ? 'rgba(10, 10, 10, 0.8)' : 'transparent',
-          backdropFilter: isScrolled ? 'blur(12px)' : 'none',
-          WebkitBackdropFilter: isScrolled ? 'blur(12px)' : 'none',
+          background: isScrolled ? 'rgba(9, 9, 11, 0.85)' : 'transparent',
+          backdropFilter: isScrolled ? 'blur(16px) saturate(1.2)' : 'none',
+          WebkitBackdropFilter: isScrolled ? 'blur(16px) saturate(1.2)' : 'none',
+          borderWidth: '1px',
+          borderStyle: 'solid',
           borderColor: isScrolled ? 'var(--border)' : 'transparent',
-          boxShadow: isScrolled ? '0 8px 32px rgba(0, 0, 0, 0.3)' : 'none',
         }}
       >
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <div className="flex items-center justify-between h-14">
+        <div className="max-w-5xl mx-auto px-4 md:px-5">
+          <div className="flex items-center justify-between h-12">
             {/* Logo */}
-            <Link 
-              href="/" 
-              className="relative group"
-            >
-              <span className="text-xl font-bold tracking-tight">
-                <span className="text-[var(--foreground)]">N</span>
-                <span className="text-[var(--accent)]">.</span>
+            <Link href="/" className="relative">
+              <span className="text-lg font-semibold tracking-tight text-[var(--foreground)]">
+                N<span className="text-[var(--accent)]">.</span>
               </span>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-0.5">
               {navItems.map((item) => (
                 <button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
                   className={`
-                    relative px-4 py-2 text-sm font-medium transition-colors
+                    relative px-3.5 py-1.5 text-xs font-medium transition-colors rounded-md
                     ${activeSection === item.href.replace('#', '')
-                      ? 'text-[var(--accent)]'
-                      : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)]'
+                      ? 'text-[var(--foreground)]'
+                      : 'text-[var(--foreground-subtle)] hover:text-[var(--foreground-muted)]'
                     }
                   `}
                 >
@@ -105,43 +102,43 @@ export function Header() {
                   {activeSection === item.href.replace('#', '') && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute inset-0 rounded-lg bg-[var(--accent)]/10 border border-[var(--accent)]/20"
+                      className="absolute inset-0 rounded-md bg-[var(--chrome)]"
                       style={{ zIndex: -1 }}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
                     />
                   )}
                 </button>
               ))}
             </nav>
 
-            {/* Desktop CTA Buttons */}
+            {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-2">
               <a
                 href="/Naeem_Resume.pdf"
                 target="_blank"
-                className="btn btn-ghost btn-sm flex items-center gap-2"
+                className="btn btn-ghost btn-sm"
               >
-                <FaFileAlt className="w-3.5 h-3.5" />
+                <FiFileText className="w-3.5 h-3.5" />
                 Resume
               </a>
               <a
                 href="https://github.com/Naeem1144"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-primary btn-sm flex items-center gap-2"
+                className="btn btn-outline btn-sm"
               >
-                <FaGithub className="w-4 h-4" />
+                <FaGithub className="w-3.5 h-3.5" />
                 GitHub
               </a>
             </div>
 
             {/* Mobile Menu Button */}
             <button
-              className="md:hidden p-2 text-[var(--foreground-muted)]"
+              className="md:hidden p-1.5 text-[var(--foreground-muted)] hover:text-[var(--foreground)] transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
             >
-              {isMobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+              {isMobileMenuOpen ? <FiX size={18} /> : <FiMenu size={18} />}
             </button>
           </div>
         </div>
@@ -151,62 +148,64 @@ export function Header() {
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden mx-4 mt-2 rounded-2xl border border-[var(--border)] overflow-hidden"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.15 }}
+            className="md:hidden mx-4 mt-2 rounded-xl border border-[var(--border)] overflow-hidden"
             style={{
-              background: 'rgba(10, 10, 10, 0.95)',
+              background: 'rgba(9, 9, 11, 0.95)',
               backdropFilter: 'blur(24px)',
               WebkitBackdropFilter: 'blur(24px)',
             }}
           >
-            <nav className="p-4 flex flex-col gap-2">
+            <nav className="p-3 flex flex-col gap-1">
               {navItems.map((item, index) => (
                 <motion.button
                   key={item.name}
                   onClick={() => scrollToSection(item.href)}
                   className={`
-                    w-full py-3 px-4 text-left rounded-xl transition-colors
+                    w-full py-2.5 px-3 text-left text-sm rounded-lg transition-colors
                     ${activeSection === item.href.replace('#', '')
-                      ? 'bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/20'
-                      : 'text-[var(--foreground-muted)] hover:bg-white/5'
+                      ? 'bg-[var(--chrome)] text-[var(--foreground)]'
+                      : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--chrome)]/50'
                     }
                   `}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: index * 0.04 }}
                 >
                   {item.name}
                 </motion.button>
               ))}
               
-              <div className="h-px bg-[var(--border)] my-2" />
+              <div className="h-px bg-[var(--border)] my-1.5" />
               
-              <motion.a
-                href="/Naeem_Resume.pdf"
-                target="_blank"
-                className="btn btn-outline w-full justify-center"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <FaFileAlt className="mr-2" />
-                Resume
-              </motion.a>
-              <motion.a
-                href="https://github.com/Naeem1144"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-primary w-full justify-center"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.25 }}
-              >
-                <FaGithub className="mr-2" />
-                GitHub
-              </motion.a>
+              <div className="flex gap-2">
+                <motion.a
+                  href="/Naeem_Resume.pdf"
+                  target="_blank"
+                  className="btn btn-outline btn-sm flex-1 justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.18 }}
+                >
+                  <FiFileText className="w-3.5 h-3.5" />
+                  Resume
+                </motion.a>
+                <motion.a
+                  href="https://github.com/Naeem1144"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-outline btn-sm flex-1 justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.22 }}
+                >
+                  <FaGithub className="w-3.5 h-3.5" />
+                  GitHub
+                </motion.a>
+              </div>
             </nav>
           </motion.div>
         )}

@@ -24,41 +24,42 @@ export default async function Home() {
         <HeroSection />
 
         {/* About Section */}
-        <Section id="about">
+        <Section id="about" variant="elevated">
           <Container>
             {/* Section Header */}
-            <div className="section-header mb-12 text-center">
-              <span className="badge badge-accent mb-4 inline-block">About</span>
+            <div className="section-header mb-10 text-center">
               <h2 className="text-[var(--foreground)]">About Me</h2>
               <p className="mx-auto">
-                A glimpse into my journey, skills, and passion for technology
+                The background, mindset, and technical foundation behind my work
               </p>
             </div>
 
-            {/* About Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Profile Card */}
-              <div className="lg:col-span-1">
-                <Suspense fallback={<ProfileCard profile={null} isLoading={true} />}>
-                  <ProfileCard profile={profile} />
-                </Suspense>
-              </div>
-              
-              {/* More About Me */}
-              <div className="lg:col-span-2">
-                <MoreAboutMeSection />
-              </div>
+            {/* Profile */}
+            <div className="mb-10">
+              <Suspense fallback={<ProfileCard profile={null} isLoading={true} />}>
+                <ProfileCard profile={profile} />
+              </Suspense>
             </div>
 
-            {/* Skills Section */}
-            <div className="mt-16">
-              <CoreCompetenciesSection />
-            </div>
+            {/* Divider */}
+            <hr className="border-[var(--border)] mb-10" />
 
-            {/* Certifications Section */}
-            <div className="mt-16">
-              <CertificationsSection />
-            </div>
+            {/* More About Me */}
+            <MoreAboutMeSection />
+          </Container>
+        </Section>
+
+        {/* Skills Section */}
+        <Section id="skills">
+          <Container>
+            <CoreCompetenciesSection />
+          </Container>
+        </Section>
+
+        {/* Certifications Section */}
+        <Section id="certifications" variant="elevated">
+          <Container>
+            <CertificationsSection />
           </Container>
         </Section>
 
@@ -72,7 +73,7 @@ export default async function Home() {
         </Section>
 
         {/* Contact Section */}
-        <Section id="contact">
+        <Section id="contact" variant="elevated">
           <Container>
             <ContactSection />
           </Container>

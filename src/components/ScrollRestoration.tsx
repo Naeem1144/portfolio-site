@@ -18,14 +18,17 @@ export function Container({ className = '', children }: { className?: string; ch
 export function Section({ 
   id, 
   className = '', 
+  variant = 'default',
   children 
 }: { 
   id?: string; 
   className?: string; 
+  variant?: 'default' | 'elevated';
   children: React.ReactNode 
 }) {
+  const variantClass = variant === 'elevated' ? 'section-elevated' : '';
   return (
-    <section id={id} className={`section ${className}`.trim()}>
+    <section id={id} className={`section ${variantClass} ${className}`.trim()}>
       {children}
     </section>
   );
