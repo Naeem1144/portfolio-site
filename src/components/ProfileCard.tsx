@@ -55,13 +55,13 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
     >
       {/* Avatar */}
       <div className="flex-shrink-0">
-        <div className="w-24 h-24 rounded-full overflow-hidden border border-[var(--border)]">
+        <div className="w-24 h-24 rounded-full overflow-hidden border border-[var(--border)] ring-2 ring-[var(--accent)]/8 ring-offset-2 ring-offset-[var(--background-elevated)] hover:ring-[var(--accent)]/20 transition-all duration-300">
           <Image
             src={profile.avatarUrl}
             alt={`${profile.name}'s avatar`}
             width={96}
             height={96}
-            className="object-cover w-full h-full"
+            className="object-cover w-full h-full hover:scale-105 transition-transform duration-500"
             priority
           />
         </div>

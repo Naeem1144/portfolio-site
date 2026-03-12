@@ -59,7 +59,7 @@ void main() {
   float aspect = u_resolution.x / u_resolution.y;
   vec2 p = (uv - 0.5) * vec2(aspect, 1.0);
 
-  float t = u_time * 0.24;
+  float t = u_time * 0.20;
   vec2 driftA = vec2(cos(t * 0.9), sin(t * 0.7));
   vec2 driftB = vec2(-sin(t * 0.6), cos(t * 0.8));
 
@@ -68,7 +68,7 @@ void main() {
     snoise(p * 1.05 - driftB * 0.65 + vec2(-2.8, 3.7))
   );
 
-  vec2 fluid = p + warp * 0.24;
+  vec2 fluid = p + warp * 0.22;
 
   float n1 = snoise(fluid * 1.55 + vec2(t * 0.55, -t * 0.35));
   float n2 = snoise((fluid + warp * 0.38) * 2.65 - vec2(t * 0.30, t * 0.50));
@@ -77,23 +77,21 @@ void main() {
   float noise = n1 * 0.52 + n2 * 0.32 + n3 * 0.16;
   noise = smoothstep(-0.22, 0.66, noise);
 
-  /* colour palette — brighter indigo family */
-  vec3 indigo = vec3(0.584, 0.635, 0.992);   // lifted indigo glow
-  vec3 blue   = vec3(0.314, 0.556, 0.992);   // cool blue support
-  vec3 violet = vec3(0.475, 0.412, 0.988);   // restrained violet shift
-  vec3 dark   = vec3(0.035, 0.035, 0.067);   // near-black
+  /* colour palette */
+  vec3 indigo = vec3(0.584, 0.635, 0.992);
+  vec3 blue   = vec3(0.314, 0.556, 0.992);
+  vec3 violet = vec3(0.475, 0.412, 0.988);
+  vec3 dark   = vec3(0.035, 0.035, 0.067);
 
-  float centerGlow = smoothstep(1.25, 0.12, length(p * vec2(0.92, 1.05)));
+  /* full-screen ambient glow — no radial falloff */
+  float ambientGlow = 0.30;
+
   vec3 accent = mix(indigo, blue, n2*0.5+0.5);
   accent = mix(accent, violet, n3*0.2 + 0.25);
-  vec3 col = mix(dark, accent, noise * 0.74 + centerGlow * 0.16);
+  vec3 col = mix(dark, accent, noise * 0.55 + ambientGlow);
 
-  /* soft edge fade — keep the center readable, darken only the far edges */
-  float edgeX = smoothstep(0.01, 0.13, uv.x) * smoothstep(0.01, 0.13, 1.0 - uv.x);
-  float edgeY = smoothstep(0.01, 0.13, uv.y) * smoothstep(0.01, 0.13, 1.0 - uv.y);
-  float edge = max(edgeX * edgeY, 0.28);
-
-  float alpha = clamp(noise * 0.44 + centerGlow * 0.10, 0.0, 0.54) * edge;
+  /* NO edge fade — animation fills every pixel */
+  float alpha = clamp(noise * 0.40 + ambientGlow, 0.0, 0.50);
 
   gl_FragColor = vec4(col, alpha);
 }
@@ -112,7 +110,7 @@ export function FluidBackground() {
     if (!canvas) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const TARGET_FPS = 36;
+    const TARGET_FPS = 60;
     const FRAME_INTERVAL = 1000 / TARGET_FPS;
     let lastFrameTime = 0;
     let resizeObserver: ResizeObserver | null = null;

@@ -54,15 +54,15 @@ function ProjectRow({ repo, index }: { repo: Repo; index: number }) {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.06 }}
-      className="py-5 border-b border-[var(--border)] group"
+      className="py-5 border-b border-[var(--border)] group hover:bg-[var(--chrome)]/20 transition-colors duration-200 -mx-4 px-4 rounded-lg"
     >
       {/* Project name */}
       <div className="flex items-center justify-between gap-4 mb-2">
-        <h3 className="font-medium text-[var(--foreground)] font-mono text-sm truncate">
+        <h3 className="font-medium text-[var(--foreground)] font-mono text-sm truncate group-hover:text-[var(--accent)] transition-colors duration-200">
           {repo.name}
         </h3>
         {/* Links */}
-        <div className="flex items-center gap-4 flex-shrink-0">
+        <div className="flex items-center gap-4 flex-shrink-0 opacity-60 group-hover:opacity-100 transition-opacity duration-200">
           <a
             href={repo.htmlUrl}
             target="_blank"
@@ -87,16 +87,16 @@ function ProjectRow({ repo, index }: { repo: Repo; index: number }) {
       </div>
 
       {/* Description */}
-      <p className="text-sm text-[var(--foreground-muted)] leading-relaxed line-clamp-2">
+      <p className="text-sm text-[var(--foreground-muted)] leading-relaxed line-clamp-2 mb-2">
         {repo.description || 'No description provided.'}
       </p>
 
       {/* Language + Topics */}
-      <div className="flex items-center gap-3 mt-2 text-xs text-[var(--foreground-subtle)]">
+      <div className="flex items-center gap-3 text-xs text-[var(--foreground-subtle)]">
         {repo.language && (
           <div className="flex items-center gap-1.5">
             <span
-              className="w-2 h-2 rounded-full"
+              className="w-2 h-2 rounded-full ring-1 ring-white/5"
               style={{ backgroundColor: langColor }}
             />
             <span className="font-mono">{repo.language}</span>

@@ -28,7 +28,7 @@ export default async function Home() {
           <Container>
             {/* Section Header */}
             <div className="section-header mb-10 text-center">
-              <h2 className="text-[var(--foreground)]">About Me</h2>
+              <h2 className="text-[var(--foreground)]">About</h2>
               <p className="mx-auto">
                 The background, mindset, and technical foundation behind my work
               </p>
@@ -42,7 +42,7 @@ export default async function Home() {
             </div>
 
             {/* Divider */}
-            <hr className="border-[var(--border)] mb-10" />
+            <div className="h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent mb-10" />
 
             {/* More About Me */}
             <MoreAboutMeSection />

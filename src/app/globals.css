@@ -8,7 +8,6 @@
   /* Core Color System - Near-black + Single Accent */
   --background: #09090b;
   --background-elevated: #0e0e11;
-  --background-subtle: #1c1c21;
   
   --foreground: #ececef;
   --foreground-muted: #94949e;
@@ -17,7 +16,6 @@
   /* Single Accent - Indigo (refined, calm, intelligent) */
   --accent: #818cf8;
   --accent-muted: #6366f1;
-  --accent-subtle: #4f46e5;
   --accent-rgb: 129, 140, 248;
   
   /* Neutral Chrome */
@@ -57,7 +55,6 @@
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ================================================================
@@ -125,11 +122,6 @@ h2 {
 p {
   color: var(--foreground-muted);
   max-width: 60ch;
-}
-
-/* Accent text color */
-.text-accent {
-  color: var(--accent);
 }
 
 /* ================================================================
@@ -327,11 +319,6 @@ textarea.input {
    DIVIDERS
    ================================================================ */
 
-.divider {
-  height: 1px;
-  background: var(--border);
-}
-
 /* ================================================================
    ANIMATIONS
    ================================================================ */
@@ -482,4 +469,16 @@ textarea.input {
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
+}
+
+
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--foreground) 0%,
+    var(--foreground-muted) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

@@ -83,6 +83,11 @@ export function ContactSection() {
         viewport={{ once: true }}
         className="section-header mb-10"
       >
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <span className="w-6 h-px bg-gradient-to-r from-transparent to-[var(--accent)] opacity-30" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] opacity-40" />
+          <span className="w-6 h-px bg-gradient-to-l from-transparent to-[var(--accent)] opacity-30" />
+        </div>
         <h2 className="text-[var(--foreground)]">Get in Touch</h2>
         <p className="mx-auto">
           Open to full-time roles, freelance projects, and collaborations.
@@ -104,8 +109,10 @@ export function ContactSection() {
             machine learning, deep learning, and data analytics to solve meaningful problems.
           </p>
 
-          <p className="text-xs text-[var(--foreground-subtle)] mb-6">
-            Ontario, Canada · Open to work
+          <p className="text-xs text-[var(--foreground-ghost)] mb-6 font-mono tracking-wide">
+            Ontario, Canada
+            <span className="mx-2 text-[var(--accent)] opacity-50">·</span>
+            <span className="text-[var(--accent)] opacity-70">Open to work</span>
           </p>
 
           {/* Contact Links — row/divider pattern */}
@@ -120,12 +127,12 @@ export function ContactSection() {
                   group"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <link.icon className="w-4 h-4 text-[var(--foreground-subtle)] flex-shrink-0" />
-                  <span className="text-sm text-[var(--foreground-muted)] group-hover:text-[var(--foreground)] transition-colors truncate">
+                  <link.icon className="w-4 h-4 text-[var(--foreground-ghost)] group-hover:text-[var(--accent)] transition-colors duration-200 flex-shrink-0" />
+                  <span className="text-sm text-[var(--foreground-muted)] group-hover:text-[var(--foreground)] transition-colors duration-200 truncate">
                     {link.value}
                   </span>
                 </div>
-                <FiArrowUpRight className="w-3.5 h-3.5 text-[var(--foreground-subtle)] group-hover:text-[var(--foreground-muted)] transition-colors flex-shrink-0" />
+                <FiArrowUpRight className="w-3.5 h-3.5 text-[var(--foreground-ghost)] group-hover:text-[var(--foreground-muted)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 flex-shrink-0" />
               </a>
             ))}
           </div>
@@ -138,7 +145,7 @@ export function ContactSection() {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-5 flex items-center gap-2.5"
+              className="mb-5 flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/15"
             >
               <FaCheckCircle className="w-4 h-4 text-emerald-400 flex-shrink-0" />
               <p className="text-sm text-emerald-400">
@@ -152,7 +159,7 @@ export function ContactSection() {
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-5 flex items-center gap-2.5"
+              className="mb-5 flex items-center gap-2.5 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/15"
             >
               <FaExclamationCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
               <p className="text-sm text-red-400">
@@ -161,10 +168,22 @@ export function ContactSection() {
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <motion.form 
+            onSubmit={handleSubmit} 
+            className="space-y-5"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
             {/* Name & Email Row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.25 }}
+              >
                 <label htmlFor="name" className="label">
                   Name
                 </label>
@@ -178,8 +197,13 @@ export function ContactSection() {
                   placeholder="Your name"
                   className="input"
                 />
-              </div>
-              <div>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+              >
                 <label htmlFor="email" className="label">
                   Email
                 </label>
@@ -193,11 +217,16 @@ export function ContactSection() {
                   placeholder="you@company.com"
                   className="input"
                 />
-              </div>
+              </motion.div>
             </div>
 
             {/* Message */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.35 }}
+            >
               <label htmlFor="message" className="label">
                 Message
               </label>
@@ -211,33 +240,40 @@ export function ContactSection() {
                 placeholder="Tell me about the role or project..."
                 className="input resize-none"
               />
-            </div>
+            </motion.div>
 
             {/* Submit */}
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              className="w-full"
-              disabled={isSubmitting}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4 }}
             >
-              {isSubmitting ? (
-                <>
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="w-4 h-4 border-2 border-[var(--background)] border-t-transparent rounded-full"
-                  />
-                  Sending...
-                </>
-              ) : (
-                <>
-                  <FiSend className="w-3.5 h-3.5" />
-                  Send Message
-                </>
-              )}
-            </Button>
-          </form>
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                className="w-full"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                      className="w-4 h-4 border-2 border-[var(--background)] border-t-transparent rounded-full"
+                    />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <FiSend className="w-3.5 h-3.5" />
+                    Send Message
+                  </>
+                )}
+              </Button>
+            </motion.div>
+          </motion.form>
         </div>
       </motion.div>
     </div>

@@ -51,12 +51,13 @@ export function MoreAboutMeSection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 + index * 0.06 }}
-            className="py-4 border-b border-[var(--border)]"
+            className="py-4 border-b border-[var(--border)] hover:bg-[var(--chrome)]/10 transition-colors duration-200 -mx-4 px-4"
           >
-            <h4 className="font-medium text-[var(--foreground)] text-sm mb-1">
+            <h4 className="font-medium text-[var(--foreground)] text-sm mb-1 flex items-center gap-2">
+              <span className="w-1 h-1 rounded-full bg-[var(--accent)] opacity-40" />
               {item.title}
             </h4>
-            <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
+            <p className="text-sm text-[var(--foreground-muted)] leading-relaxed pl-3">
               {item.description}
             </p>
           </motion.div>

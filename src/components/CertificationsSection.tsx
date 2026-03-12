@@ -34,6 +34,11 @@ export function CertificationsSection() {
         viewport={{ once: true }}
         className="section-header mb-10"
       >
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <span className="w-6 h-px bg-gradient-to-r from-transparent to-[var(--accent)] opacity-30" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] opacity-40" />
+          <span className="w-6 h-px bg-gradient-to-l from-transparent to-[var(--accent)] opacity-30" />
+        </div>
         <h2 className="text-[var(--foreground)]">Certifications</h2>
         <p className="mx-auto">
           Professional certifications that validate my expertise
@@ -49,19 +54,21 @@ export function CertificationsSection() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: index * 0.08 }}
-            className="grid grid-cols-1 sm:grid-cols-[80px_1fr] gap-1 sm:gap-8 py-5 border-b border-[var(--border)]"
+            className="grid grid-cols-1 sm:grid-cols-[80px_1fr] gap-1 sm:gap-8 py-5 border-b border-[var(--border)] hover:bg-[var(--chrome)]/10 transition-colors duration-200 -mx-4 px-4"
           >
             {/* Year */}
-            <span className="font-mono text-sm text-[var(--foreground-subtle)] tabular-nums">
-              {cert.year}
-            </span>
+            <div className="flex items-start gap-2">
+              <span className="font-mono text-sm text-[var(--foreground-subtle)] tabular-nums mt-0.5">
+                {cert.year}
+              </span>
+            </div>
 
             {/* Details */}
-            <div>
+            <div className="relative">
               <h3 className="font-medium text-[var(--foreground)] text-sm leading-relaxed mb-0.5">
                 {cert.title}
               </h3>
-              <p className="text-xs text-[var(--foreground-subtle)] mb-2">
+              <p className="text-xs text-[var(--accent)] font-medium mb-2 opacity-70">
                 {cert.issuer}
               </p>
               <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">

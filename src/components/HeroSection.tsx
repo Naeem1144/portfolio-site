@@ -58,12 +58,12 @@ export function HeroSection() {
     >
       {/* Static fallback glow so the hero reads even without WebGL */}
       <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-1/2 top-[44%] -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute left-1/2 top-[30%] -translate-x-1/2 -translate-y-1/2">
           <motion.div
-            className="h-[26rem] w-[26rem] rounded-full blur-3xl sm:h-[30rem] sm:w-[30rem]"
+            className="h-[50svh] w-[50svh] max-h-[40rem] max-w-[40rem] rounded-full blur-3xl"
             style={{
               background:
-                'radial-gradient(circle, rgba(var(--accent-rgb), 0.18) 0%, rgba(var(--accent-rgb), 0.10) 28%, rgba(99, 102, 241, 0.05) 50%, transparent 74%)',
+                'radial-gradient(circle, rgba(var(--accent-rgb), 0.15) 0%, rgba(var(--accent-rgb), 0.08) 28%, rgba(99, 102, 241, 0.04) 50%, transparent 74%)',
             }}
             animate={
               reduceMotion
@@ -82,12 +82,12 @@ export function HeroSection() {
             }}
           />
         </div>
-        <div className="absolute left-1/2 top-[60%] -translate-x-1/2 -translate-y-1/2">
+        <div className="absolute left-1/2 top-[70%] -translate-x-1/2 -translate-y-1/2">
           <motion.div
-            className="h-[36rem] w-[36rem] rounded-full blur-[120px] sm:h-[42rem] sm:w-[42rem]"
+            className="h-[60svh] w-[60svh] max-h-[48rem] max-w-[48rem] rounded-full blur-[120px]"
             style={{
               background:
-                'radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, rgba(79, 70, 229, 0.07) 34%, transparent 70%)',
+                'radial-gradient(circle, rgba(99, 102, 241, 0.06) 0%, rgba(79, 70, 229, 0.04) 34%, transparent 70%)',
             }}
             animate={
               reduceMotion
@@ -121,34 +121,38 @@ export function HeroSection() {
         >
           {/* Status badge */}
           <motion.div variants={fadeIn} className="mb-8 sm:mb-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border)] bg-[var(--background-elevated)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]" />
-              <span className="text-xs text-[var(--foreground-muted)]">Available for opportunities</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[var(--border)] bg-[var(--background-elevated)] backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
+              <span className="text-xs font-medium text-[var(--foreground-muted)] tracking-wide">Available for opportunities</span>
             </div>
           </motion.div>
 
-          {/* Name — mask reveal (text rises into view) */}
-          <div className="overflow-hidden mb-4">
+          {/* Name — mask reveal with gradient */}
+          <div className="overflow-hidden mb-5">
             <motion.h1 variants={maskReveal}>
-              <span className="text-[var(--foreground)]">Naeem</span>
+              <span className="gradient-text">Naeem</span>
             </motion.h1>
           </div>
 
-          {/* Role */}
+          {/* Role — split emphasis */}
           <motion.p
             variants={fadeUp}
-            className="text-lg sm:text-xl md:text-2xl text-[var(--foreground-muted)] font-light tracking-tight mb-5"
+            className="text-base sm:text-lg md:text-xl tracking-tight mb-6"
           >
-            Data Science, Analytics, Machine Learning &amp; AI
+            <span className="text-[var(--foreground)] font-light">Data Science</span>
+            <span className="text-[var(--foreground-ghost)] font-light mx-2">·</span>
+            <span className="text-[var(--foreground)] font-light">Machine Learning</span>
+            <span className="text-[var(--foreground-ghost)] font-light mx-2">·</span>
+            <span className="text-[var(--accent)] font-medium opacity-80">AI</span>
           </motion.p>
 
           {/* Tagline */}
           <motion.p
             variants={fadeUp}
-            className="text-sm sm:text-base text-[var(--foreground-subtle)] max-w-md mx-auto mb-10 sm:mb-12 leading-relaxed"
+            className="text-sm sm:text-base text-[var(--foreground-muted)] max-w-md mx-auto mb-10 sm:mb-12 leading-relaxed"
           >
-            I use data science, analytics, machine learning, and AI to uncover
-            patterns, build predictive solutions, and turn raw data into decisions.
+            Investigating intelligence through data, algorithms, mathematical
+            structure and underlying learning systems.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -167,11 +171,11 @@ export function HeroSection() {
         </motion.div>
       </div>
 
-      {/* Bottom gradient fade into elevated section */}
+      {/* Fade into next section (elevated bg) */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none"
+        className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
         style={{
-          background: 'linear-gradient(to top, var(--background-elevated), transparent)',
+          background: 'linear-gradient(to bottom, transparent 0%, var(--background-elevated) 100%)',
         }}
       />
     </section>

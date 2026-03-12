@@ -51,7 +51,7 @@ export function Footer() {
                   <a
                     key={link.label}
                     href={link.href}
-                    className="inline-flex items-center rounded-full border border-[var(--border)] px-3 py-1.5 text-xs text-[var(--foreground-muted)] transition-colors hover:text-[var(--foreground)] hover:border-[rgba(255,255,255,0.12)]"
+                    className="inline-flex items-center rounded-full border border-[var(--border)] px-3 py-1.5 text-xs text-[var(--foreground-muted)] transition-all duration-200 hover:text-[var(--foreground)] hover:border-[var(--border-hover)] hover:bg-[var(--chrome)]/30"
                   >
                     {link.label}
                   </a>
@@ -65,11 +65,11 @@ export function Footer() {
                     href={link.href}
                     target={link.href.startsWith('http') ? '_blank' : undefined}
                     rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-3 py-1.5 text-xs text-[var(--foreground-subtle)] transition-colors hover:text-[var(--foreground)] hover:border-[rgba(var(--accent-rgb),0.2)]"
+                    className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] px-3 py-1.5 text-xs text-[var(--foreground-subtle)] transition-all duration-200 hover:text-[var(--foreground)] hover:border-[var(--border-hover)] hover:bg-[var(--chrome)]/30 group"
                   >
-                    <link.icon className="h-3.5 w-3.5" />
+                    <link.icon className="h-3.5 w-3.5 group-hover:text-[var(--accent)] transition-colors duration-200" />
                     <span>{link.label}</span>
-                    <FiArrowUpRight className="h-3 w-3" />
+                    <FiArrowUpRight className="h-3 w-3 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200" />
                   </a>
                 ))}
               </div>
