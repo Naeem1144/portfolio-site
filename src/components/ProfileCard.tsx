@@ -19,6 +19,10 @@ interface ProfileCardProps {
   isLoading?: boolean;
 }
 
+// Shown instead of the GitHub profile location — the site targets the
+// Ahmedabad job market
+const LOCATION = "Ahmedabad, Gujarat, India";
+
 function ProfileSkeleton() {
   return (
     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
@@ -76,7 +80,7 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
         {profile.location && (
           <div className="flex items-center justify-center sm:justify-start gap-1.5 text-xs text-[var(--foreground-subtle)] mb-3">
             <FiMapPin className="w-3 h-3" />
-            <span>{profile.location}</span>
+            <span>{LOCATION}</span>
           </div>
         )}
 
@@ -89,7 +93,7 @@ export function ProfileCard({ profile, isLoading = false }: ProfileCardProps) {
         {/* Actions */}
         <div className="flex flex-wrap justify-center sm:justify-start gap-3">
           <Button
-            href="/Naeem_Resume.pdf"
+            href="/Naeem_Nagori_Resume.pdf"
             download
             variant="primary"
           >

@@ -1,20 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Sora, JetBrains_Mono } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-
-const sora = Sora({
-  variable: "--font-sora",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: 'swap',
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -23,20 +10,22 @@ export const viewport: Viewport = {
   minimumScale: 1,
   userScalable: true,
   viewportFit: "cover",
-  themeColor: '#09090b',
+  themeColor: "#f5f4ee",
 };
 
 export const metadata: Metadata = {
-  title: "Naeem — Data Science, Analytics, Machine Learning & AI",
-  description: "Portfolio of Naeem, focused on data science, data analytics, machine learning, and AI-driven problem solving.",
+  title: "Naeem Nagori — Data Analytics & Customer Insights",
+  description:
+    "Data analyst in Ahmedabad, India, focused on reporting, marketing analytics, and customer insights. Selected work in SQL, Power BI, and Python.",
   icons: [
-    { rel: 'icon', url: '/favicon.svg?v=3', type: 'image/svg+xml' },
-    { rel: 'apple-touch-icon', url: '/favicon.svg?v=3' },
-    { rel: 'shortcut icon', url: '/favicon.svg?v=3' }
+    { rel: "icon", url: "/favicon.svg?v=4", type: "image/svg+xml" },
+    { rel: "apple-touch-icon", url: "/favicon.svg?v=4" },
+    { rel: "shortcut icon", url: "/favicon.svg?v=4" },
   ],
   openGraph: {
-    title: "Naeem — Data Science, Analytics, Machine Learning & AI",
-    description: "Focused on data science, data analytics, machine learning, and AI-driven problem solving.",
+    title: "Naeem Nagori — Making data mean more",
+    description:
+      "Selected projects in customer insights, reporting, and business intelligence, using SQL, Power BI, and Python.",
     type: "website",
   },
 };
@@ -47,17 +36,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sora.variable} ${jetbrainsMono.variable}`}>
-      <body
-        className="antialiased"
-        style={{
-          fontFamily: 'var(--font-sora), system-ui, sans-serif',
-        }}
-        suppressHydrationWarning
-      >
-        <div className="min-h-svh flex flex-col">
-          {children}
-        </div>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      <body className="antialiased" suppressHydrationWarning>
+        <div className="min-h-svh flex flex-col">{children}</div>
       </body>
     </html>
   );

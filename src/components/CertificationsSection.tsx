@@ -1,81 +1,62 @@
-"use client";
-
-import React from 'react';
-import { motion } from 'framer-motion';
+import { Award } from "lucide-react";
 
 const certifications = [
   {
-    title: "Google Data Analytics Professional Certificate",
-    issuer: "Coursera",
+    title: "Google Data Analytics",
+    detail: "Professional Certificate",
+    issuer: "Google / Coursera",
     year: "2025",
-    description: "Completed rigorous training covering the data lifecycle, analysis, visualization, and tools including SQL, R, and Tableau.",
+    mark: "G",
+    description:
+      "Data lifecycle, analysis, visualization, SQL, spreadsheets, and Tableau.",
   },
   {
-    title: "Data Science Certification",
-    issuer: "Udemy",
+    title: "Inbound Marketing",
+    detail: "Professional Certification",
+    issuer: "HubSpot Academy",
     year: "2024",
-    description: "Comprehensive training in data analysis, visualization, machine learning, deep neural networks, NLP, MLOps, Python, and related frameworks.",
+    mark: "H",
+    description:
+      "Content strategy and a data-driven approach to the marketing funnel.",
   },
   {
-    title: "Data Analyst Certificate",
+    title: "Data Analytics",
+    detail: "Classroom Training & Certification",
     issuer: "TOPS Technologies",
     year: "2023",
-    description: "Completed 6 months of rigorous on-site training covering Python, statistics, Excel, Tableau, SQL, project building, and problem solving.",
+    mark: "T",
+    description:
+      "Python, statistics, Excel, Tableau, SQL, and project development.",
   },
 ];
 
 export function CertificationsSection() {
   return (
-    <div className="w-full">
-      {/* Section Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="section-header mb-10"
-      >
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <span className="w-6 h-px bg-gradient-to-r from-transparent to-[var(--accent)] opacity-30" />
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] opacity-40" />
-          <span className="w-6 h-px bg-gradient-to-l from-transparent to-[var(--accent)] opacity-30" />
-        </div>
-        <h2 className="text-[var(--foreground)]">Certifications</h2>
-        <p className="mx-auto">
-          Professional certifications that validate my expertise
-        </p>
-      </motion.div>
-
-      {/* Timeline-style stacked list */}
-      <div className="border-t border-[var(--border)]">
-        {certifications.map((cert, index) => (
-          <motion.div
-            key={cert.title}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.08 }}
-            className="grid grid-cols-1 sm:grid-cols-[80px_1fr] gap-1 sm:gap-8 py-5 border-b border-[var(--border)] hover:bg-[var(--chrome)]/10 transition-colors duration-200 -mx-4 px-4"
-          >
-            {/* Year */}
-            <div className="flex items-start gap-2">
-              <span className="font-mono text-sm text-[var(--foreground-subtle)] tabular-nums mt-0.5">
-                {cert.year}
-              </span>
+    <div className="credentials-layout">
+      <div>
+        <span className="eyebrow">04 / CREDENTIALS</span>
+        <h2>
+          Study, then
+          <br />
+          <em>build.</em>
+        </h2>
+        <p>Structured learning, applied through projects.</p>
+        <Award size={48} strokeWidth={0.8} className="credential-decoration" />
+      </div>
+      <div className="credentials-list">
+        {certifications.map((cert) => (
+          <article key={cert.title} className="credential">
+            <div className="credential-mark" aria-hidden="true">
+              {cert.mark}
             </div>
-
-            {/* Details */}
-            <div className="relative">
-              <h3 className="font-medium text-[var(--foreground)] text-sm leading-relaxed mb-0.5">
-                {cert.title}
-              </h3>
-              <p className="text-xs text-[var(--accent)] font-medium mb-2 opacity-70">
-                {cert.issuer}
-              </p>
-              <p className="text-sm text-[var(--foreground-muted)] leading-relaxed">
-                {cert.description}
-              </p>
+            <div>
+              <span className="eyebrow">{cert.issuer}</span>
+              <h3>{cert.title}</h3>
+              <p className="credential-detail">{cert.detail}</p>
+              <p>{cert.description}</p>
             </div>
-          </motion.div>
+            <span className="credential-year">{cert.year}</span>
+          </article>
         ))}
       </div>
     </div>

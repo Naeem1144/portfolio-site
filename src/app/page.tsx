@@ -1,85 +1,47 @@
-import { Suspense } from 'react';
-import { Header } from '@/components/Header';
-import { HeroSection } from '@/components/HeroSection';
-import { ProjectsSection } from '@/components/ProjectsSection';
-import { MoreAboutMeSection } from '@/components/MoreAboutMeSection';
-import { CoreCompetenciesSection } from '@/components/CoreCompetenciesSection';
-import { CertificationsSection } from '@/components/CertificationsSection';
-import { ContactSection } from '@/components/ContactSection';
-import { ProfileCard } from '@/components/ProfileCard';
-import { Footer } from '@/components/Footer';
-import { fetchGitHubProfile, fetchPinnedRepos } from '@/lib/github';
-import { Container, Section } from '@/components/ScrollRestoration';
+import { Header } from "@/components/Header";
+import { HeroSection } from "@/components/HeroSection";
+import { ProjectsSection } from "@/components/ProjectsSection";
+import { MoreAboutMeSection } from "@/components/MoreAboutMeSection";
+import { CoreCompetenciesSection } from "@/components/CoreCompetenciesSection";
+import { CertificationsSection } from "@/components/CertificationsSection";
+import { ContactSection } from "@/components/ContactSection";
+import { Footer } from "@/components/Footer";
 
-export default async function Home() {
-  const profile = await fetchGitHubProfile();
-  const repos = await fetchPinnedRepos();
-
+export default function Home() {
   return (
     <>
+      <a href="#main" className="skip-link">
+        Skip to content
+      </a>
       <Header />
-      
-      <main className="flex flex-col items-center w-full">
-        {/* Hero Section */}
+      <main id="main" tabIndex={-1}>
         <HeroSection />
-
-        {/* About Section */}
-        <Section id="about" variant="elevated">
-          <Container>
-            {/* Section Header */}
-            <div className="section-header mb-10 text-center">
-              <h2 className="text-[var(--foreground)]">About</h2>
-              <p className="mx-auto">
-                The background, mindset, and technical foundation behind my work
-              </p>
-            </div>
-
-            {/* Profile */}
-            <div className="mb-10">
-              <Suspense fallback={<ProfileCard profile={null} isLoading={true} />}>
-                <ProfileCard profile={profile} />
-              </Suspense>
-            </div>
-
-            {/* Divider */}
-            <div className="h-px bg-gradient-to-r from-transparent via-[var(--border)] to-transparent mb-10" />
-
-            {/* More About Me */}
+        <section id="projects" className="section work-section">
+          <div className="container">
+            <ProjectsSection />
+          </div>
+        </section>
+        <section id="about" className="section about-section">
+          <div className="container">
             <MoreAboutMeSection />
-          </Container>
-        </Section>
-
-        {/* Skills Section */}
-        <Section id="skills">
-          <Container>
+          </div>
+        </section>
+        <section id="skills" className="section skills-section">
+          <div className="container">
             <CoreCompetenciesSection />
-          </Container>
-        </Section>
-
-        {/* Certifications Section */}
-        <Section id="certifications" variant="elevated">
-          <Container>
+          </div>
+        </section>
+        <section id="certifications" className="section credentials-section">
+          <div className="container">
             <CertificationsSection />
-          </Container>
-        </Section>
-
-        {/* Projects Section */}
-        <Section id="projects">
-          <Container>
-            <Suspense fallback={<ProjectsSection repos={[]} isLoading={true} />}>
-              <ProjectsSection repos={repos} />
-            </Suspense>
-          </Container>
-        </Section>
-
-        {/* Contact Section */}
-        <Section id="contact" variant="elevated">
-          <Container>
+          </div>
+        </section>
+        <section id="contact" className="section contact-section">
+          <div className="container">
             <ContactSection />
-          </Container>
-        </Section>
+          </div>
+        </section>
       </main>
-
       <Footer />
     </>
   );
