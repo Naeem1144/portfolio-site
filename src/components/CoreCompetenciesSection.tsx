@@ -11,7 +11,7 @@ const competencies = [
     icon: Database,
     number: "01",
     title: "Prepare the data.",
-    subtitle: "ANALYSIS & PREPARATION",
+    subtitle: "DATA ANALYSIS",
     description:
       "Clean, structure, and explore datasets to answer focused questions.",
     skills: [
@@ -25,11 +25,11 @@ const competencies = [
     icon: ChartNoAxesCombined,
     number: "02",
     title: "Make it visible.",
-    subtitle: "REPORTING & VISUALIZATION",
+    subtitle: "BUSINESS INTELLIGENCE",
     description:
       "Build clear dashboards and communicate what the data shows.",
     skills: [
-      "Power BI & Power BI Service",
+      "Power BI, Power BI Service & Tableau",
       "Advanced Excel & automation",
       "Matplotlib & Seaborn",
       "Dashboard design & data storytelling",
@@ -39,27 +39,27 @@ const competencies = [
     icon: BrainCircuit,
     number: "03",
     title: "Test the patterns.",
-    subtitle: "MODELING & METHODS",
+    subtitle: "DATA SCIENCE & AI",
     description:
-      "Model customer groups and test whether the findings hold up.",
+      "Model customer groups, test patterns, and build with machine and deep learning.",
     skills: [
       "K-Means, DBSCAN & HDBSCAN",
       "scikit-learn & predictive modeling",
-      "Feature engineering & validation",
-      "PCA, t-SNE & A/B testing",
+      "Deep learning · CNNs · NLP",
+      "PCA, t-SNE & reinforcement learning",
     ],
   },
   {
     icon: Workflow,
     number: "04",
     title: "Add the context.",
-    subtitle: "TOOLS & COLLABORATION",
+    subtitle: "MARKETING & BUSINESS",
     description:
-      "Pair technical analysis with business context, documentation, and communication.",
+      "Pair technical analysis with marketing strategy, business context, and communication.",
     skills: [
-      "Jupyter Notebook & Git / GitHub",
-      "Relational databases",
-      "Business & marketing acumen",
+      "Google Analytics & Google Ads",
+      "SEO, email marketing & CRM",
+      "Marketing analytics & funnels",
       "Documentation & presentation",
     ],
   },
@@ -106,7 +106,11 @@ export function CoreCompetenciesSection() {
       <div className="toolkit-notes">
         <p>
           <span className="eyebrow">ALSO EXPLORING</span>Deep neural networks ·
-          CNNs · Reinforcement learning
+          CNNs · Reinforcement learning · NLP
+        </p>
+        <p>
+          <span className="eyebrow">AI TOOLS</span>ChatGPT · Claude · GitHub
+          Copilot
         </p>
         <p>
           <span className="eyebrow">HUMAN LANGUAGES</span>English (C1, IELTS

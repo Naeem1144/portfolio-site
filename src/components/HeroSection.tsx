@@ -1,6 +1,42 @@
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { SignalSculpture } from "./SignalSculpture";
 
+const tools = [
+  "SQL",
+  "Python",
+  "Power BI",
+  "Excel",
+  "Tableau",
+  "DAX",
+  "Data modeling",
+  "ETL",
+  "KPI reporting",
+  "Data storytelling",
+  "Data analysis",
+  "Statistics",
+  "A/B testing",
+  "pandas",
+  "NumPy",
+  "scikit-learn",
+  "Matplotlib",
+  "Seaborn",
+  "Jupyter",
+  "Git",
+  "Deep learning",
+  "NLP",
+  "Computer vision",
+  "Reinforcement learning",
+  "ChatGPT",
+  "Claude",
+  "GitHub Copilot",
+  "Google Analytics",
+  "Google Ads",
+  "SEO",
+  "Email marketing",
+  "CRM",
+  "Marketing analytics",
+];
+
 export function HeroSection() {
   return (
     <section id="home" className="hero">
@@ -8,10 +44,6 @@ export function HeroSection() {
         <div className="hero-topline">
           <span className="eyebrow">
             ANALYTICAL THINKING. HUMAN PERSPECTIVE.
-          </span>
-          <span className="availability">
-            <i />
-            Open to opportunities
           </span>
         </div>
         <div className="hero-grid">
@@ -29,7 +61,8 @@ export function HeroSection() {
             </h1>
             <p>
               I connect <strong>data and people</strong>—turning complex
-              information into clear insights and better decisions.
+              information into clear dashboards, useful models, and better
+              decisions.
             </p>
             <div className="hero-actions">
               <a href="#projects" className="button button-dark">
@@ -47,8 +80,8 @@ export function HeroSection() {
             BASED IN AHMEDABAD, INDIA <span className="location-cross">↗</span>
           </span>
           <span className="hero-discipline">
-            Data analytics <span>/</span> Customer insights <span>/</span>{" "}
-            Business intelligence
+            Data analytics <span>/</span> Data science <span>/</span> Business
+            intelligence <span>/</span> Marketing analytics
           </span>
           <a
             href="#projects"
@@ -61,17 +94,23 @@ export function HeroSection() {
       </div>
       <div className="tool-ribbon">
         <div className="container ribbon-inner">
-          <span className="eyebrow">TOOLS I USE</span>
-          <div>
-            <span>SQL</span>
-            <i>✳</i>
-            <span>Python</span>
-            <i>✳</i>
-            <span>Power BI</span>
-            <i>✳</i>
-            <span>Excel</span>
-            <i>✳</i>
-            <span>scikit-learn</span>
+          <div className="ribbon-strip">
+            <div className="ribbon-track">
+              {[false, true].map((isClone) => (
+                <div
+                  className="ribbon-group"
+                  key={String(isClone)}
+                  aria-hidden={isClone || undefined}
+                >
+                  {tools.map((tool) => (
+                    <span key={tool}>
+                      {tool}
+                      <i aria-hidden="true">✳</i>
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

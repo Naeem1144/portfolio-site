@@ -54,17 +54,32 @@ export async function sendEmail(data: EmailData): Promise<boolean> {
   }
 }
 
+const escapeHtml = (value: string): string =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+// Strip control characters so user input cannot inject mail headers.
+const sanitizeHeaderValue = (value: string): string =>
+  value.replace(/[\r\n\t]+/g, " ").trim();
+
 export function createContactEmail(name: string, email: string, message: string): EmailData {
   const recipientEmail = process.env.EMAIL_ADDRESS;
-  
+
   if (!recipientEmail) {
     throw new Error('Recipient email not configured');
   }
-  
+
+  const safeName = sanitizeHeaderValue(name);
+  const safeEmail = sanitizeHeaderValue(email);
+
   return {
     to: recipientEmail,
-    subject: `New Contact Form Submission from ${name}`,
-    replyTo: email,
+    subject: `New Contact Form Submission from ${safeName}`,
+    replyTo: safeEmail,
     text: `
 Name: ${name}
 Email: ${email}
@@ -75,11 +90,11 @@ ${message}
     html: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
   <h2 style="color: #0070f3;">New Contact Form Submission</h2>
-  <p><strong>From:</strong> ${name}</p>
-  <p><strong>Email:</strong> ${email}</p>
+  <p><strong>From:</strong> ${escapeHtml(name)}</p>
+  <p><strong>Email:</strong> ${escapeHtml(email)}</p>
   <div style="margin-top: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 5px;">
     <p><strong>Message:</strong></p>
-    <p style="white-space: pre-wrap;">${message}</p>
+    <p style="white-space: pre-wrap;">${escapeHtml(message)}</p>
   </div>
 </div>
     `,

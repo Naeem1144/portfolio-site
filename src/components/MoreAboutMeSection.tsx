@@ -18,25 +18,32 @@ export function MoreAboutMeSection() {
           <div className="about-signature">
             <span>Naeem.</span>
             <span className="eyebrow">
-              BUSINESS & MARKETING GRADUATE.
+              BUSINESS &amp; MARKETING GRADUATE.
               <br />
-              DATA ANALYST IN PRACTICE.
+              DATA ANALYST &amp; DATA SCIENTIST.
             </span>
           </div>
         </div>
         <div className="about-copy">
           <p>
-            I’m Naeem Nagori, a business and marketing graduate from{" "}
+            I&rsquo;m Naeem Nagori, a business and marketing graduate from{" "}
             <strong>Seneca Polytechnic in Toronto</strong>, now based in
             Ahmedabad, India.
           </p>
           <p>
             I use SQL, Python, and Power BI to clean data, explore customer
-            behavior, and make the findings clear and useful.
+            behavior, and turn it into dashboards, customer segments, and
+            predictive models.
           </p>
           <p>
-            I’m seeking a junior data analyst, reporting, or marketing
-            analytics role where thoughtful work can make a difference.
+            I also build machine learning and deep learning projects from
+            scratch — clustering, churn prediction, CNNs, and reinforcement
+            learning — with AI tools like ChatGPT and Claude in the loop.
+          </p>
+          <p>
+            I&rsquo;m seeking a junior data analyst, data scientist, or
+            marketing analytics role where thoughtful work can make a
+            difference.
           </p>
           <a
             href="/Naeem_Nagori_Resume.pdf"
@@ -61,8 +68,8 @@ export function MoreAboutMeSection() {
         </div>
         <div>
           <span className="eyebrow">IN PRACTICE</span>
-          <h3>Data & Customer Insights</h3>
-          <p>SQL analysis · Python segmentation · Power BI</p>
+          <h3>Data Science &amp; AI</h3>
+          <p>Machine learning · Deep learning · NLP · Power BI</p>
           <span className="journey-year">
             <i /> CURRENT FOCUS
           </span>

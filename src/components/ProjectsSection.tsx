@@ -34,6 +34,22 @@ const archive = [
     type: "CLASSIFICATION",
     url: "spam-email-detection-system",
   },
+  {
+    number: "07",
+    name: "Alzheimer's disease detection",
+    description:
+      "Classifying Alzheimer's disease from MRI scans with convolutional neural networks.",
+    type: "COMPUTER VISION",
+    url: "alzheimer-disease-detection",
+  },
+  {
+    number: "08",
+    name: "Reinforcement learning from scratch",
+    description:
+      "Classic reinforcement learning algorithms implemented from scratch in Python.",
+    type: "REINFORCEMENT LEARNING",
+    url: "RL-by-hand",
+  },
 ];
 
 const clusters = Array.from({ length: 210 }, (_, i) => {
@@ -153,7 +169,11 @@ function ClusterGraphic() {
 
 function SqlGraphic() {
   return (
-    <div className="sql-graphic" aria-label="Illustrative SQL query">
+    <div
+      className="sql-graphic"
+      role="img"
+      aria-label="Illustration of a SQL query window: a window-function query ranking revenue by customer segment."
+    >
       <div className="code-window">
         <div className="code-window-bar">
           <span>
@@ -198,7 +218,11 @@ function SqlGraphic() {
 
 function DashboardGraphic() {
   return (
-    <div className="dashboard-graphic">
+    <div
+      className="dashboard-graphic"
+      role="img"
+      aria-label="Illustration of a Power BI customer dashboard: a bar chart of customers by geography and a retention donut chart."
+    >
       <div className="dashboard-window">
         <div className="dashboard-title">
           <span className="dashboard-mark">
@@ -265,9 +289,9 @@ export function ProjectsSection() {
           aria-label="Filter projects"
         >
           {[
-            ["All work", "06"],
+            ["All work", "08"],
             ["Data analytics", "03"],
-            ["Machine learning", "03"],
+            ["Machine learning", "05"],
           ].map(([label, count]) => (
             <button
               key={label}
@@ -281,7 +305,12 @@ export function ProjectsSection() {
           ))}
         </div>
         <span className="eyebrow project-count" aria-live="polite">
-          {filter === "All work" ? "06" : "03"} PROJECTS
+          {filter === "All work"
+            ? "08"
+            : filter === "Data analytics"
+              ? "03"
+              : "05"}{" "}
+          PROJECTS
         </span>
       </div>
       {filter !== "Machine learning" && (
@@ -392,7 +421,7 @@ export function ProjectsSection() {
                 ? "MORE PROJECTS"
                 : "MACHINE LEARNING PROJECTS"}
             </span>
-            <span className="eyebrow">MODELING & CLASSIFICATION</span>
+            <span className="eyebrow">MACHINE LEARNING &amp; AI</span>
           </div>
           {archive.map((project) => (
             <a

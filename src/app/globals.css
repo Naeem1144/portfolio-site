@@ -26,7 +26,7 @@ html {
   scroll-padding-top: 108px;
 }
 body {
-  min-width: 320px;
+  min-width: 300px;
   margin: 0;
   overflow-x: clip;
   background: var(--background);
@@ -254,7 +254,7 @@ em {
 .brand-name > span {
   display: block;
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.14em;
   color: var(--foreground-muted);
   margin-top: 5px;
@@ -344,8 +344,8 @@ em {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 52px;
-  padding-top: 26px;
+  min-height: 44px;
+  padding-top: 20px;
   color: var(--foreground-muted);
 }
 .availability {
@@ -371,7 +371,7 @@ em {
   min-height: 598px;
 }
 .hero-copy {
-  padding-block: 46px 60px;
+  padding-block: 18px 60px;
   position: relative;
   z-index: 1;
   animation: enter-soft 0.85s ease both;
@@ -391,7 +391,6 @@ h1 {
   letter-spacing: -0.065em;
   line-height: 1.01;
   position: relative;
-  white-space: nowrap;
   text-wrap: balance;
 }
 h1 em {
@@ -437,7 +436,7 @@ h1 em {
   padding-block: 24px;
 }
 .hero-bottom > .eyebrow {
-  font-size: 9px;
+  font-size: 10px;
 }
 .location-cross {
   margin-left: 10px;
@@ -449,7 +448,7 @@ h1 em {
   color: var(--foreground-muted);
 }
 .hero-discipline > span {
-  color: #a2ab95;
+  color: var(--foreground-muted);
   padding: 0 12px;
 }
 .scroll-cue {
@@ -471,34 +470,46 @@ h1 em {
   background: #eceee3;
   border-block: 1px solid var(--border);
 }
-.ribbon-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.container.ribbon-inner {
+  width: 100%;
   padding-block: 27px;
-  gap: 24px;
 }
-.ribbon-inner > .eyebrow {
-  font-size: 8px;
-  max-width: 140px;
-  color: var(--foreground-muted);
+.ribbon-strip {
+  width: 100%;
+  overflow: hidden;
 }
-.ribbon-inner > div {
+.ribbon-track {
+  display: flex;
+  width: max-content;
+  animation: ribbon-ticker 52s linear infinite;
+}
+.ribbon-strip:hover .ribbon-track {
+  animation-play-state: paused;
+}
+.ribbon-group {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 77%;
   gap: 18px;
+  padding-right: 18px;
 }
-.ribbon-inner > div > span {
+.ribbon-group span {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
   font-size: 21px;
   letter-spacing: -0.04em;
   font-weight: 500;
+  white-space: nowrap;
 }
 .ribbon-inner i {
   font-size: 14px;
   color: #94a185;
   font-style: normal;
+}
+@keyframes ribbon-ticker {
+  to {
+    transform: translateX(-50%);
+  }
 }
 .signal-study {
   position: relative;
@@ -512,8 +523,8 @@ h1 em {
 .study-label {
   display: flex;
   justify-content: space-between;
-  font-size: 8px;
-  color: #6d7963;
+  font-size: 9px;
+  color: var(--foreground-muted);
   padding-inline: 12px;
 }
 .study-canvas {
@@ -553,8 +564,8 @@ h1 em {
 .axis-label {
   position: absolute;
   font-family: var(--font-mono);
-  font-size: 7px;
-  color: #6f7c66;
+  font-size: 9px;
+  color: var(--foreground-muted);
   letter-spacing: 0.13em;
   top: 42%;
   left: 11px;
@@ -566,7 +577,7 @@ h1 em {
   right: 25px;
   top: 37px;
   font-family: var(--font-mono);
-  font-size: 7px;
+  font-size: 10px;
   color: #7a846e;
 }
 .study-controls {
@@ -583,10 +594,10 @@ h1 em {
   border-radius: 99px;
 }
 .signal-toggle button {
-  min-height: 34px;
+  min-height: 44px;
   border: 0;
   background: none;
-  padding: 9px 15px;
+  padding: 9px 17px;
   border-radius: 99px;
   font-size: 10px;
   transition:
@@ -596,7 +607,7 @@ h1 em {
 .signal-toggle button > span {
   font-family: var(--font-mono);
   margin-right: 7px;
-  font-size: 8px;
+  font-size: 10px;
   opacity: 0.65;
 }
 .signal-toggle button[aria-pressed="true"] {
@@ -624,7 +635,7 @@ h1 em {
   font-size: 10px;
   margin-top: 11px;
   font-style: italic;
-  color: #747d69;
+  color: var(--foreground-muted);
 }
 .section-kicker {
   position: relative;
@@ -648,7 +659,7 @@ h1 em {
   transform: translateX(-50%) rotate(45deg);
 }
 .section-kicker > :last-child {
-  font-size: 8px;
+  font-size: 10px;
 }
 .section-heading-row {
   display: flex;
@@ -700,7 +711,7 @@ h2 em {
 }
 .project-filters button > span {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   opacity: 0.6;
 }
 .project-filters button:hover {
@@ -713,7 +724,7 @@ h2 em {
   border-color: var(--forest);
 }
 .project-count {
-  font-size: 8px;
+  font-size: 10px;
   color: var(--foreground-muted);
 }
 .project-featured {
@@ -725,16 +736,6 @@ h2 em {
   border: 1px solid var(--forest);
   overflow: hidden;
   transition: background 0.35s var(--ease-out);
-}
-.project-featured::before {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  width: 32%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--lime), rgba(213, 237, 158, 0));
-  content: "";
 }
 .project-featured:hover {
   background: #294837;
@@ -751,7 +752,7 @@ h2 em {
   justify-content: space-between;
   align-items: center;
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10px;
   letter-spacing: 0.08em;
 }
 .project-featured .project-overline {
@@ -801,7 +802,7 @@ h2 em {
   margin-top: 23px;
 }
 .project-tags span {
-  font-size: 9px;
+  font-size: 10px;
   padding: 4px 10px;
   border: 1px solid #526e54;
   border-radius: 99px;
@@ -832,7 +833,7 @@ h2 em {
   justify-content: space-between;
   gap: 10px;
   font-family: var(--font-mono);
-  font-size: 7px;
+  font-size: 10px;
   color: #a8bd9e;
   letter-spacing: 0.05em;
 }
@@ -868,7 +869,7 @@ h2 em {
   line-height: 1.2;
 }
 .project-stat > span {
-  font-size: 7px;
+  font-size: 10px;
   font-family: var(--font-mono);
   line-height: 1.8;
   color: #bdd0ad;
@@ -886,16 +887,6 @@ h2 em {
   transition: border-color 0.3s var(--ease-out);
   background: #f9f8f3;
   min-width: 0;
-}
-.project-card::before {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  width: 28%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent-muted), rgba(55, 105, 76, 0));
-  content: "";
 }
 .project-card:hover {
   border-color: #799170;
@@ -943,7 +934,6 @@ h2 em {
   background: #f9f8f3;
   border: 1px solid #d4d3c8;
   box-shadow: 8px 10px 0 #d8dbcf;
-  transform: rotate(-2deg);
 }
 .code-window-bar {
   display: flex;
@@ -1008,7 +998,6 @@ h2 em {
   box-shadow: 8px 10px 0 #cbd8bc;
   padding: 17px;
   width: 100%;
-  transform: rotate(2deg);
 }
 .dashboard-title {
   display: flex;
@@ -1137,7 +1126,7 @@ h2 em {
   color: var(--foreground-muted);
 }
 .archive-heading .eyebrow {
-  font-size: 8px;
+  font-size: 10px;
 }
 .archive-row {
   display: grid;
@@ -1163,7 +1152,7 @@ h2 em {
 .archive-number {
   font-family: var(--font-mono);
   font-size: 10px;
-  color: #798570;
+  color: var(--foreground-muted);
 }
 .archive-row h3 {
   font-size: 20px;
@@ -1175,7 +1164,7 @@ h2 em {
 }
 .archive-type {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   color: var(--foreground-muted);
 }
 .work-bottom {
@@ -1185,7 +1174,7 @@ h2 em {
   margin-top: 29px;
 }
 .work-bottom > span {
-  color: #7a8271;
+  color: var(--foreground-muted);
   font-family: Georgia, serif;
   font-style: italic;
   font-size: 14px;
@@ -1197,7 +1186,7 @@ h2 em {
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.18), transparent 35%),
     #e8ecdf;
-  border-block: 1px solid #d6decb;
+  border-block: 1px solid var(--border);
 }
 .about-section .section-kicker::after {
   background: #e8ecdf;
@@ -1206,11 +1195,10 @@ h2 em {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 70px;
-  margin-top: 47px;
 }
 .about-lead {
   font-size: 19px;
-  color: #68765b;
+  color: var(--foreground-muted);
   margin-top: 24px;
   line-height: 1.5;
   letter-spacing: -0.025em;
@@ -1231,7 +1219,7 @@ h2 em {
   color: #315039;
 }
 .about-signature > .eyebrow {
-  font-size: 7px;
+  font-size: 10px;
   padding-top: 13px;
   color: #6e7c60;
 }
@@ -1274,8 +1262,8 @@ h2 em {
   margin-top: 9px;
 }
 .journey-strip .eyebrow {
-  font-size: 8px;
-  color: #697b57;
+  font-size: 10px;
+  color: var(--foreground-muted);
 }
 .journey-year {
   display: inline-flex;
@@ -1283,8 +1271,8 @@ h2 em {
   gap: 9px;
   margin-top: 19px;
   font-family: var(--font-mono);
-  font-size: 8px;
-  color: #68775b;
+  font-size: 10px;
+  color: var(--foreground-muted);
 }
 .journey-connector {
   display: flex;
@@ -1298,9 +1286,6 @@ h2 em {
   height: 1px;
   background: #bccbac;
 }
-.skills-section {
-  padding-bottom: 73px;
-}
 .competency-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1309,6 +1294,8 @@ h2 em {
 }
 .competency {
   position: relative;
+  display: flex;
+  flex-direction: column;
   padding: 30px 25px 33px;
   border-right: 1px solid var(--border);
 }
@@ -1329,11 +1316,11 @@ h2 em {
 .competency-top > span {
   font-family: var(--font-mono);
   font-size: 9px;
-  color: #88937c;
+  color: var(--foreground-muted);
 }
 .competency > .eyebrow {
-  font-size: 7px;
-  color: #77836c;
+  font-size: 10px;
+  color: var(--foreground-muted);
   letter-spacing: 0.06em;
 }
 .competency h3 {
@@ -1346,7 +1333,7 @@ h2 em {
   font-size: 11px;
   line-height: 1.85;
   margin-top: 15px;
-  min-height: 82px;
+  flex: 1;
 }
 .competency ul {
   list-style: none;
@@ -1380,13 +1367,12 @@ h2 em {
 }
 .toolkit-notes .eyebrow {
   display: block;
-  font-size: 7px;
-  color: #7e8a71;
+  font-size: 10px;
+  color: var(--foreground-muted);
   margin-bottom: 7px;
 }
 .credentials-section {
   border-top: 1px solid var(--border);
-  padding-block: 75px 103px;
 }
 .credentials-layout {
   display: grid;
@@ -1394,8 +1380,8 @@ h2 em {
   gap: 80px;
 }
 .credentials-layout > div > .eyebrow {
-  font-size: 9px;
-  color: #6b795d;
+  font-size: 10px;
+  color: var(--foreground-muted);
 }
 .credentials-layout h2 {
   font-size: 42px;
@@ -1448,9 +1434,9 @@ h2 em {
   box-shadow: inset 0 0 0 1px rgba(84, 114, 67, 0.05);
 }
 .credential .eyebrow {
-  font-size: 7px;
+  font-size: 10px;
   text-transform: uppercase;
-  color: #78856b;
+  color: var(--foreground-muted);
 }
 .credential h3 {
   font-size: 19px;
@@ -1468,8 +1454,8 @@ h2 em {
 }
 .credential-year {
   font-family: var(--font-mono);
-  font-size: 9px;
-  color: #718260;
+  font-size: 10px;
+  color: var(--foreground-muted);
   padding-top: 3px;
 }
 .contact-section {
@@ -1481,7 +1467,6 @@ h2 em {
     radial-gradient(circle at 8% 90%, rgba(120, 168, 135, 0.1), transparent 30%),
     var(--forest);
   color: var(--background);
-  padding-block: 68px 83px;
 }
 .contact-section .section-kicker {
   color: #bac8ac;
@@ -1497,7 +1482,7 @@ h2 em {
 }
 .contact-section .availability {
   font-family: var(--font-mono);
-  font-size: 8px;
+  font-size: 10px;
   letter-spacing: 0.06em;
 }
 .contact-section .availability i {
@@ -1508,7 +1493,6 @@ h2 em {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 90px;
-  margin-top: 50px;
 }
 .contact-copy h2 {
   font-size: clamp(40px, 4.2vw, 61px);
@@ -1557,13 +1541,15 @@ h2 em {
   display: flex;
   align-items: center;
   gap: 7px;
+  min-height: 44px;
+  padding-block: 12px;
 }
 .contact-socials a:hover {
   color: var(--lime);
 }
 .contact-socials > span {
   margin-left: auto;
-  font-size: 8px;
+  font-size: 10px;
   color: #a4b69a;
 }
 .contact-form {
@@ -1579,7 +1565,7 @@ h2 em {
   color: #c6d7b6;
 }
 .form-heading .eyebrow {
-  font-size: 8px;
+  font-size: 10px;
 }
 .form-row {
   display: grid;
@@ -1645,6 +1631,12 @@ h2 em {
 .error-message a {
   text-decoration: underline;
 }
+.field-error {
+  margin-top: 7px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #ffd2ae;
+}
 .spinner {
   animation: asterisk-turn 1s linear infinite;
 }
@@ -1701,12 +1693,12 @@ h2 em {
   gap: 20px;
   padding-top: 18px;
   border-top: 1px solid #40573b;
-  font-size: 8px;
+  font-size: 10px;
   color: #a6b699;
 }
 .footer-bottom > :last-child {
   font-family: var(--font-mono);
-  font-size: 7px;
+  font-size: 10px;
   letter-spacing: 0.06em;
 }
 @keyframes enter-soft {
@@ -1763,7 +1755,7 @@ h2 em {
   .hero-discipline > span {
     padding: 0 6px;
   }
-  .ribbon-inner > div > span {
+  .ribbon-group span {
     font-size: 18px;
   }
   .featured-copy {
@@ -1791,9 +1783,6 @@ h2 em {
   }
   .competency h3 {
     font-size: 20px;
-  }
-  .competency p {
-    min-height: 104px;
   }
   .competency li {
     font-size: 9px;
@@ -1852,8 +1841,8 @@ h2 em {
   .mobile-nav a > span {
     width: 25px;
     font-family: var(--font-mono);
-    font-size: 8px;
-    color: #879575;
+    font-size: 10px;
+    color: var(--foreground-muted);
     letter-spacing: 0.05em;
   }
   .mobile-nav a > svg {
@@ -1869,7 +1858,7 @@ h2 em {
     display: none;
   }
   .hero-topline > .eyebrow {
-    font-size: 8px;
+    font-size: 10px;
   }
   .hero-grid {
     display: flex;
@@ -1879,10 +1868,10 @@ h2 em {
     min-height: 0;
   }
   .hero-copy {
-    padding-block: 48px;
+    padding-block: 20px;
   }
   .hero-intro {
-    font-size: 8px;
+    font-size: 10px;
     margin-bottom: 19px;
   }
   h1 {
@@ -1918,20 +1907,20 @@ h2 em {
     height: 270px;
   }
   .study-label {
-    font-size: 6px;
+    font-size: 10px;
   }
   .axis-label {
     left: 5px;
-    font-size: 6px;
+    font-size: 10px;
   }
   .study-coordinate {
-    font-size: 6px;
+    font-size: 10px;
     top: 22px;
     right: 15px;
   }
   .signal-toggle button {
     padding: 8px 10px;
-    font-size: 8px;
+    font-size: 10px;
   }
   .signal-toggle button > span {
     display: none;
@@ -1941,10 +1930,10 @@ h2 em {
     height: 40px;
   }
   .study-caption {
-    font-size: 8px;
+    font-size: 10px;
   }
   .hero-bottom .eyebrow {
-    font-size: 8px;
+    font-size: 10px;
   }
   .hero-discipline {
     max-width: 230px;
@@ -1953,16 +1942,12 @@ h2 em {
   }
   .ribbon-inner {
     padding-block: 23px;
-    gap: 20px;
   }
-  .ribbon-inner > .eyebrow {
-    font-size: 6px;
-    max-width: 110px;
-  }
-  .ribbon-inner > div {
+  .ribbon-group {
     gap: 12px;
+    padding-right: 12px;
   }
-  .ribbon-inner > div > span {
+  .ribbon-group span {
     font-size: 15px;
   }
   .ribbon-inner i {
@@ -1978,10 +1963,10 @@ h2 em {
     font-size: 11px;
   }
   .section-kicker .eyebrow {
-    font-size: 8px;
+    font-size: 10px;
   }
   .section-kicker > :last-child {
-    font-size: 6px;
+    font-size: 10px;
   }
   .featured-copy {
     padding: 23px;
@@ -1993,7 +1978,7 @@ h2 em {
     font-size: 11px;
   }
   .project-overline {
-    font-size: 7px;
+    font-size: 10px;
   }
   .round-arrow {
     height: 30px;
@@ -2006,14 +1991,14 @@ h2 em {
     font-size: 35px;
   }
   .project-stat > span {
-    font-size: 6px;
+    font-size: 10px;
   }
   .graphic-topline,
   .graphic-bottomline {
-    font-size: 5px;
+    font-size: 10px;
   }
   .project-tags span {
-    font-size: 8px;
+    font-size: 10px;
     padding-inline: 8px;
   }
   .project-featured {
@@ -2103,7 +2088,6 @@ h2 em {
   .about-grid {
     grid-template-columns: 1fr;
     gap: 32px;
-    margin-top: 32px;
   }
   .about-copy p {
     font-size: 12px;
@@ -2121,7 +2105,7 @@ h2 em {
     font-size: 40px;
   }
   .about-signature > .eyebrow {
-    font-size: 6px;
+    font-size: 10px;
   }
   .journey-strip {
     grid-template-columns: 1fr 65px 1fr;
@@ -2139,17 +2123,15 @@ h2 em {
   .competency-grid {
     grid-template-columns: 1fr 1fr;
   }
-  .competency {
-    padding: 30px !important;
+  .competency:first-child,
+  .competency:last-child {
+    padding: 30px;
   }
-  .competency:nth-child(2) {
+  .competency:nth-child(even) {
     border-right: 0;
   }
   .competency:nth-child(-n + 2) {
     border-bottom: 1px solid var(--border);
-  }
-  .competency p {
-    min-height: 60px;
   }
   .competency h3 {
     font-size: 24px;
@@ -2235,7 +2217,7 @@ h2 em {
     font-size: 12px;
   }
   .brand-name > span {
-    font-size: 7px;
+    font-size: 10px;
   }
   .brand-symbol {
     font-size: 35px;
@@ -2277,8 +2259,8 @@ h2 em {
   }
   .mobile-nav a > span {
     font-family: var(--font-mono);
-    font-size: 8px;
-    color: #879575;
+    font-size: 10px;
+    color: var(--foreground-muted);
     letter-spacing: 0.05em;
     width: 25px;
   }
@@ -2295,11 +2277,11 @@ h2 em {
     padding-top: 21px;
   }
   .hero-topline > .eyebrow {
-    font-size: 7px;
-    max-width: 155px;
+    font-size: 10px;
+    max-width: 220px;
   }
   .availability {
-    font-size: 8px;
+    font-size: 10px;
     gap: 6px;
   }
   .hero-grid {
@@ -2310,10 +2292,10 @@ h2 em {
     align-items: stretch;
   }
   .hero-copy {
-    padding-block: 51px 10px;
+    padding-block: 22px 10px;
   }
   .hero-intro {
-    font-size: 8px;
+    font-size: 10px;
     margin-bottom: 20px;
   }
   h1 {
@@ -2347,7 +2329,7 @@ h2 em {
   }
   .study-label {
     padding-inline: 7px;
-    font-size: 7px;
+    font-size: 10px;
   }
   .study-canvas {
     height: 282px;
@@ -2363,16 +2345,16 @@ h2 em {
     display: inline;
   }
   .study-caption {
-    font-size: 9px;
+    font-size: 10px;
   }
   .study-coordinate {
-    font-size: 7px;
+    font-size: 10px;
   }
   .hero-bottom {
     padding-block: 18px;
   }
   .hero-bottom .eyebrow {
-    font-size: 7px;
+    font-size: 10px;
   }
   .hero-discipline {
     display: none;
@@ -2382,19 +2364,16 @@ h2 em {
     height: 40px;
   }
   .ribbon-inner {
-    flex-direction: column;
-    gap: 13px;
     padding-block: 19px 22px;
   }
-  .ribbon-inner > .eyebrow {
-    max-width: none;
-    font-size: 6px;
-  }
-  .ribbon-inner > div {
+  .ribbon-strip {
     width: 100%;
-    gap: 8px;
   }
-  .ribbon-inner > div > span {
+  .ribbon-group {
+    gap: 8px;
+    padding-right: 8px;
+  }
+  .ribbon-group span {
     font-size: 14px;
   }
   .ribbon-inner i {
@@ -2407,7 +2386,7 @@ h2 em {
     display: none;
   }
   .section-kicker .eyebrow {
-    font-size: 8px;
+    font-size: 10px;
   }
   h2 {
     font-size: 37px;
@@ -2437,10 +2416,18 @@ h2 em {
     gap: 9px;
   }
   .project-filters button > span {
-    font-size: 8px;
+    font-size: 10px;
   }
   .project-count {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
   }
   .project-featured {
     grid-template-columns: 1fr;
@@ -2453,7 +2440,7 @@ h2 em {
     margin-top: 24px;
   }
   .project-overline {
-    font-size: 8px;
+    font-size: 10px;
   }
   .featured-copy > p {
     font-size: 12px;
@@ -2471,7 +2458,7 @@ h2 em {
   }
   .graphic-topline,
   .graphic-bottomline {
-    font-size: 6px;
+    font-size: 10px;
   }
   .project-stat {
     margin-top: 20px;
@@ -2480,7 +2467,7 @@ h2 em {
     font-size: 44px;
   }
   .project-stat > span {
-    font-size: 7px;
+    font-size: 10px;
   }
   .project-pair {
     grid-template-columns: 1fr;
@@ -2567,7 +2554,6 @@ h2 em {
   .about-grid {
     grid-template-columns: 1fr;
     gap: 32px;
-    margin-top: 29px;
   }
   .about-statement h2 {
     font-size: 41px;
@@ -2581,7 +2567,7 @@ h2 em {
     gap: 25px;
   }
   .about-signature > .eyebrow {
-    font-size: 7px;
+    font-size: 10px;
   }
   .about-copy {
     padding-top: 0;
@@ -2619,28 +2605,26 @@ h2 em {
     margin-top: 32px;
   }
   .competency {
-    padding: 25px 15px 27px !important;
+    padding: 25px 15px 27px;
   }
   .competency:nth-child(odd) {
-    padding-left: 0 !important;
+    padding-left: 0;
   }
   .competency:nth-child(even) {
-    padding-right: 0 !important;
+    padding-right: 0;
   }
   .competency-top {
     margin-bottom: 23px;
   }
   .competency > .eyebrow {
-    font-size: 6px;
+    font-size: 10px;
     letter-spacing: 0.04em;
   }
   .competency h3 {
     font-size: 21px;
-    min-height: 50px;
   }
   .competency p {
     font-size: 12px;
-    min-height: 128px;
     line-height: 1.8;
   }
   .competency li {
@@ -2690,22 +2674,18 @@ h2 em {
   .credential p {
     font-size: 10px;
   }
-  .contact-section {
-    padding-block: 37px 51px;
-  }
   .contact-section .section-kicker {
     gap: 8px;
   }
   .contact-section .section-kicker > .eyebrow {
-    font-size: 7px;
+    font-size: 10px;
   }
   .contact-section .availability {
-    font-size: 6px;
+    font-size: 10px;
   }
   .contact-grid {
     grid-template-columns: 1fr;
     gap: 43px;
-    margin-top: 35px;
   }
   .contact-copy h2 {
     font-size: 44px;
@@ -2729,7 +2709,7 @@ h2 em {
   .contact-socials > span {
     width: auto;
     margin-left: auto;
-    font-size: 8px;
+    font-size: 10px;
   }
   .form-row {
     gap: 20px;
@@ -2767,7 +2747,7 @@ h2 em {
   }
   .footer-bottom {
     flex-wrap: wrap;
-    font-size: 8px;
+    font-size: 10px;
     gap: 13px;
   }
   .footer-bottom > :last-child {
@@ -2779,16 +2759,16 @@ h2 em {
     width: calc(100% - 32px);
   }
   .hero-topline > .eyebrow {
-    font-size: 5.5px;
+    font-size: 9px;
     max-width: 120px;
   }
   .availability {
-    font-size: 7px;
+    font-size: 10px;
   }
   .hero-actions {
     gap: 24px;
   }
-  .ribbon-inner > div > span {
+  .ribbon-group span {
     font-size: 12px;
   }
   .sql-graphic,
@@ -2809,9 +2789,6 @@ h2 em {
   }
   .competency h3 {
     font-size: 19px;
-  }
-  .competency p {
-    min-height: 110px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -2,6 +2,15 @@ import { Award } from "lucide-react";
 
 const certifications = [
   {
+    title: "Data Science Course",
+    detail: "Complete Data Science, Machine Learning, DL & NLP Bootcamp",
+    issuer: "Udemy",
+    year: "2025",
+    mark: "U",
+    description:
+      "Natural language processing, Tableau, and 16 more skills. Credential ID UC-d8be2692-b47c-437e-9422-11520e426ae8.",
+  },
+  {
     title: "Google Data Analytics",
     detail: "Professional Certificate",
     issuer: "Google / Coursera",

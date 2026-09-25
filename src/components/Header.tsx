@@ -9,11 +9,13 @@ const links = [
   { label: "Toolkit", id: "skills" },
   { label: "Contact", id: "contact" },
 ];
+const mobileLinks = [{ label: "Home", id: "home" }, ...links];
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
   const firstMobileLink = useRef<HTMLAnchorElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const update = () => {
@@ -36,19 +38,50 @@ export function Header() {
         document.getElementById("menu-toggle")?.focus();
       }
     };
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== "Tab" || !mobileNavRef.current) return;
+      const focusable = mobileNavRef.current.querySelectorAll<HTMLAnchorElement>(
+        "a[href]",
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
     window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
     window.addEventListener("keydown", escape);
+    window.addEventListener("keydown", trapFocus);
     update();
     return () => {
       window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
       window.removeEventListener("keydown", escape);
+      window.removeEventListener("keydown", trapFocus);
     };
   }, []);
 
   useEffect(() => {
     if (!open) return;
-    const frame = requestAnimationFrame(() => firstMobileLink.current?.focus());
-    return () => cancelAnimationFrame(frame);
+    firstMobileLink.current?.focus();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const html = document.documentElement;
+    const previousOverflow = html.style.overflow;
+    html.style.overflow = "hidden";
+    return () => {
+      html.style.overflow = previousOverflow;
+    };
   }, [open]);
 
   return (
@@ -65,7 +98,7 @@ export function Header() {
             <i />
           </span>
           <span className="brand-name">
-            Naeem Nagori<span>DATA ANALYST</span>
+            Naeem Nagori<span>DATA ANALYST &amp; DATA SCIENTIST</span>
           </span>
         </a>
         <nav className="desktop-nav" aria-label="Main navigation">
@@ -103,11 +136,12 @@ export function Header() {
       </div>
       <nav
         id="mobile-navigation"
+        ref={mobileNavRef}
         className={`mobile-nav ${open ? "is-open" : ""}`}
         aria-label="Mobile navigation"
         inert={!open}
       >
-        {links.map((link, index) => (
+        {mobileLinks.map((link, index) => (
           <a
             key={link.id}
             href={`#${link.id}`}

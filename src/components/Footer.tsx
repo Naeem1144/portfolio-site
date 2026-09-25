@@ -19,8 +19,8 @@ export function Footer() {
         </div>
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Naeem Nagori</span>
-          <span>Data analyst based in Ahmedabad, India.</span>
-          <span>SQL · PYTHON · POWER BI</span>
+          <span>Data analyst &amp; data scientist based in Ahmedabad, India.</span>
+          <span>SQL · PYTHON · POWER BI · DEEP LEARNING</span>
         </div>
       </div>
     </footer>
