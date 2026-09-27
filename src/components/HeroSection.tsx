@@ -1,117 +1,34 @@
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { SignalSculpture } from "./SignalSculpture";
-
-const tools = [
-  "SQL",
-  "Python",
-  "Power BI",
-  "Excel",
-  "Tableau",
-  "DAX",
-  "Data modeling",
-  "ETL",
-  "KPI reporting",
-  "Data storytelling",
-  "Data analysis",
-  "Statistics",
-  "A/B testing",
-  "pandas",
-  "NumPy",
-  "scikit-learn",
-  "Matplotlib",
-  "Seaborn",
-  "Jupyter",
-  "Git",
-  "Deep learning",
-  "NLP",
-  "Computer vision",
-  "Reinforcement learning",
-  "ChatGPT",
-  "Claude",
-  "GitHub Copilot",
-  "Google Analytics",
-  "Google Ads",
-  "SEO",
-  "Email marketing",
-  "CRM",
-  "Marketing analytics",
-];
+import { HeroFigure } from "./HeroFigure";
+import { site } from "@/lib/site";
 
 export function HeroSection() {
   return (
-    <section id="home" className="hero">
+    <section id="top" className="hero" aria-labelledby="hero-heading">
       <div className="container">
-        <div className="hero-topline">
-          <span className="eyebrow">
-            ANALYTICAL THINKING. HUMAN PERSPECTIVE.
-          </span>
+        <div className="hero__eyebrow">
+          <p className="eyebrow">Naeem Nagori · Data analyst & curious mind</p>
+          <p className="hero__status"><span className="status-dot" aria-hidden="true" />{site.available ? "Open to opportunities" : site.location}</p>
         </div>
-        <div className="hero-grid">
-          <div className="hero-copy">
-            <div className="eyebrow hero-intro">
-              <span className="tiny-cross">+</span> HELLO, I’M NAEEM
+        <div className="hero__grid">
+          <div className="hero__main">
+            <h1 id="hero-heading">Curiosity first.<br /><em>Clarity follows.</em></h1>
+            <p className="hero__lede">I&rsquo;m Naeem. I bring a marketing mind to data: asking better questions, finding the patterns, and making the answer useful.</p>
+            <div className="hero__actions">
+              <a href="#projects" className="button button--primary">Explore my work <ArrowDown size={17} aria-hidden="true" /></a>
+              <a href="#about" className="text-link">A little about me <ArrowUpRight size={17} aria-hidden="true" /></a>
             </div>
-            <h1>
-              Making data
-              <br />
-              <em>mean more.</em>
-              <span className="heading-period" aria-hidden="true">
-                ✳
-              </span>
-            </h1>
-            <p>
-              I connect <strong>data and people</strong>—turning complex
-              information into clear dashboards, useful models, and better
-              decisions.
-            </p>
-            <div className="hero-actions">
-              <a href="#projects" className="button button-dark">
-                Explore my work <ArrowDown size={18} />
-              </a>
-              <a href="#contact" className="text-link">
-                Let’s talk <ArrowUpRight size={18} />
-              </a>
-            </div>
+            <p className="hero__location">Based in Ahmedabad, India <span aria-hidden="true">↗</span> Shaped by Toronto</p>
           </div>
-          <SignalSculpture />
-        </div>
-        <div className="hero-bottom">
-          <span className="eyebrow">
-            BASED IN AHMEDABAD, INDIA <span className="location-cross">↗</span>
-          </span>
-          <span className="hero-discipline">
-            Data analytics <span>/</span> Data science <span>/</span> Business
-            intelligence <span>/</span> Marketing analytics
-          </span>
-          <a
-            href="#projects"
-            className="scroll-cue"
-            aria-label="Scroll to selected work"
-          >
-            <ArrowDown size={17} />
-          </a>
-        </div>
-      </div>
-      <div className="tool-ribbon">
-        <div className="container ribbon-inner">
-          <div className="ribbon-strip">
-            <div className="ribbon-track">
-              {[false, true].map((isClone) => (
-                <div
-                  className="ribbon-group"
-                  key={String(isClone)}
-                  aria-hidden={isClone || undefined}
-                >
-                  {tools.map((tool) => (
-                    <span key={tool}>
-                      {tool}
-                      <i aria-hidden="true">✳</i>
-                    </span>
-                  ))}
-                </div>
-              ))}
-            </div>
+          <div className="hero__art">
+            <p className="hero__annotation"><span aria-hidden="true">↳</span> From curiosity to convergence</p>
+            <HeroFigure />
           </div>
+        </div>
+        <div className="hero__foot">
+          <p>Business questions.<br /><span>Technical follow-through.</span></p>
+          <p className="hero__tools">SQL / Python / Power BI / Machine learning</p>
+          <a href="#projects" className="hero__scroll" aria-label="Scroll to my work"><ArrowDown size={17} aria-hidden="true" /></a>
         </div>
       </div>
     </section>

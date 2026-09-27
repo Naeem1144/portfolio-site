@@ -1,26 +1,20 @@
 import { ArrowUp } from "lucide-react";
+import { CopyrightYear } from "./CopyrightYear";
+import { site } from "@/lib/site";
+import { BrandMark } from "./BrandMark";
 
 export function Footer() {
   return (
-    <footer className="site-footer">
+    <footer className="site-footer band">
       <div className="container">
-        <div className="footer-top">
-          <a
-            href="#home"
-            className="footer-name"
-            aria-label="Naeem Nagori, back to top"
-          >
-            Naeem Nagori<span>✳</span>
+        <p className="footer-signature" aria-hidden="true">Naeem Nagori<BrandMark /></p>
+        <div className="site-footer__row">
+          <p>
+            © {site.copyrightStart}-<CopyrightYear /> {site.name} · {site.location}
+          </p>
+          <a href="#top" className="text-link text-link--small">
+            Back to top <ArrowUp size={14} aria-hidden="true" />
           </a>
-          <a href="#home" className="back-to-top">
-            BACK TO TOP
-            <ArrowUp size={18} />
-          </a>
-        </div>
-        <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} Naeem Nagori</span>
-          <span>Data analyst &amp; data scientist based in Ahmedabad, India.</span>
-          <span>SQL · PYTHON · POWER BI · DEEP LEARNING</span>
         </div>
       </div>
     </footer>

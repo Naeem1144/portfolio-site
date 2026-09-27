@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { site } from "@/lib/site";
+import { siteUrl } from "@/lib/site-url";
+import { fontPreloads } from "./fonts";
 import "./globals.css";
+import "./identity.css";
 
+/** Browser chrome mirrors the near-black canvas in globals.css. */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -10,49 +13,101 @@ export const viewport: Viewport = {
   minimumScale: 1,
   userScalable: true,
   viewportFit: "cover",
-  themeColor: "#f5f4ee",
+  themeColor: "#0c0e0f",
+  colorScheme: "dark",
 };
 
-// Set NEXT_PUBLIC_SITE_URL to the deployed origin (e.g. in Vercel project env vars)
-// so og:url and the og:image resolve to absolute URLs. The fallback follows the
-// default Vercel project slug derived from the repository name.
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio-site-naeem1144.vercel.app";
+const TITLE = `${site.name} | ${site.role}`;
+const DESCRIPTION =
+  "I'm Naeem Nagori, a data analyst and data scientist in Ahmedabad, India. Here are eight projects I've built with SQL, Power BI and Python, from customer segmentation to computer vision, with the real numbers behind each one.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Naeem Nagori — Data Analyst & Data Scientist",
-  description:
-    "Portfolio of Naeem Nagori: data analysis, business intelligence, data science, machine learning, and marketing analytics. SQL, Power BI, Python, deep learning, and customer insight projects from Ahmedabad, India.",
+  title: TITLE,
+  description: DESCRIPTION,
+  applicationName: `${site.name} | Portfolio`,
+  authors: [{ name: site.name, url: siteUrl }],
+  creator: site.name,
+  publisher: site.name,
   alternates: { canonical: "/" },
-  icons: [
-    { rel: "icon", url: "/favicon.svg?v=4", type: "image/svg+xml" },
-    { rel: "apple-touch-icon", url: "/apple-touch-icon.png", sizes: "180x180" },
-    { rel: "shortcut icon", url: "/favicon.svg?v=4" },
+  category: "portfolio",
+  keywords: [
+    "data analyst",
+    "data scientist",
+    "business intelligence",
+    "marketing analytics",
+    "SQL",
+    "Power BI",
+    "Python",
+    "machine learning",
+    "deep learning",
+    "computer vision",
+    "reinforcement learning",
+    "customer segmentation",
+    site.location,
   ],
+  formatDetection: { telephone: false, address: false, email: false },
   openGraph: {
-    title: "Naeem Nagori — Making data mean more",
+    title: `${site.name} | ${site.role}`,
     description:
-      "Data analysis, business intelligence, data science, and marketing analytics — selected projects in SQL, Power BI, Python, and machine learning.",
-    url: siteUrl,
-    siteName: "Naeem Nagori — Portfolio",
+      "Eight data projects I've built, including 83,590 hotel customers sorted into groups, a CNN at 99.21% validation accuracy, and an R² of 0.990 on Toronto-area house prices.",
+    // Trailing slash to match the resolved `canonical`, so the two never
+    // disagree about which URL is the real one.
+    url: `${siteUrl}/`,
+    siteName: `${site.name} | Portfolio`,
+    locale: "en_GB",
     type: "website",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Naeem Nagori — Making data mean more. SQL, Python, Power BI, Customer Insights.",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Naeem Nagori — Making data mean more",
+    title: `${site.name} | ${site.role}`,
     description:
-      "Selected projects in customer insights, reporting, and business intelligence, using SQL, Power BI, and Python.",
-    images: ["/og-image.png"],
+      "Eight data projects I've built with SQL, Power BI and Python, with the real numbers behind each one.",
   },
+};
+
+/**
+ * Person schema.
+ *
+ * A personal site is exactly the case this rich result is for: it is what can
+ * produce a person card with the name, role, location and social profiles in
+ * search instead of a bare blue link.
+ */
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: site.name,
+  alternateName: site.name,
+  url: siteUrl,
+  image: `${siteUrl}/icon.svg`,
+  email: `mailto:${site.email}`,
+  jobTitle: site.role,
+  description: DESCRIPTION,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Ahmedabad",
+    addressRegion: "Gujarat",
+    addressCountry: "IN",
+  },
+  sameAs: [site.social.github, site.social.linkedin],
+  knowsAbout: [
+    "Data analysis",
+    "Data science",
+    "Business intelligence",
+    "Marketing analytics",
+    "SQL",
+    "Power BI",
+    "Python",
+    "Machine learning",
+    "Deep learning",
+    "Computer vision",
+    "Reinforcement learning",
+  ],
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Seneca Polytechnic",
+  },
+  knowsLanguage: site.languages.map((language) => language.name),
 };
 
 export default function RootLayout({
@@ -61,9 +116,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
-      <body className="antialiased" suppressHydrationWarning>
-        <div className="min-h-svh flex flex-col">{children}</div>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* See `fonts.ts`: without these the first webfont could not start
+            downloading until the stylesheet naming it had arrived. */}
+        {fontPreloads.map((font) => (
+          <link
+            key={font.href}
+            rel="preload"
+            href={font.href}
+            as="font"
+            type={font.type}
+            crossOrigin="anonymous"
+          />
+        ))}
+      </head>
+      <body suppressHydrationWarning>
+        <script
+          type="application/ld+json"
+          // Static, developer-authored JSON with no user input interpolated.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {children}
       </body>
     </html>
   );

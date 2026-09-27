@@ -1,229 +1,245 @@
 "use client";
 
-import { useState, type FormEvent, type ChangeEvent } from "react";
-import { ArrowUpRight, ArrowRight, Check, LoaderCircle } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import type { ChangeEvent, FormEvent, ReactNode } from "react";
+import { ArrowRight, ArrowUpRight, Check, LoaderCircle } from "lucide-react";
+import { CopyEmail } from "./CopyEmail";
+import { site } from "@/lib/site";
 
 type FieldName = "name" | "email" | "message";
+type Values = Record<FieldName, string>;
+type Errors = Partial<Record<FieldName, string>>;
+type Status =
+  | { kind: "idle" }
+  | { kind: "success" }
+  | { kind: "invalid" }
+  | { kind: "failed"; reason: string };
 
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const FIELDS: FieldName[] = ["name", "email", "message"];
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MESSAGE_MAX = 5000;
+const REQUEST_TIMEOUT_MS = 15000;
+const EMPTY: Values = { name: "", email: "", message: "" };
+
+function validate(values: Values): Errors {
+  const errors: Errors = {};
+  if (!values.name.trim()) errors.name = "Please enter your name.";
+  const email = values.email.trim();
+  if (!email) errors.email = "Please enter your email address.";
+  else if (!EMAIL_PATTERN.test(email)) errors.email = "That email address doesn’t look right.";
+  if (!values.message.trim()) errors.message = "Please write a message.";
+  return errors;
+}
+
+async function failureReason(response: Response): Promise<string> {
+  const payload = (await response.json().catch(() => null)) as
+    | { error?: string; retryAfter?: number }
+    | null;
+  if (payload?.error === "tooMany") {
+    const minutes = Math.max(1, Math.ceil((payload.retryAfter ?? 60) / 60));
+    return `That's a lot of messages in a short time. Please try again in ${minutes} ${minutes === 1 ? "minute" : "minutes"}.`;
+  }
+  if (payload?.error === "delivery") return "Sorry, your message couldn’t be delivered.";
+  return payload?.error ?? `The server returned an error (${response.status}).`;
+}
 
 export function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [errors, setErrors] = useState<Partial<Record<FieldName, string>>>({});
+  const [values, setValues] = useState<Values>(EMPTY);
+  const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
-  const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = event.target;
-    setFormData((previous) => ({ ...previous, [name]: value }));
-    setErrors((previous) =>
-      previous[name as FieldName] ? { ...previous, [name as FieldName]: undefined } : previous,
-    );
-    if (status !== "idle") setStatus("idle");
+  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => () => abortRef.current?.abort(), []);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const field = event.target.name as FieldName;
+    setValues((previous) => ({ ...previous, [field]: event.target.value }));
+    setErrors((previous) => (previous[field] ? { ...previous, [field]: undefined } : previous));
+    if (status.kind !== "idle") setStatus({ kind: "idle" });
   };
-  const validate = () => {
-    const next: Partial<Record<FieldName, string>> = {};
-    if (!formData.name.trim()) next.name = "Please enter your name.";
-    if (!formData.email.trim()) next.email = "Please enter your email address.";
-    else if (!emailPattern.test(formData.email.trim()))
-      next.email = "Please enter a valid email address.";
-    if (!formData.message.trim()) next.message = "Please enter a message.";
-    return next;
-  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (submitting) return;
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      setStatus("error");
-      const firstInvalid = (["name", "email", "message"] as const).find(
-        (field) => validationErrors[field],
-      );
-      if (firstInvalid) document.getElementById(firstInvalid)?.focus();
+
+    const found = validate(values);
+    if (Object.keys(found).length > 0) {
+      setErrors(found);
+      setStatus({ kind: "invalid" });
+      const first = FIELDS.find((field) => found[field]);
+      if (first) document.getElementById(`contact-${first}`)?.focus();
       return;
     }
+
     setErrors({});
     setSubmitting(true);
-    setStatus("idle");
+    setStatus({ kind: "idle" });
+
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(values),
+        signal: controller.signal,
       });
-      if (!response.ok) throw new Error("Message not sent");
-      setStatus("success");
-      setFormData({ name: "", email: "", message: "" });
-    } catch {
-      setStatus("error");
+      if (!response.ok) {
+        setStatus({ kind: "failed", reason: await failureReason(response) });
+        return;
+      }
+      setStatus({ kind: "success" });
+      setValues(EMPTY);
+    } catch (error) {
+      setStatus({
+        kind: "failed",
+        reason:
+          (error as Error)?.name === "AbortError"
+            ? "Sorry, that took too long to send."
+            : "I couldn’t reach the server. Please check your connection.",
+      });
     } finally {
+      clearTimeout(timer);
+      abortRef.current = null;
       setSubmitting(false);
     }
   };
 
+  const field = (name: FieldName) => ({
+    id: `contact-${name}`,
+    name,
+    value: values[name],
+    onChange: handleChange,
+    readOnly: submitting,
+    "aria-invalid": errors[name] ? true : undefined,
+    "aria-describedby": errors[name] ? `contact-${name}-error` : undefined,
+  });
+
+  const fieldError = (name: FieldName): ReactNode =>
+    errors[name] && (
+      <p className="field__error" id={`contact-${name}-error`}>
+        {errors[name]}
+      </p>
+    );
+
   return (
-    <>
-      <div className="section-kicker">
-        <span className="eyebrow">05 / GET IN TOUCH</span>
-        <span className="availability">
-          <i />
-          OPEN TO OPPORTUNITIES
-        </span>
+    <div className="contact">
+      <div className="contact__intro">
+        <p className="eyebrow">Your next question. Our starting point.</p>
+        <h2 id="contact-heading">Good work starts<br />with a <em>conversation.</em></h2>
+        <p className="contact__lede">
+          Whether you&rsquo;re hiring for a data role or just have a dataset
+          you&rsquo;d like a second opinion on, I&rsquo;d love to hear from
+          you. Email is the quickest way to reach me, and I usually reply
+          within two days.
+        </p>
+
+        <CopyEmail className="contact__email" />
+
+        <ul className="contact__links">
+          <li>
+            <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer">
+              LinkedIn <ArrowUpRight size={15} aria-hidden="true" />
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          </li>
+          <li>
+            <a href={site.social.github} target="_blank" rel="noopener noreferrer">
+              GitHub <ArrowUpRight size={15} aria-hidden="true" />
+              <span className="sr-only"> (opens in a new tab)</span>
+            </a>
+          </li>
+          <li>
+            <a href={site.resume.href} target="_blank" rel="noopener noreferrer">
+              Résumé <ArrowUpRight size={15} aria-hidden="true" />
+              <span className="sr-only"> (PDF, opens in a new tab)</span>
+            </a>
+          </li>
+        </ul>
       </div>
-      <div className="contact-grid">
-        <div className="contact-copy">
-          <h2>
-            Let’s talk about
-            <br />
-            the <em>work.</em>
-            <ArrowUpRight className="contact-big-arrow" strokeWidth={1} />
-          </h2>
-          <p>
-            Have a role, project, or question in mind? Tell me what you’re
-            working on.
-          </p>
-          <a className="contact-email" href="mailto:aknaeem246@gmail.com">
-            aknaeem246@gmail.com
-            <ArrowUpRight size={22} />
-          </a>
-          <div className="contact-socials">
-            <a
-              href="https://www.linkedin.com/in/naeemnagori/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LinkedIn <ArrowUpRight size={16} />
-            </a>
-            <a
-              href="https://github.com/Naeem1144"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              GitHub <ArrowUpRight size={16} />
-            </a>
-            <span>Ahmedabad, India</span>
+
+      <form
+        className="form"
+        onSubmit={handleSubmit}
+        aria-labelledby="contact-form-heading"
+        aria-busy={submitting}
+        noValidate
+      >
+        <h3 id="contact-form-heading" className="form__heading">
+          Or send a message
+        </h3>
+
+        <div className="form__row">
+          <div className="field">
+            <label htmlFor="contact-name">Name</label>
+            <input {...field("name")} autoComplete="name" maxLength={120} />
+            {fieldError("name")}
+          </div>
+          <div className="field">
+            <label htmlFor="contact-email">Email</label>
+            <input
+              {...field("email")}
+              type="email"
+              autoComplete="email"
+              inputMode="email"
+              spellCheck={false}
+              maxLength={254}
+            />
+            {fieldError("email")}
           </div>
         </div>
-        <form
-          className="contact-form"
-          onSubmit={handleSubmit}
-          aria-label="Contact Naeem"
-          aria-busy={submitting}
-          noValidate
-        >
-          <div className="form-heading">
-            <span className="eyebrow">SHARE THE DETAILS</span>
-            <span aria-hidden="true">↗</span>
-          </div>
-          <div className="form-row">
-            <div>
-              <label htmlFor="name">Your name</label>
-              <input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Alex Morgan"
-                autoComplete="name"
-                required
-                maxLength={120}
-                disabled={submitting}
-                aria-invalid={errors.name ? true : undefined}
-                aria-describedby={errors.name ? "name-error" : undefined}
-              />
-              {errors.name && (
-                <p className="field-error" id="name-error">
-                  {errors.name}
-                </p>
-              )}
-            </div>
-            <div>
-              <label htmlFor="email">Email address</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="alex@company.com"
-                autoComplete="email"
-                required
-                maxLength={254}
-                disabled={submitting}
-                aria-invalid={errors.email ? true : undefined}
-                aria-describedby={errors.email ? "email-error" : undefined}
-              />
-              {errors.email && (
-                <p className="field-error" id="email-error">
-                  {errors.email}
-                </p>
-              )}
-            </div>
-          </div>
-          <div>
-            <label htmlFor="message">Message</label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder="Role, project, or question…"
-              rows={3}
-              required
-              maxLength={5000}
-              disabled={submitting}
-              aria-invalid={errors.message ? true : undefined}
-              aria-describedby={errors.message ? "message-error" : undefined}
-            />
-            {errors.message && (
-              <p className="field-error" id="message-error">
-                {errors.message}
-              </p>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="button button-lime"
-            disabled={submitting}
-          >
+
+        <div className="field">
+          <label htmlFor="contact-message">
+            Message
+            <span className="field__counter" aria-hidden="true">
+              {values.message.length > MESSAGE_MAX * 0.8 &&
+                `${values.message.length} / ${MESSAGE_MAX}`}
+            </span>
+          </label>
+          <textarea
+            {...field("message")}
+            rows={5}
+            maxLength={MESSAGE_MAX}
+            placeholder="Tell me about the role, project or question you have in mind"
+          />
+          {fieldError("message")}
+        </div>
+
+        <div className="form__foot">
+          <button type="submit" className="button button--primary" disabled={submitting}>
             {submitting ? (
               <>
-                Sending message… <LoaderCircle className="spinner" size={18} />
+                Sending <LoaderCircle className="spinner" size={17} aria-hidden="true" />
               </>
             ) : (
               <>
-                Send message <ArrowRight size={19} />
+                Send message <ArrowRight size={17} aria-hidden="true" />
               </>
             )}
           </button>
-          <div className="form-status" role="status" aria-live="polite">
-            {status === "success" && (
-              <p className="success-message">
-                <Check size={16} />
-                Message sent. Thanks for reaching out.
+
+          <div className="form__status" role="status" aria-live="polite" aria-atomic="true">
+            {status.kind === "success" && (
+              <p className="form__success">
+                <Check size={16} aria-hidden="true" /> Sent! Thanks for getting in touch, I&rsquo;ll get back to you soon.
               </p>
             )}
-          {status === "error" && (
-            <p className="error-message">
-              {Object.keys(errors).length > 0 ? (
-                "Please fix the highlighted fields and try again."
-              ) : (
-                <>
-                  Message couldn&rsquo;t be sent. Try again or{" "}
-                  <a href="mailto:aknaeem246@gmail.com">email me directly</a>.
-                </>
-              )}
-            </p>
-          )}
+            {status.kind === "invalid" && (
+              <p className="form__error">Nearly there. Please check the fields marked above.</p>
+            )}
+            {status.kind === "failed" && (
+              <p className="form__error">
+                {status.reason} You can{" "}
+                <a href={`mailto:${site.email}`}>email me directly</a> instead.
+              </p>
+            )}
           </div>
-        </form>
-      </div>
-    </>
+        </div>
+      </form>
+    </div>
   );
 }

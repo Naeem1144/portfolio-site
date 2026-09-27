@@ -1,9 +1,8 @@
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
 import { ProjectsSection } from "@/components/ProjectsSection";
-import { MoreAboutMeSection } from "@/components/MoreAboutMeSection";
-import { CoreCompetenciesSection } from "@/components/CoreCompetenciesSection";
-import { CertificationsSection } from "@/components/CertificationsSection";
+import { ProfileSection } from "@/components/ProfileSection";
+import { CredentialsSection } from "@/components/CredentialsSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 
@@ -16,27 +15,30 @@ export default function Home() {
       <Header />
       <main id="main" tabIndex={-1}>
         <HeroSection />
-        <section id="projects" className="section work-section">
+
+        <section id="projects" className="section" aria-labelledby="work-heading">
           <div className="container">
             <ProjectsSection />
           </div>
         </section>
-        <section id="about" className="section about-section">
+
+        <section id="about" className="section section--rule" aria-labelledby="about-heading">
           <div className="container">
-            <MoreAboutMeSection />
+            <ProfileSection />
           </div>
         </section>
-        <section id="skills" className="section skills-section">
+
+        <section
+          id="credentials"
+          className="section section--tinted"
+          aria-labelledby="credentials-heading"
+        >
           <div className="container">
-            <CoreCompetenciesSection />
+            <CredentialsSection />
           </div>
         </section>
-        <section id="certifications" className="section credentials-section">
-          <div className="container">
-            <CertificationsSection />
-          </div>
-        </section>
-        <section id="contact" className="section contact-section">
+
+        <section id="contact" className="section band" aria-labelledby="contact-heading">
           <div className="container">
             <ContactSection />
           </div>

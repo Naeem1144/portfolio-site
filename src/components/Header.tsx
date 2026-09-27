@@ -1,170 +1,97 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { site } from "@/lib/site";
+import { BrandMark } from "./BrandMark";
 
 const links = [
   { label: "Work", id: "projects" },
   { label: "About", id: "about" },
-  { label: "Toolkit", id: "skills" },
+  { label: "Education", id: "credentials" },
   { label: "Contact", id: "contact" },
 ];
-const mobileLinks = [{ label: "Home", id: "home" }, ...links];
 
 export function Header() {
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState("home");
-  const firstMobileLink = useRef<HTMLAnchorElement>(null);
-  const mobileNavRef = useRef<HTMLElement>(null);
+  const [active, setActive] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    let frame = 0;
+
     const update = () => {
-      const current = ["home", ...links.map((link) => link.id)]
-        .reverse()
-        .find((id) => {
-          const section = document.getElementById(id);
-          return section && section.getBoundingClientRect().top <= 180;
-        });
-      setActive(current || "home");
-    };
-    const escape = (event: KeyboardEvent) => {
-      if (
-        event.key === "Escape" &&
-        document
-          .getElementById("menu-toggle")
-          ?.getAttribute("aria-expanded") === "true"
-      ) {
-        setOpen(false);
-        document.getElementById("menu-toggle")?.focus();
+      frame = 0;
+      setScrolled(window.scrollY > 8);
+
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 4;
+      if (atBottom) {
+        setActive(links[links.length - 1]!.id);
+        return;
       }
-    };
-    const trapFocus = (event: KeyboardEvent) => {
-      if (event.key !== "Tab" || !mobileNavRef.current) return;
-      const focusable = mobileNavRef.current.querySelectorAll<HTMLAnchorElement>(
-        "a[href]",
-      );
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
+
+      // A section becomes current once its top crosses the upper third.
+      const line = window.innerHeight * 0.33;
+      let current: string | null = null;
+      for (const { id } of links) {
+        const section = document.getElementById(id);
+        if (section && section.getBoundingClientRect().top <= line) current = id;
       }
+      setActive(current);
     };
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    window.addEventListener("orientationchange", update);
-    window.addEventListener("keydown", escape);
-    window.addEventListener("keydown", trapFocus);
+
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
     update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
     return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
-      window.removeEventListener("keydown", escape);
-      window.removeEventListener("keydown", trapFocus);
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
     };
   }, []);
 
-  useEffect(() => {
-    if (!open) return;
-    firstMobileLink.current?.focus();
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const html = document.documentElement;
-    const previousOverflow = html.style.overflow;
-    html.style.overflow = "hidden";
-    return () => {
-      html.style.overflow = previousOverflow;
-    };
-  }, [open]);
-
   return (
-    <header className="site-header">
-      <div className="container header-inner">
-        <a
-          href="#home"
-          className="wordmark"
-          aria-label="Naeem Nagori, home"
-          onClick={() => setOpen(false)}
-        >
-          <span className="brand-symbol" aria-hidden="true">
-            n<span>n</span>
-            <i />
-          </span>
-          <span className="brand-name">
-            Naeem Nagori<span>DATA ANALYST &amp; DATA SCIENTIST</span>
-          </span>
+    <header className="site-header" data-scrolled={scrolled || undefined}>
+      <div className="container site-header__inner">
+        <a href="#top" className="wordmark">
+          <span className="wordmark__seal"><BrandMark /></span>
+          {site.name.split(" ")[0]}
+          <span className="wordmark__rest"> {site.name.split(" ").slice(1).join(" ")}</span>
+          <span className="sr-only">, back to top</span>
         </a>
-        <nav className="desktop-nav" aria-label="Main navigation">
-          {links.map((link) => (
-            <a
-              key={link.id}
-              href={`#${link.id}`}
-              aria-current={active === link.id ? "location" : undefined}
-            >
-              {link.label}
-              <span className="nav-dot" />
-            </a>
-          ))}
+
+        <nav aria-label="Primary">
+          <ul className="nav">
+            {links.map((link) => (
+              <li key={link.id}>
+                <a
+                  href={`#${link.id}`}
+                  aria-current={active === link.id ? "location" : undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
         </nav>
+
         <a
-          href="/Naeem_Nagori_Resume.pdf"
+          href={site.resume.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="resume-link"
-          aria-label="Open résumé PDF in a new tab"
+          className="button button--small header-resume"
         >
-          Résumé <ArrowUpRight size={16} />
+          {site.resume.label}
+          <span className="button__meta" aria-hidden="true">
+            PDF
+          </span>
+          <span className="sr-only"> (PDF, opens in a new tab)</span>
         </a>
-        <button
-          id="menu-toggle"
-          type="button"
-          className="menu-toggle"
-          onClick={() => setOpen(!open)}
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-          aria-label={open ? "Close menu" : "Open menu"}
-        >
-          {open ? <X size={23} /> : <Menu size={23} />}
-        </button>
       </div>
-      <nav
-        id="mobile-navigation"
-        ref={mobileNavRef}
-        className={`mobile-nav ${open ? "is-open" : ""}`}
-        aria-label="Mobile navigation"
-        inert={!open}
-      >
-        {mobileLinks.map((link, index) => (
-          <a
-            key={link.id}
-            href={`#${link.id}`}
-            ref={index === 0 ? firstMobileLink : undefined}
-            aria-current={active === link.id ? "location" : undefined}
-            onClick={() => setOpen(false)}
-          >
-            <span>0{index + 1}</span>
-            {link.label}
-            <ArrowUpRight size={22} />
-          </a>
-        ))}
-        <a
-          href="/Naeem_Nagori_Resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open résumé PDF in a new tab"
-          onClick={() => setOpen(false)}
-        >
-          <span>PDF</span>Résumé
-          <ArrowUpRight size={22} />
-        </a>
-      </nav>
     </header>
   );
 }
