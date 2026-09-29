@@ -31,7 +31,7 @@ export const site = {
   education: {
     school: "Seneca Polytechnic",
     place: "Toronto, Canada",
-    programme: "Business Administration",
+    programme: "Business",
     major: "Marketing",
     award: "Ontario College Diploma",
     short: "Marketing diploma",
