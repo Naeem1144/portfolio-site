@@ -125,6 +125,30 @@ export const projects: Project[] = [
   },
   {
     number: "04",
+    repo: "alzheimer-disease-detection",
+    title: "Alzheimer's stage classifier",
+    thesis: "It reads an MRI scan and places it in one of four stages of Alzheimer's, instead of just saying yes or no.",
+    discipline: "Computer vision · CNN",
+    category: "machine-learning",
+    year: "2025",
+    stack: ["Python", "PyTorch", "CNN", "Streamlit"],
+    problem:
+      "Most image classifiers only say whether something is there or not. With dementia that isn't very helpful, because catching it early matters most, and a plain yes or no can't show what stage someone is at.",
+    approach: [
+      "I trained the model to tell four stages apart: non-demented, very mild, mild and moderate.",
+      "I built a convolutional neural network and trained it on the Well-Documented Alzheimer's Dataset from Kaggle.",
+      "I published the model under an MIT licence and put it online, so anyone can try it on a real scan.",
+    ],
+    outcomes: [
+      { value: "99.21%", label: "validation accuracy", source: "README" },
+      { value: "99%", label: "test accuracy", source: "README" },
+      { value: "4", label: "stages it can tell apart" },
+    ],
+    visual: "stages",
+    liveUrl: "https://alzheimerpredictioncnn-naeem.streamlit.app/",
+  },
+  {
+    number: "05",
     repo: "customer-churn-prediction",
     title: "Telecom churn prediction",
     thesis: "Most customers don't leave, so a model can look accurate while missing the ones who do. I built this one to catch them.",
@@ -145,30 +169,6 @@ export const projects: Project[] = [
       { value: "5", label: "metrics used to judge the model" },
     ],
     visual: "network",
-  },
-  {
-    number: "05",
-    repo: "greater-toronto-area-house-price-prediction",
-    title: "Toronto-area house price model",
-    thesis: "How well can location, timing and listing activity predict what a house in the Toronto area sells for?",
-    discipline: "Regression",
-    category: "machine-learning",
-    year: "2024",
-    stack: ["Python", "scikit-learn", "Gradient Boosting", "Neural network", "KNN imputation"],
-    problem:
-      "Toronto-area housing data mixes location, market timing and listing activity in one table. A careless model just memorises the neighbourhoods it has already seen instead of learning how prices actually move.",
-    approach: [
-      "I built features around four things: location, sales and prices, listing activity (new listings and the sale-to-list ratio), and timing (year and quarter).",
-      "I filled in missing numbers with KNN imputation instead of throwing rows away, and one-hot encoded the categories.",
-      "I compared linear regression and decision trees with a Gradient Boosting model, then tried a neural network with early stopping to see if it did any better.",
-      "I checked the final model with ten-fold cross-validation rather than trusting a single train and test split.",
-    ],
-    outcomes: [
-      { value: "0.990", label: "R² with Gradient Boosting", source: "0.9898 on the test set" },
-      { value: "0.984", label: "R² with a neural network", source: "0.9844 with early stopping" },
-      { value: "10-fold", label: "cross-validation" },
-    ],
-    visual: "regression",
   },
   {
     number: "06",
@@ -196,30 +196,6 @@ export const projects: Project[] = [
   },
   {
     number: "07",
-    repo: "alzheimer-disease-detection",
-    title: "Alzheimer's stage classifier",
-    thesis: "It reads an MRI scan and places it in one of four stages of Alzheimer's, instead of just saying yes or no.",
-    discipline: "Computer vision · CNN",
-    category: "machine-learning",
-    year: "2025",
-    stack: ["Python", "TensorFlow", "CNN", "Streamlit"],
-    problem:
-      "Most image classifiers only say whether something is there or not. With dementia that isn't very helpful, because catching it early matters most, and a plain yes or no can't show what stage someone is at.",
-    approach: [
-      "I trained the model to tell four stages apart: non-demented, very mild, mild and moderate.",
-      "I built a convolutional neural network and trained it on the Well-Documented Alzheimer's Dataset from Kaggle.",
-      "I published the model under an MIT licence and put it online, so anyone can try it on a real scan.",
-    ],
-    outcomes: [
-      { value: "99.21%", label: "validation accuracy", source: "README" },
-      { value: "99%", label: "test accuracy", source: "README" },
-      { value: "4", label: "stages it can tell apart" },
-    ],
-    visual: "stages",
-    liveUrl: "https://alzheimerpredictioncnn-naeem.streamlit.app/",
-  },
-  {
-    number: "08",
     repo: "RL-by-hand",
     title: "Multi-armed bandits, by hand",
     thesis: "I wrote eight bandit algorithms from scratch and tested how they cope when the rewards keep changing.",

@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { site } from "@/lib/site";
 
 /**
@@ -5,7 +6,6 @@ import { site } from "@/lib/site";
  * for, and the three habits that show up in every project.
  */
 export function ProfileSection() {
-  const job = site.experience[0]!;
   const english = site.languages.find((language) => language.name === "English")!;
 
   return (
@@ -34,7 +34,7 @@ export function ProfileSection() {
         <dl className="facts" aria-label="At a glance">
           <div>
             <dt>Looking for</dt>
-            <dd>Junior data analyst, data scientist or marketing analytics roles</dd>
+            <dd>Data analyst and marketing analytics roles</dd>
           </div>
           <div>
             <dt>Based in</dt>
@@ -54,8 +54,12 @@ export function ProfileSection() {
           <div>
             <dt>Experience</dt>
             <dd>
-              {job.role}, {job.org}
-              <span>{job.years}</span>
+              {site.experience.map((job) => (
+                <Fragment key={`${job.org}-${job.role}`}>
+                  {job.role}, {job.org}
+                  <span>{job.years}</span>
+                </Fragment>
+              ))}
             </dd>
           </div>
         </dl>

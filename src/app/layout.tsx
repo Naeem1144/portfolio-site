@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${site.name} | ${site.role}`,
     description:
-      "Selected data projects, including 83,590 hotel customers sorted into groups, a CNN at 99.21% validation accuracy, and an R² of 0.990 on Toronto-area house prices.",
+      "Selected data projects, including 83,590 hotel customers sorted into groups, a Power BI churn report with 6 views, and a CNN at 99.21% validation accuracy on Alzheimer's MRI stages.",
     // Trailing slash to match the resolved `canonical`, so the two never
     // disagree about which URL is the real one.
     url: `${siteUrl}/`,

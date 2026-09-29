@@ -11,7 +11,7 @@ import {
 import { site } from "@/lib/site";
 
 /**
- * The evidence: three projects, one pattern each.
+ * The evidence: four projects, one pattern each.
  *
  * A hiring manager decides in 30 seconds, so each project shows the drawing,
  * the question, two results and the code. The method is one click down, the
@@ -19,7 +19,7 @@ import { site } from "@/lib/site";
  * live on GitHub.
  */
 
-const SELECTED = ["01", "05", "07"];
+const SELECTED = ["01", "02", "03", "04"];
 
 export function ProjectsSection() {
   const selected = SELECTED.map((number) => projectByNumber(number));
@@ -31,7 +31,7 @@ export function ProjectsSection() {
           <span className="eyebrow__no">01</span>Work
         </p>
         <h2 id="work-heading">
-          Three projects, from question to <mark className="hl">result</mark>.
+          Four projects, from question to <mark className="hl">result</mark>.
         </h2>
         <p className="section-head__note">
           Chosen from {site.githubRepos} on GitHub. Each one shows the question, the result

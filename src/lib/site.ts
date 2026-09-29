@@ -8,8 +8,8 @@ export const GITHUB_USER = "Naeem1144";
 export const site = {
   name: "Naeem Nagori",
   initials: "nn",
-  role: "Data Analyst & Data Scientist",
-  seeking: "junior data analyst, data scientist or marketing analytics",
+  role: "Data Analyst",
+  seeking: "data analyst and marketing analytics roles",
   email: "aknaeem246@gmail.com",
   location: "Ahmedabad, India",
   timeZone: { id: "Asia/Kolkata", city: "Ahmedabad", label: "IST, UTC+5:30" },
@@ -36,7 +36,7 @@ export const site = {
     award: "Ontario College Diploma",
     short: "Marketing diploma",
     length: "Two-year programme",
-    years: "Jan 2023 to Apr 2025",
+    years: "Aug 2023 to Apr 2025",
     graduated: "2025",
   },
   experience: [
@@ -46,6 +46,13 @@ export const site = {
       place: "Canada",
       years: "Jul 2025 to Aug 2026",
       detail: "Baking and store operations as part of a busy team.",
+    },
+    {
+      role: "Ecommerce Analyst (Part-time)",
+      org: "Canadian Outlet Store",
+      place: "Canada",
+      years: "May 2024 to Oct 2024",
+      detail: "Analyzed sales, product and customer data for ecommerce and marketing decisions.",
     },
   ],
   languages: [
@@ -76,8 +83,8 @@ export const site = {
   /**
    * The three headline results, shown in the hero and on the social card. Each
    * is quoted from the linked project's repository (the row count of
-   * HotelCustomersDataset.xlsx, the GTA Gradient Boosting test R², the CNN's
-   * validation accuracy) and links to that project on the page.
+   * HotelCustomersDataset.xlsx, the view count of the Power BI report, the
+   * CNN's validation accuracy) and links to that project on the page.
    */
   proof: [
     {
@@ -87,15 +94,15 @@ export const site = {
       source: "Row count of HotelCustomersDataset.xlsx, the dataset in the segmentation repository.",
     },
     {
-      value: "0.990",
-      label: "R² predicting Toronto-area house prices",
-      project: "05",
-      source: "Gradient Boosting on the held-out test set, 0.9898, as reported in the project repository.",
+      value: "6",
+      label: "views in one Power BI churn report",
+      project: "03",
+      source: "Six views in the professional-power-bi-dashboard report.",
     },
     {
       value: "99.21%",
       label: "validation accuracy on Alzheimer's MRI stages",
-      project: "07",
+      project: "04",
       source: "Validation accuracy of the CNN, as reported in the project README. Test accuracy was 99%.",
     },
   ],
