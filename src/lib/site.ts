@@ -18,6 +18,11 @@ export const site = {
     github: `https://github.com/${GITHUB_USER}`,
     linkedin: "https://www.linkedin.com/in/naeemnagori/",
   },
+  /**
+   * Public repositories on GitHub. The page writes up eight of them; the rest
+   * are only on the profile, so counts that point at GitHub use this figure.
+   */
+  githubRepos: 16,
   resume: {
     href: "/Naeem_Nagori_Resume.pdf",
     label: "Résumé",
@@ -60,7 +65,7 @@ export const site = {
     {
       title: "I can do the whole job",
       body: "I can take a messy spreadsheet all the way to a clean dataset, a SQL database, a Power BI report or a trained model. All of my code is on GitHub if you'd like to look.",
-      evidence: "8 projects, Google Data Analytics",
+      evidence: "16 projects, Google Data Analytics",
     },
     {
       title: "I'm easy to work with",

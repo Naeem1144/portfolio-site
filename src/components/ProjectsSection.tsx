@@ -34,8 +34,8 @@ export function ProjectsSection() {
           Three projects, from question to <mark className="hl">result</mark>.
         </h2>
         <p className="section-head__note">
-          Chosen from {projects.length}. Each one shows the question, the result and the
-          code behind it.
+          Chosen from {site.githubRepos} on GitHub. Each one shows the question, the result
+          and the code behind it.
         </p>
       </header>
 
@@ -74,7 +74,7 @@ export function ProjectsSection() {
           >
             <Github className="button__glyph" size={18} aria-hidden="true" />
             <span>
-              All <span className="num">{projects.length}</span> projects on GitHub
+              All <span className="num">{site.githubRepos}</span> projects on GitHub
             </span>
             <ArrowUpRight className="button__icon" size={17} aria-hidden="true" />
             <span className="sr-only"> (opens in a new tab)</span>
