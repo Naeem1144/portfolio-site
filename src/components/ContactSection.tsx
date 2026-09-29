@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent, ReactNode } from "react";
-import { ArrowRight, ArrowUpRight, Check, LoaderCircle } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Check, ChevronDown, LoaderCircle } from "lucide-react";
 import { CopyEmail } from "./CopyEmail";
+import { LocalTime } from "./LocalTime";
 import { site } from "@/lib/site";
 
 type FieldName = "name" | "email" | "message";
@@ -20,6 +21,30 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MESSAGE_MAX = 5000;
 const REQUEST_TIMEOUT_MS = 15000;
 const EMPTY: Values = { name: "", email: "", message: "" };
+
+/** Who's asking. Each one rewrites the query's answer and the message prompt. */
+const TOPICS = [
+  {
+    id: "role",
+    where: "hiring for a data role",
+    reply: "Send me the role. I'll come back with questions, and a time to talk.",
+    placeholder: "Tell me about the role, the team and the data they work with",
+  },
+  {
+    id: "data",
+    where: "has a dataset to explore",
+    reply: "Send a sample. I'll tell you what it can answer, and what it can't.",
+    placeholder: "What's in the data, and what would you like to know from it?",
+  },
+  {
+    id: "hello",
+    where: "just saying hello",
+    reply: "Hello back. Ask me anything about the work above.",
+    placeholder: "Say hello, or ask about any of the projects",
+  },
+] as const;
+
+type TopicId = (typeof TOPICS)[number]["id"];
 
 function validate(values: Values): Errors {
   const errors: Errors = {};
@@ -48,6 +73,8 @@ export function ContactSection() {
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [topicId, setTopicId] = useState<TopicId>("role");
+  const topic = TOPICS.find((t) => t.id === topicId)!;
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => () => abortRef.current?.abort(), []);
@@ -127,34 +154,95 @@ export function ContactSection() {
 
   return (
     <div className="contact">
-      <div className="contact__intro">
-        <p className="eyebrow">Your next question. Our starting point.</p>
-        <h2 id="contact-heading">Good work starts<br />with a <em>conversation.</em></h2>
-        <p className="contact__lede">
-          Whether you&rsquo;re hiring for a data role or just have a dataset
-          you&rsquo;d like a second opinion on, I&rsquo;d love to hear from
-          you. Email is the quickest way to reach me, and I usually reply
-          within two days.
+      <header className="contact__head" data-reveal="rise">
+        <p className="eyebrow">
+          <span className="eyebrow__no">03</span>Contact
         </p>
+        <h2 id="contact-heading" className="contact__title">
+          Got data? <mark className="hl">Let&apos;s talk.</mark>
+        </h2>
+      </header>
+
+      <div className="contact__intro">
+        <div className="query">
+          <p className="query__comment" aria-hidden="true">
+            -- What brings you here?
+          </p>
+          <p aria-hidden="true">
+            <span className="query__kw">SELECT</span> reply
+          </p>
+          <p aria-hidden="true">
+            <span className="query__kw">FROM</span> naeem
+          </p>
+          <p className="query__where">
+            <span aria-hidden="true">
+              <span className="query__kw">WHERE</span> you =
+            </span>
+            <label className="sr-only" htmlFor="contact-topic">
+              What brings you here?
+            </label>
+            <span className="query__pick">
+              <select
+                id="contact-topic"
+                value={topicId}
+                onChange={(event) => setTopicId(event.target.value as TopicId)}
+              >
+                {TOPICS.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    &apos;{t.where}&apos;
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="query__chevron" size={15} aria-hidden="true" />
+            </span>
+          </p>
+          <p className="query__result" aria-live="polite">
+            <span className="query__rows" aria-hidden="true">
+              1 row
+            </span>
+            {topic.reply}
+          </p>
+        </div>
+
+        <p className="contact__lede">Email is quickest. I usually reply within two days.</p>
 
         <CopyEmail className="contact__email" />
+        <LocalTime />
 
         <ul className="contact__links">
           <li>
-            <a href={site.social.linkedin} target="_blank" rel="noopener noreferrer">
-              LinkedIn <ArrowUpRight size={15} aria-hidden="true" />
+            <a
+              href={site.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link"
+            >
+              LinkedIn
+              <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </li>
           <li>
-            <a href={site.social.github} target="_blank" rel="noopener noreferrer">
-              GitHub <ArrowUpRight size={15} aria-hidden="true" />
+            <a
+              href={site.social.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link"
+            >
+              GitHub
+              <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </li>
           <li>
-            <a href={site.resume.href} target="_blank" rel="noopener noreferrer">
-              Résumé <ArrowUpRight size={15} aria-hidden="true" />
+            <a
+              href={site.resume.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link"
+            >
+              {site.resume.label}
+              <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
               <span className="sr-only"> (PDF, opens in a new tab)</span>
             </a>
           </li>
@@ -164,14 +252,10 @@ export function ContactSection() {
       <form
         className="form"
         onSubmit={handleSubmit}
-        aria-labelledby="contact-form-heading"
+        aria-label="Send a message"
         aria-busy={submitting}
         noValidate
       >
-        <h3 id="contact-form-heading" className="form__heading">
-          Or send a message
-        </h3>
-
         <div className="form__row">
           <div className="field">
             <label htmlFor="contact-name">Name</label>
@@ -204,7 +288,7 @@ export function ContactSection() {
             {...field("message")}
             rows={5}
             maxLength={MESSAGE_MAX}
-            placeholder="Tell me about the role, project or question you have in mind"
+            placeholder={topic.placeholder}
           />
           {fieldError("message")}
         </div>
@@ -213,11 +297,13 @@ export function ContactSection() {
           <button type="submit" className="button button--primary" disabled={submitting}>
             {submitting ? (
               <>
-                Sending <LoaderCircle className="spinner" size={17} aria-hidden="true" />
+                Sending
+                <LoaderCircle className="spinner" size={17} aria-hidden="true" />
               </>
             ) : (
               <>
-                Send message <ArrowRight size={17} aria-hidden="true" />
+                Send message
+                <ArrowRight className="button__icon" size={17} aria-hidden="true" />
               </>
             )}
           </button>
@@ -225,7 +311,8 @@ export function ContactSection() {
           <div className="form__status" role="status" aria-live="polite" aria-atomic="true">
             {status.kind === "success" && (
               <p className="form__success">
-                <Check size={16} aria-hidden="true" /> Sent! Thanks for getting in touch, I&rsquo;ll get back to you soon.
+                <Check size={16} aria-hidden="true" />
+                Sent. Thanks for getting in touch, I&rsquo;ll get back to you soon.
               </p>
             )}
             {status.kind === "invalid" && (

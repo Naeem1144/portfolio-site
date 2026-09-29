@@ -50,14 +50,6 @@ export type Project = {
   liveUrl?: string;
 };
 
-export type FilterId = "all" | ProjectCategory;
-
-export const filters: { id: FilterId; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "analytics", label: "Analytics & BI" },
-  { id: "machine-learning", label: "Machine learning" },
-];
-
 export const projects: Project[] = [
   {
     number: "01",
@@ -250,19 +242,6 @@ export const projects: Project[] = [
     visual: "bandit",
   },
 ];
-
-export const filterCounts: Record<FilterId, number> = {
-  all: projects.length,
-  analytics: projects.filter((p) => p.category === "analytics").length,
-  "machine-learning": projects.filter((p) => p.category === "machine-learning").length,
-};
-
-export function isFilterId(value: string | null): value is FilterId {
-  return value === "all" || value === "analytics" || value === "machine-learning";
-}
-
-/** Element id of the server-rendered project list the filter acts on. */
-export const PROJECT_LIST_ID = "project-list";
 
 export const projectAnchor = (number: string) => `project-${number}`;
 

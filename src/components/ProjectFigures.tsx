@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { ProjectVisual } from "@/lib/projects";
+import { Plot } from "./Plot";
 
 /**
  * Project illustrations.
@@ -13,20 +14,38 @@ import type { ProjectVisual } from "@/lib/projects";
 const W = 500;
 const H = 360;
 
-function Figure({ caption, children }: { caption: string; children: ReactNode }) {
+type FigureProps = { number?: number };
+
+function Figure({
+  number,
+  caption,
+  children,
+}: FigureProps & { caption: string; children: ReactNode }) {
   return (
-    <figure className="figure">
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden="true"
-        focusable="false"
-      >
-        {children}
-      </svg>
-      <figcaption>Illustration · {caption}</figcaption>
+    <figure className="exhibit">
+      <Plot>
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+          focusable="false"
+        >
+          {children}
+        </svg>
+      </Plot>
+      <figcaption className="exhibit__caption">
+        <span>
+          {number && <span className="exhibit__no">Fig. {number}</span>}
+          Illustration: {caption}.
+        </span>
+      </figcaption>
     </figure>
   );
+}
+
+/** Order in which a mark is plotted when the drawing scrolls into view. */
+function order(i: number): CSSProperties {
+  return { "--i": i } as CSSProperties;
 }
 
 /** Deterministic 0..1, so the artwork is identical on every build. */
@@ -63,13 +82,15 @@ function HGrid({ top, bottom, left = 40, right = W - 24, rows = 4 }: {
 
 /* 01 · Clustering ------------------------------------------------------- */
 
-const HUES = ["var(--c1)", "var(--c2)", "var(--c3)"];
+const HUES = ["var(--data-1)", "var(--data-2)", "var(--data-3)"];
 
+/* Labels on the right edge are anchored at their end, so they stay inside the
+   drawing however large the text is drawn. */
 const HULLS = [
-  { cx: 150, cy: 196, rx: 96, ry: 70, rotate: -14, label: "Group A", lx: 72, ly: 104 },
-  { cx: 340, cy: 116, rx: 88, ry: 60, rotate: 12, label: "Group B", lx: 404, ly: 48 },
-  { cx: 340, cy: 256, rx: 86, ry: 56, rotate: -8, label: "Group C", lx: 422, ly: 310 },
-];
+  { cx: 150, cy: 196, rx: 96, ry: 70, rotate: -14, label: "Group A", lx: 72, ly: 104, anchor: "start" },
+  { cx: 340, cy: 116, rx: 88, ry: 60, rotate: 12, label: "Group B", lx: W - 24, ly: 44, anchor: "end" },
+  { cx: 340, cy: 256, rx: 86, ry: 56, rotate: -8, label: "Group C", lx: W - 24, ly: 320, anchor: "end" },
+] as const;
 
 const CLUSTER_POINTS = Array.from({ length: 210 }, (_, i) => {
   const group = i % 3;
@@ -85,9 +106,9 @@ const CLUSTER_POINTS = Array.from({ length: 210 }, (_, i) => {
   };
 });
 
-function ClusterFigure() {
+function ClusterFigure({ number }: FigureProps) {
   return (
-    <Figure caption="behavioural clusters projected to two dimensions">
+    <Figure number={number} caption="behavioural clusters projected to two dimensions">
       <line x1={40} y1={H - 30} x2={W - 24} y2={H - 30} className="fg-axis" />
       <line x1={40} y1={20} x2={40} y2={H - 30} className="fg-axis" />
       {HULLS.map((hull, i) => (
@@ -112,10 +133,18 @@ function ClusterFigure() {
           r={2.6}
           fill={HUES[point.group]}
           opacity={point.opacity}
+          style={order(i)}
         />
       ))}
       {HULLS.map((hull, i) => (
-        <text key={hull.label} x={hull.lx} y={hull.ly} className="fg-label fg-label--strong" fill={HUES[i]}>
+        <text
+          key={hull.label}
+          x={hull.lx}
+          y={hull.ly}
+          textAnchor={hull.anchor}
+          className="fg-label fg-label--strong"
+          fill={HUES[i]}
+        >
           {hull.label}
         </text>
       ))}
@@ -137,13 +166,13 @@ const TABLES = [
   { x: 162, y: 200, w: 176, name: "bookings", rows: ["passenger_id  FK", "train_id  FK", "travel_date", "status"] },
 ];
 
-function SchemaFigure() {
+function SchemaFigure({ number }: FigureProps) {
   return (
-    <Figure caption="train booking schema, three related tables">
+    <Figure number={number} caption="train booking schema, three related tables">
       <path d="M 114 144 V 172 H 220 V 200" className="fg-link" />
       <path d="M 386 126 V 172 H 280 V 200" className="fg-link" />
-      <text x={122} y={166} className="fg-label" fill="var(--c1)">FK</text>
-      <text x={394} y={166} className="fg-label" fill="var(--c1)">FK</text>
+      <text x={122} y={166} className="fg-label" fill="var(--data-1)">FK</text>
+      <text x={394} y={166} className="fg-label" fill="var(--data-1)">FK</text>
       {TABLES.map((table) => {
         const h = 30 + table.rows.length * 22;
         return (
@@ -159,7 +188,7 @@ function SchemaFigure() {
                 x={table.x + 12}
                 y={table.y + 48 + i * 22}
                 className="fg-label"
-                fill={row.includes("trigger") ? "var(--c1)" : undefined}
+                fill={row.includes("trigger") ? "var(--data-1)" : undefined}
               >
                 {row}
               </text>
@@ -176,7 +205,7 @@ function SchemaFigure() {
 const TREND = [0.58, 0.61, 0.55, 0.5, 0.53, 0.45, 0.42, 0.39, 0.43, 0.36, 0.34, 0.31];
 const CUTS = ["Demographics", "Plan", "Geography"];
 
-function DashboardFigure() {
+function DashboardFigure({ number }: FigureProps) {
   const top = 34;
   const bottom = 186;
   const left = 40;
@@ -185,15 +214,15 @@ function DashboardFigure() {
   const points = TREND.map((v, i) => `${left + i * step},${bottom - v * (bottom - top)}`);
 
   return (
-    <Figure caption="churn trend, and the same rate cut three ways">
+    <Figure number={number} caption="churn trend, and the same rate cut three ways">
       <text x={left} y={20} className="fg-label fg-label--strong">Churn over time</text>
       <HGrid top={top} bottom={bottom} left={left} right={right} rows={3} />
       <polygon
         points={`${left},${bottom} ${points.join(" ")} ${right},${bottom}`}
-        fill="var(--c1)"
+        fill="var(--data-1)"
         opacity="0.08"
       />
-      <polyline points={points.join(" ")} fill="none" stroke="var(--c1)" strokeWidth="2" />
+      <polyline points={points.join(" ")} fill="none" stroke="var(--data-1)" strokeWidth="2" />
 
       {CUTS.map((cut, c) => {
         const x0 = left + c * ((right - left + 16) / 3);
@@ -208,7 +237,7 @@ function DashboardFigure() {
                 y={240 + r * 22}
                 width={colW * (0.3 + hash(c * 10 + r) * 0.7)}
                 height="12"
-                fill={r === 0 ? "var(--c1)" : "var(--c2)"}
+                fill={r === 0 ? "var(--data-1)" : "var(--data-2)"}
                 opacity={r === 0 ? 0.9 : 0.35}
               />
             ))}
@@ -228,7 +257,7 @@ const LAYERS = [
   { x: 430, count: 1 },
 ];
 
-function NetworkFigure() {
+function NetworkFigure({ number }: FigureProps) {
   const top = 40;
   const span = H - top - 80;
   const nodes = LAYERS.map((layer) =>
@@ -239,7 +268,7 @@ function NetworkFigure() {
   );
 
   return (
-    <Figure caption="feed-forward classifier trained on SMOTE-balanced data">
+    <Figure number={number} caption="feed-forward classifier trained on SMOTE-balanced data">
       {nodes.slice(0, -1).flatMap((layer, l) =>
         layer.flatMap((from, a) =>
           nodes[l + 1]!.map((to, b) => (
@@ -249,7 +278,7 @@ function NetworkFigure() {
               y1={from.y}
               x2={to.x}
               y2={to.y}
-              stroke={l === nodes.length - 2 ? "var(--c1)" : "var(--ink-3)"}
+              stroke={l === nodes.length - 2 ? "var(--data-1)" : "var(--ink-3)"}
               strokeWidth={l === nodes.length - 2 ? 1 : 0.6}
               opacity={l === nodes.length - 2 ? 0.6 : 0.28}
             />
@@ -265,8 +294,8 @@ function NetworkFigure() {
               cx={node.x}
               cy={node.y}
               r={out ? 11 : 6}
-              fill={out ? "var(--c1)" : "var(--figure-bg)"}
-              stroke={out ? "var(--c1)" : "var(--ink-2)"}
+              fill={out ? "var(--data-1)" : "var(--paper)"}
+              stroke={out ? "var(--data-1)" : "var(--ink-2)"}
               strokeWidth="1.2"
             />
           );
@@ -279,7 +308,7 @@ function NetworkFigure() {
           y={H - 26}
           textAnchor="middle"
           className={`fg-label${i === 3 ? " fg-label--strong" : ""}`}
-          fill={i === 3 ? "var(--c1)" : undefined}
+          fill={i === 3 ? "var(--data-1)" : undefined}
         >
           {label}
         </text>
@@ -299,7 +328,7 @@ const FIT = Array.from({ length: 120 }, (_, i) => {
   };
 });
 
-function RegressionFigure() {
+function RegressionFigure({ number }: FigureProps) {
   const left = 70;
   const bottom = H - 40;
   const size = H - 70;
@@ -307,22 +336,36 @@ function RegressionFigure() {
   const toY = (v: number) => bottom - v * size;
 
   return (
-    <Figure caption="predicted against actual sale price">
+    <Figure number={number} caption="predicted against actual sale price">
       <HGrid top={bottom - size} bottom={bottom} left={left} right={toX(1)} rows={4} />
       <line x1={toX(0)} y1={toY(0)} x2={toX(1)} y2={toY(1)} stroke="var(--ink-2)" strokeWidth="1" strokeDasharray="4 4" />
       {FIT.map((p, i) => (
-        <circle key={i} cx={toX(p.x)} cy={toY(p.y)} r={2.6} fill="var(--c2)" opacity={0.35 + hash(i * 5.1) * 0.5} />
+        <circle
+          key={i}
+          cx={toX(p.x)}
+          cy={toY(p.y)}
+          r={2.6}
+          fill="var(--data-2)"
+          opacity={0.35 + hash(i * 5.1) * 0.5}
+          style={order(i * 1.6)}
+        />
       ))}
+      {/* Begins early on the diagonal so it has room to run at any text size. */}
       <text
-        x={toX(0.56)}
-        y={toY(0.56) - 18}
+        x={toX(0.3)}
+        y={toY(0.3) - 20}
         className="fg-label"
-        transform={`rotate(${(-Math.atan(1 / 1.25) * 180) / Math.PI} ${toX(0.56)} ${toY(0.56)})`}
+        transform={`rotate(${(-Math.atan(1 / 1.25) * 180) / Math.PI} ${toX(0.3)} ${toY(0.3)})`}
       >
         perfect prediction
       </text>
-      <text x={toX(0.04)} y={toY(0.86)} className="fg-value">R² 0.990</text>
-      <text x={toX(0.04)} y={toY(0.86) + 20} className="fg-label">Gradient Boosting, test set</text>
+      {/* The result sits below the diagonal, where there are no points to cross.
+          Line spacing is in em, so it follows the text size. */}
+      <text x={toX(1)} y={toY(0.36)} className="fg-value" textAnchor="end">R² 0.990</text>
+      <text x={toX(1)} y={toY(0.36)} className="fg-label" textAnchor="end">
+        <tspan x={toX(1)} dy="1.6em">Gradient Boosting</tspan>
+        <tspan x={toX(1)} dy="1.3em">on the test set</tspan>
+      </text>
       <text x={toX(1)} y={H - 14} className="fg-label" textAnchor="end">Actual →</text>
       <text x={56} y={toY(1)} className="fg-label" textAnchor="end" transform={`rotate(-90 56 ${toY(1)})`}>
         ← Predicted
@@ -336,9 +379,9 @@ function RegressionFigure() {
 const MODELS = ["Naive Bayes", "Logistic reg.", "SVM"];
 const REASONS = ["suspicious URL", "urgency words", "odd punctuation"];
 
-function EnsembleFigure() {
+function EnsembleFigure({ number }: FigureProps) {
   return (
-    <Figure caption="three models vote; each verdict comes with its reasons">
+    <Figure number={number} caption="three models vote; each verdict comes with its reasons">
       {MODELS.map((model, i) => {
         const y = 44 + i * 94;
         return (
@@ -349,14 +392,14 @@ function EnsembleFigure() {
           </g>
         );
       })}
-      <rect x={214} y={153} width={100} height={64} fill="var(--c1)" />
+      <rect x={214} y={153} width={100} height={64} fill="var(--data-1)" />
       <text x={264} y={181} textAnchor="middle" className="fg-label fg-label--strong fg-label--on-accent">Verdict</text>
       <text x={264} y={201} textAnchor="middle" className="fg-label fg-label--on-accent">+ confidence</text>
-      <line x1={314} y1={185} x2={334} y2={185} stroke="var(--c1)" />
-      <line x1={334} x2={334} y1={143} y2={227} stroke="var(--c1)" />
+      <line x1={314} y1={185} x2={334} y2={185} stroke="var(--data-1)" />
+      <line x1={334} x2={334} y1={143} y2={227} stroke="var(--data-1)" />
       {REASONS.map((reason, i) => (
         <g key={reason}>
-          <line x1={334} x2={344} y1={143 + i * 42} y2={143 + i * 42} stroke="var(--c1)" />
+          <line x1={334} x2={344} y1={143 + i * 42} y2={143 + i * 42} stroke="var(--data-1)" />
           <text x={350} y={147 + i * 42} className="fg-label">{reason}</text>
         </g>
       ))}
@@ -367,16 +410,16 @@ function EnsembleFigure() {
 
 /* 07 · Stages ----------------------------------------------------------- */
 
-const STAGES = ["Non-demented", "Very mild", "Mild", "Moderate"];
+const STAGES = [["Non-", "demented"], ["Very", "mild"], ["Mild"], ["Moderate"]];
 
-function StagesFigure() {
+function StagesFigure({ number }: FigureProps) {
   const left = 24;
   const right = W - 24;
   const gap = 10;
   const colW = (right - left - gap * 3) / 4;
 
   return (
-    <Figure caption="one scan in, one of four ordered stages out">
+    <Figure number={number} caption="one scan in, one of four ordered stages out">
       <rect x={W / 2 - 70} y={22} width={140} height={100} className="fg-panel" />
       {Array.from({ length: 7 }, (_, r) =>
         Array.from({ length: 10 }, (_, c) => (
@@ -388,24 +431,27 @@ function StagesFigure() {
             height={10.4}
             fill="var(--ink-2)"
             opacity={0.08 + hash(r * 10 + c) * 0.4}
+            style={order((r + c) * 6)}
           />
         )),
       )}
-      <text x={W / 2} y={140} textAnchor="middle" className="fg-label">MRI slice → CNN</text>
-      <path d={`M ${W / 2} 150 V 178`} stroke="var(--ink-2)" />
-      <path d={`M ${W / 2 - 5} 172 L ${W / 2} 180 L ${W / 2 + 5} 172`} fill="none" stroke="var(--ink-2)" />
+      <text x={W / 2} y={146} textAnchor="middle" className="fg-label">MRI slice → CNN</text>
+      <path d={`M ${W / 2} 156 V 184`} stroke="var(--ink-2)" />
+      <path d={`M ${W / 2 - 5} 178 L ${W / 2} 186 L ${W / 2 + 5} 178`} fill="none" stroke="var(--ink-2)" />
       {STAGES.map((stage, i) => {
         const x = left + i * (colW + gap);
         const hot = i === 1;
         return (
-          <g key={stage}>
+          <g key={stage.join("")}>
             <rect
               x={x}
               y={196}
               width={colW}
               height={70}
-              fill={hot ? "var(--c1)" : "var(--c2)"}
+              fill={hot ? "var(--data-1)" : "var(--data-2)"}
               opacity={hot ? 1 : 0.14 + i * 0.1}
+              className="fg-bar"
+              style={order(110 + i * 22)}
             />
             <text
               x={x + 10}
@@ -414,13 +460,20 @@ function StagesFigure() {
             >
               {i + 1}
             </text>
-            <text x={x} y={288} className="fg-label">{stage}</text>
+            {/* Names break onto two lines so the longest never outgrows its column. */}
+            <text x={x} y={288} className="fg-label fg-label--sans">
+              {stage.map((line, n) => (
+                <tspan key={line} x={x} dy={n === 0 ? 0 : "1.25em"}>
+                  {line}
+                </tspan>
+              ))}
+            </text>
           </g>
         );
       })}
-      <line x1={left} x2={right} y1={312} y2={312} className="fg-axis" />
-      <path d={`M ${right - 7} 308 L ${right} 312 L ${right - 7} 316`} fill="none" stroke="var(--ink-3)" />
-      <text x={left} y={334} className="fg-label">Progression</text>
+      <line x1={left} x2={right} y1={326} y2={326} className="fg-axis" />
+      <path d={`M ${right - 7} 322 L ${right} 326 L ${right - 7} 330`} fill="none" stroke="var(--ink-3)" />
+      <text x={left} y={350} className="fg-label">Progression</text>
     </Figure>
   );
 }
@@ -451,14 +504,14 @@ function regretPath(seed: number, adaptive: boolean, top: number, bottom: number
   return points.join(" ");
 }
 
-function BanditFigure() {
+function BanditFigure({ number }: FigureProps) {
   const top = 34;
   const bottom = H - 84;
   const left = 40;
   const right = W - 24;
 
   return (
-    <Figure caption="cumulative regret as arm rewards drift">
+    <Figure number={number} caption="cumulative regret as arm rewards drift">
       <text x={left} y={20} className="fg-label fg-label--strong">Cumulative regret</text>
       <HGrid top={top} bottom={bottom} left={left} right={right} rows={4} />
       {BANDITS.filter((b) => !b.adaptive).map((b) => (
@@ -466,7 +519,7 @@ function BanditFigure() {
           key={b.seed}
           points={regretPath(b.seed, false, top, bottom, left, right)}
           fill="none"
-          stroke="var(--c2)"
+          stroke="var(--data-2)"
           strokeWidth="1.2"
           opacity="0.5"
         />
@@ -476,20 +529,20 @@ function BanditFigure() {
           key={b.seed}
           points={regretPath(b.seed, true, top, bottom, left, right)}
           fill="none"
-          stroke="var(--c1)"
+          stroke="var(--data-1)"
           strokeWidth="2"
         />
       ))}
       <text x={right} y={bottom + 20} className="fg-label" textAnchor="end">Time →</text>
-      <rect x={left} y={H - 39} width={14} height={3} fill="var(--c1)" />
+      <rect x={left} y={H - 39} width={14} height={3} fill="var(--data-1)" />
       <text x={left + 22} y={H - 34} className="fg-label">Sliding-window UCB, forgetting TS</text>
-      <rect x={left} y={H - 17} width={14} height={3} fill="var(--c2)" opacity="0.6" />
+      <rect x={left} y={H - 17} width={14} height={3} fill="var(--data-2)" opacity="0.6" />
       <text x={left + 22} y={H - 12} className="fg-label">The six stationary strategies</text>
     </Figure>
   );
 }
 
-const FIGURES: Record<ProjectVisual, () => React.JSX.Element> = {
+const FIGURES: Record<ProjectVisual, (props: FigureProps) => React.JSX.Element> = {
   clusters: ClusterFigure,
   schema: SchemaFigure,
   dashboard: DashboardFigure,
@@ -500,7 +553,8 @@ const FIGURES: Record<ProjectVisual, () => React.JSX.Element> = {
   bandit: BanditFigure,
 };
 
-export function ProjectFigure({ visual }: { visual: ProjectVisual }) {
+/** `number` is the figure's place in the brief; the hero figure is Fig. 1. */
+export function ProjectFigure({ visual, number }: { visual: ProjectVisual; number?: number }) {
   const Component = FIGURES[visual];
-  return <Component />;
+  return <Component number={number} />;
 }

@@ -1,19 +1,22 @@
 import { ArrowUp } from "lucide-react";
 import { CopyrightYear } from "./CopyrightYear";
+import { Signature } from "./Signature";
 import { site } from "@/lib/site";
-import { BrandMark } from "./BrandMark";
 
+/** The sign-off: the name, set large in dots you can play with, then a last line. */
 export function Footer() {
   return (
-    <footer className="site-footer band">
+    <footer className="site-footer night">
       <div className="container">
-        <p className="footer-signature" aria-hidden="true">Naeem Nagori<BrandMark /></p>
+        <Signature />
         <div className="site-footer__row">
           <p>
-            © {site.copyrightStart}-<CopyrightYear /> {site.name} · {site.location}
+            © {site.copyrightStart}–<CopyrightYear /> {site.name}
           </p>
-          <a href="#top" className="text-link text-link--small">
-            Back to top <ArrowUp size={14} aria-hidden="true" />
+          <p className="site-footer__thanks">Thanks for scrolling all the way down.</p>
+          <a href="#top" className="link">
+            Back to top
+            <ArrowUp className="link__icon link__icon--up" size={15} aria-hidden="true" />
           </a>
         </div>
       </div>

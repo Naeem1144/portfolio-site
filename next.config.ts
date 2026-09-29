@@ -64,7 +64,6 @@ const nextConfig: NextConfig = {
     // The generated social card reads these TTFs at build time; without this
     // they are pruned from the traced output.
     "/opengraph-image": [
-      "./assets/og/Newsreader-Display-Medium.ttf",
       "./node_modules/geist/dist/fonts/geist-sans/Geist-Medium.ttf",
       "./node_modules/geist/dist/fonts/geist-mono/GeistMono-Regular.ttf",
     ],

@@ -1,17 +1,21 @@
 "use client";
 
-import { Pause, Play } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { tokens } from "@/lib/tokens";
 
 /**
- * Fig. 001: a model learning, told in steps.
+ * A model learning, told in steps.
  *
- * Idle, the points drift across the card with no structure. "Train a model"
- * gathers them into a flat sheet, bends the sheet into a loss surface, marks
- * its minima, then walks a ball downhill by gradient descent. Every point
- * keeps its identity throughout, so each stage morphs out of the last.
- * A generative illustration: the readout is computed from the surface, not
- * quoted from any project.
+ * It plays once on load and then rests on the finished picture: a loss surface
+ * with its lowest point marked. Each run scatters the points, gathers them into a flat sheet, bends
+ * the sheet into the surface, marks its minima, then walks a ball downhill by
+ * gradient descent, with a caption for each step. Every point keeps its
+ * identity throughout, so each stage morphs out of the last. When the run
+ * finishes the animation stops by itself.
+ *
+ * A generative illustration: every number is computed from the surface, none is
+ * quoted from a project.
  */
 
 const SIDE = 38;
@@ -71,9 +75,12 @@ const POINTS = GRID.map((grid, i) => ({
  * the depth of the scene makes the near edge two to three times the far edge,
  * which reads as a funhouse rather than a measured surface. Yaw holds the
  * valleys' diagonal across the card so both minima stay side by side.
+ * Elevation looks down into the basins from above and in front: low enough
+ * that height still reads as height, high enough that the ball's whole path
+ * across the floor is in view rather than hidden behind the rim.
  */
 const YAW = -Math.PI / 4;
-const ELEVATION = 0.7;
+const ELEVATION = 1.02;
 const CAMERA = 11;
 const SWAY = 0.12;
 const PARALLAX_YAW = 0.06;
@@ -159,6 +166,8 @@ const LOCAL = descend(-0.95, -0.85).at(-1)!;
 const T = { sheet: 1600, surface: 2500, minima: 3800, descent: 4700 };
 const STEP_MS = 80;
 const DONE = T.descent + (HOPS - 1) * STEP_MS;
+/** How long the finished picture lingers, alive, before the animation rests. */
+const LINGER_MS = 2500;
 
 /** Error axis ticks, in loss units, spanning the sampled range. */
 const TICKS = [0.5, 1, 1.5].filter((v) => v > LOSS_MIN && v < LOSS_MAX);
@@ -166,20 +175,22 @@ const TICKS = [0.5, 1, 1.5].filter((v) => v > LOSS_MIN && v < LOSS_MAX);
 /** The right gutter is reserved for the error axis; the other edges only need breathing room. */
 const PAD = { left: 20, right: 44, top: 36, bottom: 30 };
 
+/** What the caption says while a replay is running, one line per stage. */
 const PHASES = [
-  { id: "raw", readout: "raw data · no structure", caption: "Scattered points, no structure yet. Press train to see what a model does." },
-  { id: "gather", readout: "01 / 05 · collecting", caption: "Step 1 · the points come together." },
-  { id: "sheet", readout: "02 / 05 · shaping", caption: "Step 2 · they line up into a sheet of possible answers." },
-  { id: "surface", readout: "03 / 05 · measuring error", caption: "Step 3 · height is the error of each answer. Valleys are good." },
-  { id: "minima", readout: "04 / 05 · finding low points", caption: "Step 4 · there are two low points, but only one is the lowest." },
-  { id: "descent", readout: "", caption: "Step 5 · gradient descent walks downhill, one small step at a time." },
-  { id: "done", readout: "", caption: "Found it · the lowest error on the whole surface." },
+  { id: "gather", caption: "Step 1. The points come together." },
+  { id: "sheet", caption: "Step 2. They line up into a sheet of possible answers." },
+  { id: "surface", caption: "Step 3. Height is the error of each answer. Valleys are good." },
+  { id: "minima", caption: "Step 4. There are two low points, but only one is the lowest." },
+  { id: "descent", caption: "Step 5. Gradient descent walks downhill, one small step at a time." },
+  { id: "done", caption: "Found it: the lowest error on the whole surface." },
 ] as const;
 
 type PhaseId = (typeof PHASES)[number]["id"];
 
-function phaseAt(elapsed: number, training: boolean): PhaseId {
-  if (!training) return "raw";
+/** What the caption says at rest. It is also the figure's text alternative. */
+const REST_CAPTION = "Illustration: a model finding the lowest error on a loss surface.";
+
+function phaseAt(elapsed: number): PhaseId {
   if (elapsed < T.sheet) return "gather";
   if (elapsed < T.surface) return "sheet";
   if (elapsed < T.minima) return "surface";
@@ -199,25 +210,20 @@ const approach = (value: number, target: number, delta: number, tau: number) =>
 
 export function HeroFigure() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const readoutRef = useRef<HTMLSpanElement>(null);
-  const trainingRef = useRef(true);
+  /** Set running on mount and by Replay; rests once the run has lingered. */
   const pausedRef = useRef(true);
   const restart = useRef(false);
   const pointer = useRef({ x: 0, y: 0 });
   const wake = useRef<() => void>(() => {});
-  const [training, setTraining] = useState(true);
-  const [paused, setPaused] = useState(true);
+  const [played, setPlayed] = useState(false);
   const [phase, setPhase] = useState<PhaseId>("done");
 
-  useEffect(() => {
-    trainingRef.current = training;
+  const replay = () => {
+    restart.current = true;
+    pausedRef.current = false;
+    setPlayed(true);
     wake.current();
-  }, [training]);
-
-  useEffect(() => {
-    pausedRef.current = paused;
-    wake.current();
-  }, [paused]);
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -226,10 +232,10 @@ export function HeroFigure() {
 
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reduced = media.matches;
-    let ink = "#f2f4ed";
-    let accent = "#dfff00";
-    let mono = "ui-monospace, monospace";
-    let surface = "#171c1e";
+    let ink: string = tokens.ink;
+    let accent: string = tokens.accent;
+    let mono: string = "ui-monospace, monospace";
+    let surface: string = tokens.paper;
     let width = 0;
     let height = 0;
     let frame = 0;
@@ -251,7 +257,7 @@ export function HeroFigure() {
       ink = style.getPropertyValue("--ink").trim() || ink;
       accent = style.getPropertyValue("--accent").trim() || accent;
       mono = style.getPropertyValue("--font-mono").trim() || mono;
-      surface = style.getPropertyValue("--paper-raised").trim() || surface;
+      surface = style.getPropertyValue("--paper").trim() || surface;
     };
 
     const schedule = () => {
@@ -305,7 +311,7 @@ export function HeroFigure() {
       alpha: number,
       strong = false,
       align: CanvasTextAlign = "center",
-      size = 11,
+      size = 12,
     ) => {
       ctx.globalAlpha = alpha;
       ctx.font = `${strong ? 600 : 500} ${size}px ${mono}`;
@@ -323,7 +329,6 @@ export function HeroFigure() {
       running = false;
       const delta = Math.min(time - last, 40);
       last = time;
-      const training = trainingRef.current;
       const paused = pausedRef.current;
 
       if (restart.current) {
@@ -335,30 +340,28 @@ export function HeroFigure() {
       }
       if (!paused) {
         clock += delta;
-        if (training) elapsed += delta;
+        elapsed += delta;
       }
-      if (reduced && training) elapsed = DONE;
+      if (reduced) elapsed = DONE;
 
-      const nextPhase = phaseAt(elapsed, training);
+      const nextPhase = phaseAt(elapsed);
       if (nextPhase !== currentPhase) {
         currentPhase = nextPhase;
         setPhase(nextPhase);
       }
 
-      // Stage targets from the timeline; tweening keeps reversals smooth too.
-      const targets = training
-        ? {
-            gather: 1,
-            bend: elapsed >= T.surface ? 1 : 0,
-            marks: elapsed >= T.minima ? 1 : 0,
-          }
-        : { gather: 0, bend: 0, marks: 0 };
+      // Stage targets from the timeline.
+      const targets = {
+        gather: 1,
+        bend: elapsed >= T.surface ? 1 : 0,
+        marks: elapsed >= T.minima ? 1 : 0,
+      };
       if (reduced) {
         gather = targets.gather;
         bend = targets.bend;
         marks = targets.marks;
       } else if (!paused) {
-        gather = approach(gather, targets.gather, delta, training ? 420 : 300);
+        gather = approach(gather, targets.gather, delta, 420);
         bend = approach(bend, targets.bend, delta, 380);
         marks = approach(marks, targets.marks, delta, 250);
       }
@@ -431,9 +434,9 @@ export function HeroFigure() {
           // Perpendicular to the axis, pointing into the right gutter.
           ctx.lineTo(tick.x - (dy / len) * 4, tick.y + (dx / len) * 4);
           ctx.stroke();
-          label(value.toFixed(1), tick.x + 7, tick.y + 3, lift * 0.75, false, "left", 10);
+          label(value.toFixed(1), tick.x + 7, tick.y + 4, lift * 0.75, false, "left");
         }
-        label("error", head.x + 4, head.y - 7, lift * 0.75, false, "left", 10);
+        label("error", head.x + 4, head.y - 8, lift * 0.75, false, "left");
       }
 
       const at = (s: Sample, above = 0.05) => project(s.x, s.y, surfaceZ(s.loss) * lift + above, turn, elevation);
@@ -459,7 +462,7 @@ export function HeroFigure() {
           // Leader line out to the clear space below the terrain, so the two
           // labels never knot together over the point field. Half the label
           // width is reserved either side so neither runs off the stage.
-          const half = 30;
+          const half = 38;
           const ax = Math.min(
             Math.max(PAD.left + half, m.x + side * lead * 1.3),
             width - PAD.right - half,
@@ -476,12 +479,12 @@ export function HeroFigure() {
           // The caption claims only one minimum is the lowest, so the pair of
           // values is what makes that checkable.
           label(name, ax, ay - 3, marks, side > 0 && currentPhase === "done", "center");
-          label(minimum.loss.toFixed(2), ax, ay + 11, marks * 0.8, false, "center", 10);
+          label(minimum.loss.toFixed(2), ax, ay + 14, marks * 0.8, false, "center");
         }
       }
 
       const step = Math.max(0, Math.min(PATH.length - 1, Math.floor((elapsed - T.descent) / STEP_MS)));
-      const walking = training && elapsed >= T.descent;
+      const walking = elapsed >= T.descent;
       if (walking) {
         ctx.globalAlpha = 1;
         ctx.strokeStyle = accent;
@@ -517,20 +520,17 @@ export function HeroFigure() {
       }
       ctx.globalAlpha = 1;
 
-      if (readoutRef.current) {
-        const info = PHASES.find((p) => p.id === currentPhase)!;
-        readoutRef.current.textContent =
-          currentPhase === "done"
-            ? `05 / 05 · converged · loss ${GLOBAL.loss.toFixed(3)}`
-            : walking
-              ? `05 / 05 · step ${String(step).padStart(2, "0")} · loss ${PATH[step]!.loss.toFixed(3)}`
-              : info.readout;
-      }
-
       const settling =
         Math.abs(gather - targets.gather) > 0.001 ||
         Math.abs(bend - targets.bend) > 0.001 ||
         Math.abs(marks - targets.marks) > 0.001;
+
+      // The run is over and the picture has lingered: stop drawing until the
+      // next replay, so a finished figure costs nothing.
+      if (!paused && !reduced && !settling && elapsed >= DONE + LINGER_MS) {
+        pausedRef.current = true;
+        return;
+      }
       if (!paused && (!reduced || settling)) schedule();
     }
 
@@ -551,11 +551,6 @@ export function HeroFigure() {
       visible = entry?.isIntersecting ?? true;
       schedule();
     });
-    const scheme = window.matchMedia("(prefers-color-scheme: dark)");
-    const onScheme = () => {
-      readStyle();
-      schedule();
-    };
     const onMotion = () => {
       reduced = media.matches;
       schedule();
@@ -563,9 +558,15 @@ export function HeroFigure() {
     const onVisibility = () => schedule();
 
     readStyle();
+    // Every visit starts the run from the first step. With reduced motion it
+    // opens on the finished picture instead.
+    if (!reduced) {
+      restart.current = true;
+      pausedRef.current = false;
+      setPlayed(true);
+    }
     resize.observe(canvas);
     intersection.observe(canvas);
-    scheme.addEventListener("change", onScheme);
     media.addEventListener("change", onMotion);
     document.addEventListener("visibilitychange", onVisibility);
 
@@ -574,17 +575,18 @@ export function HeroFigure() {
       wake.current = () => {};
       resize.disconnect();
       intersection.disconnect();
-      scheme.removeEventListener("change", onScheme);
       media.removeEventListener("change", onMotion);
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
 
-  const caption = PHASES.find((p) => p.id === phase)!.caption;
+  const caption = played
+    ? PHASES.find((p) => p.id === phase)!.caption
+    : REST_CAPTION;
 
   return (
     <figure
-      className="study"
+      className="exhibit"
       onPointerMove={(event) => {
         const box = event.currentTarget.getBoundingClientRect();
         pointer.current = {
@@ -596,60 +598,19 @@ export function HeroFigure() {
         pointer.current = { x: 0, y: 0 };
       }}
     >
-      <div className="study__head" aria-hidden="true">
-        <span>Fig. 001</span>
-        <span>How a model learns</span>
-      </div>
-
-      <div className="study__stage">
-        <span className="study__cross study__cross--tl" aria-hidden="true">+</span>
-        <span className="study__cross study__cross--br" aria-hidden="true">+</span>
-        <span className="study__meta" aria-hidden="true">
-          {phase === "raw" ? "raw data" : "loss surface"}
-          <br />
-          {POINTS.length.toLocaleString("en")} points
-        </span>
+      <div className="hero-figure__stage">
         <canvas ref={canvasRef} aria-hidden="true" />
-        <span className="study__readout num" ref={readoutRef} aria-hidden="true">
-          A model finding its minimum error
+      </div>
+
+      <figcaption className="exhibit__caption">
+        <span>
+          <span className="exhibit__no">Fig. 1</span>
+          {caption}
         </span>
-      </div>
-
-      <div className="study__controls">
-        <div className="study__toggle" role="group" aria-label="Figure view">
-          <button type="button" aria-pressed={!training} onClick={() => { setTraining(false); setPaused(false); }}>
-            <span className="num">01</span> Raw data
-          </button>
-          <button
-            type="button"
-            aria-pressed={training}
-            onClick={() => {
-              setPaused(false);
-              if (training) {
-                restart.current = true;
-                wake.current();
-              } else {
-                restart.current = true;
-                setTraining(true);
-              }
-            }}
-          >
-            <span className="num">02</span> Watch it learn
-          </button>
-        </div>
-        <button
-          type="button"
-          className="study__pause"
-          onClick={() => setPaused(!paused)}
-          aria-label={paused ? "Play the animation" : "Pause the animation"}
-          aria-pressed={paused}
-        >
-          {paused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
+        <button type="button" className="text-button" onClick={replay}>
+          <RotateCcw size={15} aria-hidden="true" />
+          Replay
         </button>
-      </div>
-
-      <figcaption className="study__caption" aria-live="polite">
-        {caption}
       </figcaption>
     </figure>
   );

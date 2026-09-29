@@ -34,7 +34,7 @@ export function CopyEmail({ className = "" }: { className?: string }) {
       </a>
       <button
         type="button"
-        className="copy-email__button"
+        className="text-button"
         onClick={copy}
         aria-label={copied ? "Email address copied" : "Copy email address"}
       >

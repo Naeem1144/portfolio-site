@@ -2,9 +2,12 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
 import { site } from "@/lib/site";
+import { tokens } from "@/lib/tokens";
 
-/** Social card shares the near-black, acid-yellow palette and signal monogram.
- * Satori reads the bundled Geist TTFs; numbers come from the existing site data.
+/**
+ * The social card is the page's hero, at card size: same paper, same
+ * statement, same three results, same monogram. Satori reads the bundled Geist
+ * TTFs; every number comes from the site data.
  */
 
 export const alt = `${site.name}, ${site.role}. ${site.proof.map((p) => `${p.value} ${p.label}`).join("; ")}.`;
@@ -19,12 +22,7 @@ const [sans, mono] = await Promise.all([
   readFile(path.join(GEIST, "geist-mono/GeistMono-Regular.ttf")),
 ]);
 
-const PAPER = "#0c0e0f";
-const INK = "#f2f4ed";
-const INK_2 = "#bcc3bd";
-const INK_3 = "#939e98";
-const ACCENT = "#dfff00";
-const LINE = "rgba(199, 212, 203, 0.2)";
+const RULE = "rgba(20, 23, 26, 0.16)";
 
 export default async function OpengraphImage() {
   return new ImageResponse(
@@ -36,9 +34,9 @@ export default async function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: PAPER,
-          padding: "60px 72px 52px",
-          color: INK,
+          background: tokens.paper,
+          padding: "60px 72px 56px",
+          color: tokens.ink,
           fontFamily: "Geist",
         }}
       >
@@ -46,61 +44,78 @@ export default async function OpengraphImage() {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "baseline",
+            alignItems: "center",
             fontSize: 26,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 18, fontSize: 28 }}>
-            <svg width="44" height="44" viewBox="0 0 40 40"><path d="M6 29V11L20 29V11L34 29V11" fill="none" stroke={INK} strokeWidth="3" /><circle cx="34" cy="11" r="4" fill={ACCENT} /></svg>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <svg width="44" height="44" viewBox="0 0 40 40">
+              <path
+                d="M6 29V11L20 29V11L34 29V11"
+                fill="none"
+                stroke={tokens.ink}
+                strokeWidth="3"
+              />
+              <circle cx="34" cy="11" r="4" fill={tokens.accent} />
+            </svg>
             {site.name}
           </div>
-          <div style={{ display: "flex", color: INK_3 }}>{site.role}</div>
+          <div style={{ display: "flex", color: tokens.ink3 }}>{site.role}</div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              fontFamily: "Geist",
-              fontSize: 84,
-              lineHeight: 1.02,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            <div style={{ display: "flex" }}>Curiosity first.</div>
-            <div style={{ display: "flex", color: ACCENT }}>Clarity follows.</div>
-          </div>
+        <div
+          style={{
+            display: "flex",
+            maxWidth: 980,
+            fontSize: 78,
+            lineHeight: 1.04,
+            letterSpacing: "-0.04em",
+          }}
+        >
+          Data analyst who turns business questions into decisions.
+        </div>
 
-          <div
-            style={{
-              display: "flex",
-              marginTop: 48,
-              borderTop: `2px solid ${INK}`,
-              paddingTop: 22,
-            }}
-          >
-            {site.proof.map((item, index) => (
+        <div
+          style={{
+            display: "flex",
+            borderTop: `1px solid ${RULE}`,
+            paddingTop: 28,
+          }}
+        >
+          {site.proof.map((item, index) => (
+            <div
+              key={item.label}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                flex: 1,
+                paddingLeft: index === 0 ? 0 : 32,
+                paddingRight: 24,
+              }}
+            >
               <div
-                key={item.label}
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  flex: 1,
-                  borderLeft: index === 0 ? "none" : `1px solid ${LINE}`,
-                  paddingLeft: index === 0 ? 0 : 22,
-                  paddingRight: 16,
+                  fontFamily: "GeistMono",
+                  fontSize: 46,
+                  letterSpacing: "-0.03em",
                 }}
               >
-                <div style={{ display: "flex", fontFamily: "GeistMono", fontSize: 40, letterSpacing: "-0.03em" }}>
-                  {item.value}
-                </div>
-                <div style={{ display: "flex", fontSize: 18, color: INK_2, marginTop: 8, lineHeight: 1.3 }}>
-                  {item.label}
-                </div>
+                {item.value}
               </div>
-            ))}
-          </div>
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: 8,
+                  fontSize: 21,
+                  lineHeight: 1.3,
+                  color: tokens.ink2,
+                }}
+              >
+                {item.label}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     ),

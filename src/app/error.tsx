@@ -19,12 +19,10 @@ export default function Error({
   return (
     <main className="status-page">
       <div className="container">
-        <p className="label">
+        <p className="eyebrow">
           Something went wrong{error.digest && <> · ref {error.digest}</>}
         </p>
-        <h1>
-          Lost the thread <em>mid-analysis.</em>
-        </h1>
+        <h1>Lost the thread mid-analysis.</h1>
         <p>
           An unexpected error interrupted this page. Trying again usually
           clears it.
@@ -33,7 +31,7 @@ export default function Error({
           <button type="button" className="button button--primary" onClick={reset}>
             <RotateCcw size={17} aria-hidden="true" /> Try again
           </button>
-          <a href={`mailto:${site.email}`} className="text-link">
+          <a href={`mailto:${site.email}`} className="link">
             {site.email}
           </a>
         </div>

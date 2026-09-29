@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { site } from "@/lib/site";
 import { siteUrl } from "@/lib/site-url";
+import { tokens } from "@/lib/tokens";
 import { fontPreloads } from "./fonts";
 import "./globals.css";
-import "./identity.css";
 
-/** Browser chrome mirrors the near-black canvas in globals.css. */
+/** Browser chrome mirrors the paper canvas in globals.css. */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -13,13 +13,13 @@ export const viewport: Viewport = {
   minimumScale: 1,
   userScalable: true,
   viewportFit: "cover",
-  themeColor: "#0c0e0f",
-  colorScheme: "dark",
+  themeColor: tokens.paper,
+  colorScheme: "light",
 };
 
 const TITLE = `${site.name} | ${site.role}`;
 const DESCRIPTION =
-  "I'm Naeem Nagori, a data analyst and data scientist in Ahmedabad, India. Here are eight projects I've built with SQL, Power BI and Python, from customer segmentation to computer vision, with the real numbers behind each one.";
+  "I'm Naeem Nagori, a data analyst and data scientist in Ahmedabad, India. Selected work with SQL, Power BI and Python, from customer segmentation to computer vision, with the real numbers behind each one.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${site.name} | ${site.role}`,
     description:
-      "Eight data projects I've built, including 83,590 hotel customers sorted into groups, a CNN at 99.21% validation accuracy, and an R² of 0.990 on Toronto-area house prices.",
+      "Selected data projects, including 83,590 hotel customers sorted into groups, a CNN at 99.21% validation accuracy, and an R² of 0.990 on Toronto-area house prices.",
     // Trailing slash to match the resolved `canonical`, so the two never
     // disagree about which URL is the real one.
     url: `${siteUrl}/`,
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${site.name} | ${site.role}`,
     description:
-      "Eight data projects I've built with SQL, Power BI and Python, with the real numbers behind each one.",
+      "Selected data projects with SQL, Power BI and Python, with the real numbers behind each one.",
   },
 };
 

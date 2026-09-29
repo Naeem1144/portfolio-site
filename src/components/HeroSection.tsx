@@ -1,34 +1,70 @@
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { HeroFigure } from "./HeroFigure";
+import { Odometer } from "./Odometer";
+import { projectAnchor } from "@/lib/projects";
 import { site } from "@/lib/site";
 
+/**
+ * The finding first: who this is, what he does, what he has proved, and how to
+ * reach him. The highlighter marks the outcome; each result carries a
+ * footnote to its source, listed at the end of the work.
+ */
 export function HeroSection() {
   return (
     <section id="top" className="hero" aria-labelledby="hero-heading">
       <div className="container">
-        <div className="hero__eyebrow">
-          <p className="eyebrow">Naeem Nagori · Data analyst & curious mind</p>
-          <p className="hero__status"><span className="status-dot" aria-hidden="true" />{site.available ? "Open to opportunities" : site.location}</p>
-        </div>
         <div className="hero__grid">
-          <div className="hero__main">
-            <h1 id="hero-heading">Curiosity first.<br /><em>Clarity follows.</em></h1>
-            <p className="hero__lede">I&rsquo;m Naeem. I bring a marketing mind to data: asking better questions, finding the patterns, and making the answer useful.</p>
-            <div className="hero__actions">
-              <a href="#projects" className="button button--primary">Explore my work <ArrowDown size={17} aria-hidden="true" /></a>
-              <a href="#about" className="text-link">A little about me <ArrowUpRight size={17} aria-hidden="true" /></a>
+          <div className="hero__copy">
+            {site.available && (
+              <p className="status hero__enter">
+                Open to junior data roles · {site.location}
+              </p>
+            )}
+            <h1 id="hero-heading" className="hero__enter">
+              Data analyst who turns business questions into{" "}
+              <mark className="hl">decisions</mark>.
+            </h1>
+            <p className="hero__lede hero__enter">
+              I studied marketing, then taught myself SQL, Python and Power BI. I find
+              the pattern in the data and make it usable.
+            </p>
+            <div className="hero__actions hero__enter">
+              <a href={`mailto:${site.email}`} className="button button--primary">
+                Email me
+              </a>
+              <a
+                href={site.resume.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link"
+              >
+                {site.resume.label}
+                <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+                <span className="sr-only"> (PDF, opens in a new tab)</span>
+              </a>
             </div>
-            <p className="hero__location">Based in Ahmedabad, India <span aria-hidden="true">↗</span> Shaped by Toronto</p>
           </div>
-          <div className="hero__art">
-            <p className="hero__annotation"><span aria-hidden="true">↳</span> From curiosity to convergence</p>
+
+          <div className="hero__figure hero__enter">
             <HeroFigure />
           </div>
-        </div>
-        <div className="hero__foot">
-          <p>Business questions.<br /><span>Technical follow-through.</span></p>
-          <p className="hero__tools">SQL / Python / Power BI / Machine learning</p>
-          <a href="#projects" className="hero__scroll" aria-label="Scroll to my work"><ArrowDown size={17} aria-hidden="true" /></a>
+
+          <ul className="keyfigures" aria-label="Headline results">
+            {site.proof.map((item, i) => (
+              <li key={item.project}>
+                <a className="keyfigure" href={`#${projectAnchor(item.project)}`}>
+                  <span className="keyfigure__value num">
+                    <Odometer value={item.value} />
+                    <sup className="keyfigure__note" aria-hidden="true">
+                      {i + 1}
+                    </sup>
+                  </span>
+                  <span className="keyfigure__label">{item.label}</span>
+                  <span className="sr-only">, see the project. Source in note {i + 1}.</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

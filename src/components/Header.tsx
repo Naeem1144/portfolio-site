@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { site } from "@/lib/site";
 import { BrandMark } from "./BrandMark";
 
 const links = [
   { label: "Work", id: "projects" },
   { label: "About", id: "about" },
-  { label: "Education", id: "credentials" },
   { label: "Contact", id: "contact" },
 ];
 
 export function Header() {
   const [active, setActive] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -21,6 +21,12 @@ export function Header() {
     const update = () => {
       frame = 0;
       setScrolled(window.scrollY > 8);
+
+      // Reading progress, drawn as the header's bottom rule. Set directly so
+      // scrolling never re-renders the header.
+      const range = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = range > 0 ? Math.min(1, window.scrollY / range) : 0;
+      headerRef.current?.style.setProperty("--progress", progress.toFixed(4));
 
       const atBottom =
         window.innerHeight + window.scrollY >=
@@ -55,12 +61,11 @@ export function Header() {
   }, []);
 
   return (
-    <header className="site-header" data-scrolled={scrolled || undefined}>
+    <header ref={headerRef} className="site-header" data-scrolled={scrolled || undefined}>
       <div className="container site-header__inner">
-        <a href="#top" className="wordmark">
-          <span className="wordmark__seal"><BrandMark /></span>
-          {site.name.split(" ")[0]}
-          <span className="wordmark__rest"> {site.name.split(" ").slice(1).join(" ")}</span>
+        <a href="#top" className="brand">
+          <BrandMark />
+          <span className="brand__name">{site.name}</span>
           <span className="sr-only">, back to top</span>
         </a>
 
@@ -78,19 +83,6 @@ export function Header() {
             ))}
           </ul>
         </nav>
-
-        <a
-          href={site.resume.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="button button--small header-resume"
-        >
-          {site.resume.label}
-          <span className="button__meta" aria-hidden="true">
-            PDF
-          </span>
-          <span className="sr-only"> (PDF, opens in a new tab)</span>
-        </a>
       </div>
     </header>
   );
