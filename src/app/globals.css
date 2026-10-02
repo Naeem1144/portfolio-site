@@ -651,7 +651,9 @@ h2 {
 
 .hero__grid {
   display: grid;
-  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  /* Copy takes two thirds: wide enough that the headline sets in three lines
+     at full size, so the figure column carries the drawing, not dead air. */
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
   column-gap: var(--col-gap);
   align-items: center;
 }

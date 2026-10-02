@@ -34,8 +34,8 @@ export function ProjectsSection() {
           Four projects, from question to <mark className="hl">result</mark>.
         </h2>
         <p className="section-head__note">
-          Chosen from {site.githubRepos} on GitHub. Each one shows the question, the result
-          and the code behind it.
+          Four of seven, written up here. Each one shows the question, the result and the
+          code behind it. The rest are on GitHub.
         </p>
       </header>
 
