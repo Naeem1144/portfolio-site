@@ -41,18 +41,18 @@ export const site = {
   },
   experience: [
     {
-      role: "Team Member",
-      org: "Tim Hortons",
-      place: "Canada",
-      years: "Jul 2025 to Aug 2026",
-      detail: "Baking and store operations as part of a busy team.",
-    },
-    {
       role: "Ecommerce Analyst (Part-time)",
       org: "Canadian Outlet Store",
       place: "Canada",
       years: "May 2024 to Oct 2024",
       detail: "Analyzed sales, product and customer data for ecommerce and marketing decisions.",
+    },
+    {
+      role: "Team Member",
+      org: "Tim Hortons",
+      place: "Canada",
+      years: "Jul 2025 to Aug 2026",
+      detail: "Baking and store operations as part of a busy team.",
     },
   ],
   languages: [

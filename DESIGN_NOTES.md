@@ -8,8 +8,8 @@ the evidence, then the method in a footnote, then what to do next.
 1. **Finding**: the hero says what I am and what I do, in one sentence.
 2. **Evidence**: three results sit directly under it, each linking to the
    project that produced it.
-3. **Method**: three projects, each with a drawing, the question, two numbers
-   and the code. "How I did it" is one click down.
+3. **Method**: four projects, each with a drawing, the question, two numbers
+   and the code. "How I did it" is one click down (opened on the first project).
 4. **Person**: a short About, the credentials, and how I work.
 5. **Action**: one way to get in touch, closing the page.
 
@@ -43,17 +43,17 @@ than a set of effects.
   highlighter stroke: "decisions", "result", "Business first", "Let's talk.".
   It sweeps in as the section arrives. The tint is `--hl`.
 - **Numbered like a report.** Sections (01 Work, 02 About, 03 Contact), figures
-  (Fig. 1 is the hero, Figs. 2 to 4 the projects) and notes (1 to 3) are all
-  numbered. Projects carry their catalogue number, "05 of 08".
+  (Fig. 1 is the hero, Figs. 2 to 5 the projects) and notes (1 to 3) are all
+  numbered. Projects carry their featured index, "01 of 04" to "04 of 04".
 - **Every headline number is sourced.** The hero results carry footnote
-  markers, and a Sources list closes the work section. Beside it, "All 8
+  markers, and a Sources list closes the work section. Beside it, "All 16
   projects on GitHub" is the page's secondary button (`.button--secondary`):
   outlined in ink, not accent, with an ink fill that sweeps in like the marker.
 - **Numbers count into place.** `Odometer.tsx` rolls each digit through a full
   turn to its value, in the hero on load and in the project stats on arrival.
 - **The drawings plot themselves.** Frame and labels appear, then the points in
   order (`--i` on each mark). On a mouse, a crosshair with an x/y readout
-  follows the pointer (`Plot.tsx`).
+  follows the pointer on coordinate charts (`Plot.tsx`).
 - **Graph paper** under the hero figure, dissolving at the edges.
 - **Reading progress** is the header's bottom rule, in the accent.
 - **The close** is the largest line on the page (`--fs-display`), "Got data?
@@ -159,10 +159,10 @@ only figures shown are ones the project itself publishes.
 - **Project drawings**: SVG in a 500 by 360 space. Their text is sized in drawing
   units, so it would shrink with the screen. Seven size steps in `globals.css`
   (section 09, container queries) pick the smallest label size that still
-  renders at 12px or more at each width. The three featured drawings were
+  renders at 12px or more at each width. The four featured drawings were
   checked for collisions and clipping at every step, from 320px to 1440px.
-- Only three projects are shown (`SELECTED` in `ProjectsSection.tsx`). The
-  drawings for the other five are kept in `ProjectFigures.tsx` but have not been
+- Only four projects are shown (`SELECTED` in `ProjectsSection.tsx`). The
+  drawings for the other three are kept in `ProjectFigures.tsx` but have not been
   checked at the small label steps. Check them the same way before featuring one.
 
 ## What was cut
@@ -176,8 +176,8 @@ only figures shown are ones the project itself publishes.
   backgrounds, entrance animations, card lifts. (A large footer signature came
   back later as the interactive sign-off, so it earns its place by being fun.)
 - Cards, badges and pills as a visual device. Structure is type and hairlines.
-- Dead CSS, unused components and unused data. `src/lib/skills.ts` is now
-  unused and can be deleted.
+- Dead CSS, unused components and unused data (`src/lib/skills.ts` and legacy
+  font files removed).
 
 ## Accessibility
 

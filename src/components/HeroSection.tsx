@@ -29,7 +29,7 @@ export function HeroSection() {
               the pattern in the data and make it usable.
             </p>
             <div className="hero__actions hero__enter">
-              <a href={`mailto:${site.email}`} className="button button--primary">
+              <a href="#contact" className="button button--primary">
                 Email me
               </a>
               <a
@@ -60,7 +60,9 @@ export function HeroSection() {
                     </sup>
                   </span>
                   <span className="keyfigure__label">{item.label}</span>
-                  <span className="sr-only">, see the project. Source in note {i + 1}.</span>
+                  <span className="sr-only">
+                    , see the project. Source listed in Sources at the end of the Work section.
+                  </span>
                 </a>
               </li>
             ))}

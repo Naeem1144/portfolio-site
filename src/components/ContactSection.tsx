@@ -111,7 +111,7 @@ export function ContactSection() {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, topic: topic.where }),
         signal: controller.signal,
       });
       if (!response.ok) {
@@ -279,7 +279,7 @@ export function ContactSection() {
         <div className="field">
           <label htmlFor="contact-message">
             Message
-            <span className="field__counter" aria-hidden="true">
+            <span className="field__counter" aria-live="polite">
               {values.message.length > MESSAGE_MAX * 0.8 &&
                 `${values.message.length} / ${MESSAGE_MAX}`}
             </span>

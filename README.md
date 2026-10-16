@@ -84,9 +84,9 @@ src/
   components/           sections (mostly server components)
   lib/
     site.ts             name, email, URLs, hero results (single source of truth)
-    projects.ts         project catalogue and derived filter counts
-    skills.ts           skills, each linked to the projects that use it
+    projects.ts         project catalogue
     credentials.ts      certifications and their verification links
+    tokens.ts           design tokens shared with canvas, OG image and viewport
     email.ts            nodemailer transport + message templating
     site-url.ts         canonical origin
   middleware.ts

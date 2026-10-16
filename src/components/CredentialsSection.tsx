@@ -25,7 +25,6 @@ export function CredentialsSection() {
             </p>
           </div>
           <span className="credentials__date num">{education.graduated}</span>
-          <span />
         </li>
 
         {credentials.map((cert) => (

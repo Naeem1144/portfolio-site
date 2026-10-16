@@ -19,20 +19,23 @@ type FigureProps = { number?: number };
 function Figure({
   number,
   caption,
+  plotted = false,
   children,
-}: FigureProps & { caption: string; children: ReactNode }) {
+}: FigureProps & { caption: string; plotted?: boolean; children: ReactNode }) {
+  const drawing = (
+    <svg
+      viewBox={`0 0 ${W} ${H}`}
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {children}
+    </svg>
+  );
+
   return (
     <figure className="exhibit">
-      <Plot>
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          preserveAspectRatio="xMidYMid meet"
-          aria-hidden="true"
-          focusable="false"
-        >
-          {children}
-        </svg>
-      </Plot>
+      {plotted ? <Plot>{drawing}</Plot> : drawing}
       <figcaption className="exhibit__caption">
         <span>
           {number && <span className="exhibit__no">Fig. {number}</span>}
@@ -108,7 +111,7 @@ const CLUSTER_POINTS = Array.from({ length: 210 }, (_, i) => {
 
 function ClusterFigure({ number }: FigureProps) {
   return (
-    <Figure number={number} caption="behavioural clusters projected to two dimensions">
+    <Figure number={number} caption="behavioural clusters projected to two dimensions" plotted>
       <line x1={40} y1={H - 30} x2={W - 24} y2={H - 30} className="fg-axis" />
       <line x1={40} y1={20} x2={40} y2={H - 30} className="fg-axis" />
       {HULLS.map((hull, i) => (
@@ -214,7 +217,7 @@ function DashboardFigure({ number }: FigureProps) {
   const points = TREND.map((v, i) => `${left + i * step},${bottom - v * (bottom - top)}`);
 
   return (
-    <Figure number={number} caption="churn trend, and the same rate cut three ways">
+    <Figure number={number} caption="churn trend, and the same rate cut three ways" plotted>
       <text x={left} y={20} className="fg-label fg-label--strong">Churn over time</text>
       <HGrid top={top} bottom={bottom} left={left} right={right} rows={3} />
       <polygon
@@ -336,7 +339,7 @@ function RegressionFigure({ number }: FigureProps) {
   const toY = (v: number) => bottom - v * size;
 
   return (
-    <Figure number={number} caption="predicted against actual sale price">
+    <Figure number={number} caption="predicted against actual sale price" plotted>
       <HGrid top={bottom - size} bottom={bottom} left={left} right={toX(1)} rows={4} />
       <line x1={toX(0)} y1={toY(0)} x2={toX(1)} y2={toY(1)} stroke="var(--ink-2)" strokeWidth="1" strokeDasharray="4 4" />
       {FIT.map((p, i) => (
@@ -511,7 +514,7 @@ function BanditFigure({ number }: FigureProps) {
   const right = W - 24;
 
   return (
-    <Figure number={number} caption="cumulative regret as arm rewards drift">
+    <Figure number={number} caption="cumulative regret as arm rewards drift" plotted>
       <text x={left} y={20} className="fg-label fg-label--strong">Cumulative regret</text>
       <HGrid top={top} bottom={bottom} left={left} right={right} rows={4} />
       {BANDITS.filter((b) => !b.adaptive).map((b) => (
