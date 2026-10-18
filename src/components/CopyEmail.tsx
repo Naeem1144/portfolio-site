@@ -11,7 +11,7 @@ import { site } from "@/lib/site";
  * dead end for them; the copy button is the path that always works.
  */
 export function CopyEmail({ className = "" }: { className?: string }) {
-  const [copied, setCopied] = useState(false);
+  const [state, setState] = useState<"idle" | "copied" | "failed">("idle");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => () => clearTimeout(timer.current), []);
@@ -19,13 +19,19 @@ export function CopyEmail({ className = "" }: { className?: string }) {
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(site.email);
-      setCopied(true);
+      setState("copied");
       clearTimeout(timer.current);
-      timer.current = setTimeout(() => setCopied(false), 2000);
+      timer.current = setTimeout(() => setState("idle"), 2000);
     } catch {
-      window.location.href = `mailto:${site.email}`;
+      // No clipboard access (insecure context, permission denied): say so
+      // outright. The mailto link beside the button is the fallback path.
+      setState("failed");
+      clearTimeout(timer.current);
+      timer.current = setTimeout(() => setState("idle"), 4000);
     }
   };
+
+  const copied = state === "copied";
 
   return (
     <span className={`copy-email ${className}`}>
@@ -36,17 +42,29 @@ export function CopyEmail({ className = "" }: { className?: string }) {
         type="button"
         className="text-button"
         onClick={copy}
-        aria-label={copied ? "Email address copied" : "Copy email address"}
+        aria-label={
+          copied
+            ? "Email address copied"
+            : state === "failed"
+              ? "Copy failed, use the email link instead"
+              : "Copy email address"
+        }
       >
         {copied ? (
           <Check size={15} aria-hidden="true" />
         ) : (
           <Copy size={15} aria-hidden="true" />
         )}
-        <span aria-hidden="true">{copied ? "Copied" : "Copy"}</span>
+        <span aria-hidden="true">
+          {copied ? "Copied" : state === "failed" ? "Failed" : "Copy"}
+        </span>
       </button>
       <span className="sr-only" role="status">
-        {copied ? "Email address copied to clipboard" : ""}
+        {copied
+          ? "Email address copied to clipboard"
+          : state === "failed"
+            ? "Could not copy automatically. Use the email link to open a mail client."
+            : ""}
       </span>
     </span>
   );

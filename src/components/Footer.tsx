@@ -11,7 +11,7 @@ export function Footer() {
         <Signature />
         <div className="site-footer__row">
           <p>
-            © {site.copyrightStart}–<CopyrightYear /> {site.name}
+            © <CopyrightYear start={site.copyrightStart} /> {site.name}
           </p>
           <p className="site-footer__thanks">Thanks for scrolling all the way down.</p>
           <a href="#top" className="link">

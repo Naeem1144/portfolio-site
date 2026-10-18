@@ -108,18 +108,22 @@ function ProjectItem({
       </div>
 
       <article className="project__body" aria-labelledby={`${anchor}-title`}>
-        <p className="project__index" aria-hidden="true">
-          <span className="project__no">{project.number}</span>
-          <span className="project__of">of {String(SELECTED.length).padStart(2, "0")}</span>
-        </p>
-        <p className="project__meta">
-          {project.discipline} · {project.year}
-        </p>
-        <p className="project__stack">{project.stack.join(" · ")}</p>
+        <div className="project__head">
+          <p className="project__index" aria-hidden="true">
+            <span className="project__no">{project.number}</span>
+            <span className="project__of">/ {String(SELECTED.length).padStart(2, "0")}</span>
+          </p>
+          <p className="project__meta">
+            {project.discipline} · {project.year}
+          </p>
+        </div>
         <h3 id={`${anchor}-title`} className="project__title">
           {project.title}
         </h3>
         <p className="project__thesis">{project.thesis}</p>
+        <p className="project__stack" aria-label="Technical stack">
+          {project.stack.join(" · ")}
+        </p>
 
         <dl className="stats">
           {outcomes.map((outcome) => (
@@ -158,7 +162,12 @@ function ProjectItem({
         </div>
 
         <details className="method" open={defaultOpen}>
-          <summary>How I did it</summary>
+          <summary>
+            <span>How I did it</span>
+            <span className="method__count num" aria-hidden="true">
+              {project.approach.length} steps
+            </span>
+          </summary>
           <div className="method__body">
             <div>
               <h4>Problem</h4>

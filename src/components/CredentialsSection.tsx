@@ -31,7 +31,9 @@ export function CredentialsSection() {
           <li key={cert.title}>
             <div>
               <p className="credentials__title">{cert.title}</p>
-              <p className="credentials__issuer">{cert.issuer}</p>
+              <p className="credentials__issuer">
+                {cert.issuer} · {cert.detail}
+              </p>
             </div>
             <span className="credentials__date num">{cert.date}</span>
             <a

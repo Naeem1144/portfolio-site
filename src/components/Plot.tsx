@@ -28,7 +28,11 @@ export function Plot({ children }: { children: ReactNode }) {
   };
 
   const leave = () => {
-    if (frame.current) delete frame.current.dataset.tracking;
+    const el = frame.current;
+    if (!el) return;
+    delete el.dataset.tracking;
+    delete el.dataset.side;
+    if (readout.current) readout.current.textContent = "";
   };
 
   return (

@@ -55,7 +55,9 @@ export function ProfileSection() {
               {site.experience.map((job) => (
                 <div className="facts__item" key={`${job.org}-${job.role}`}>
                   {job.role}, {job.org}
-                  <span>{job.years}</span>
+                  <span>
+                    {job.years} · {job.detail}
+                  </span>
                 </div>
               ))}
             </dd>
@@ -68,10 +70,14 @@ export function ProfileSection() {
           How I work
         </h3>
         <ol className="practice">
-          {site.strengths.map((strength) => (
+          {site.strengths.map((strength, i) => (
             <li key={strength.title}>
+              <span className="practice__no num" aria-hidden="true">
+                {String(i + 1).padStart(2, "0")}
+              </span>
               <h4>{strength.title}</h4>
               <p>{strength.body}</p>
+              <p className="practice__evidence">{strength.evidence}</p>
             </li>
           ))}
         </ol>

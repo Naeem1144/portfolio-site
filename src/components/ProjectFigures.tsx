@@ -206,7 +206,11 @@ function SchemaFigure({ number }: FigureProps) {
 /* 03 · Dashboard -------------------------------------------------------- */
 
 const TREND = [0.58, 0.61, 0.55, 0.5, 0.53, 0.45, 0.42, 0.39, 0.43, 0.36, 0.34, 0.31];
-const CUTS = ["Demographics", "Plan", "Geography"];
+const CUTS = [
+  { name: "Demographics", bars: [0.86, 0.58, 0.41, 0.25] },
+  { name: "Plan", bars: [0.92, 0.54, 0.35, 0.2] },
+  { name: "Geography", bars: [0.78, 0.61, 0.44, 0.28] },
+] as const;
 
 function DashboardFigure({ number }: FigureProps) {
   const top = 34;
@@ -214,11 +218,18 @@ function DashboardFigure({ number }: FigureProps) {
   const left = 40;
   const right = W - 24;
   const step = (right - left) / (TREND.length - 1);
-  const points = TREND.map((v, i) => `${left + i * step},${bottom - v * (bottom - top)}`);
+  const coords = TREND.map((v, i) => ({
+    x: left + i * step,
+    y: bottom - v * (bottom - top),
+  }));
+  const points = coords.map((p) => `${p.x},${p.y}`);
+  const first = coords[0]!;
+  const last = coords[coords.length - 1]!;
 
   return (
     <Figure number={number} caption="churn trend, and the same rate cut three ways" plotted>
       <text x={left} y={20} className="fg-label fg-label--strong">Churn over time</text>
+      <text x={right} y={20} textAnchor="end" className="fg-label">6 report views</text>
       <HGrid top={top} bottom={bottom} left={left} right={right} rows={3} />
       <polygon
         points={`${left},${bottom} ${points.join(" ")} ${right},${bottom}`}
@@ -226,23 +237,36 @@ function DashboardFigure({ number }: FigureProps) {
         opacity="0.08"
       />
       <polyline points={points.join(" ")} fill="none" stroke="var(--data-1)" strokeWidth="2" />
+      <circle cx={first.x} cy={first.y} r={3} fill="var(--data-1)" />
+      <circle cx={last.x} cy={last.y} r={3.5} fill="var(--data-1)" />
 
       {CUTS.map((cut, c) => {
         const x0 = left + c * ((right - left + 16) / 3);
         const colW = (right - left + 16) / 3 - 16;
         return (
-          <g key={cut}>
-            <text x={x0} y={226} className="fg-label fg-label--strong">By {cut.toLowerCase()}</text>
-            {[0, 1, 2, 3].map((r) => (
-              <rect
-                key={r}
-                x={x0}
-                y={240 + r * 22}
-                width={colW * (0.3 + hash(c * 10 + r) * 0.7)}
-                height="12"
-                fill={r === 0 ? "var(--data-1)" : "var(--data-2)"}
-                opacity={r === 0 ? 0.9 : 0.35}
-              />
+          <g key={cut.name}>
+            <text x={x0} y={224} className="fg-label fg-label--strong">
+              By {cut.name.toLowerCase()}
+            </text>
+            {cut.bars.map((ratio, r) => (
+              <g key={r}>
+                <rect
+                  x={x0}
+                  y={238 + r * 22}
+                  width={colW}
+                  height="12"
+                  fill="var(--ink-3)"
+                  opacity="0.1"
+                />
+                <rect
+                  x={x0}
+                  y={238 + r * 22}
+                  width={colW * ratio}
+                  height="12"
+                  fill={r === 0 ? "var(--data-1)" : "var(--data-2)"}
+                  opacity={r === 0 ? 0.92 : 0.38}
+                />
+              </g>
             ))}
           </g>
         );
@@ -413,30 +437,43 @@ function EnsembleFigure({ number }: FigureProps) {
 
 /* 07 · Stages ----------------------------------------------------------- */
 
-const STAGES = [["Non-", "demented"], ["Very", "mild"], ["Mild"], ["Moderate"]];
+const STAGES = [
+  { lines: ["Non-", "demented"], barH: 10 },
+  { lines: ["Very", "mild"], barH: 72 },
+  { lines: ["Mild"], barH: 8 },
+  { lines: ["Moderate"], barH: 4 },
+] as const;
 
 function StagesFigure({ number }: FigureProps) {
   const left = 24;
   const right = W - 24;
   const gap = 10;
   const colW = (right - left - gap * 3) / 4;
+  const slotTop = 194;
+  const slotH = 72;
+  const slotBottom = slotTop + slotH;
 
   return (
     <Figure number={number} caption="one scan in, one of four ordered stages out">
       <rect x={W / 2 - 70} y={22} width={140} height={100} className="fg-panel" />
       {Array.from({ length: 7 }, (_, r) =>
-        Array.from({ length: 10 }, (_, c) => (
-          <rect
-            key={`${r}-${c}`}
-            x={W / 2 - 62 + c * 12.4}
-            y={30 + r * 12.4}
-            width={10.4}
-            height={10.4}
-            fill="var(--ink-2)"
-            opacity={0.08 + hash(r * 10 + c) * 0.4}
-            style={order((r + c) * 6)}
-          />
-        )),
+        Array.from({ length: 10 }, (_, c) => {
+          const dx = (c - 4.5) / 4.2;
+          const dy = (r - 3) / 3.1;
+          const radial = Math.max(0, 1 - (dx * dx + dy * dy) * 0.75);
+          return (
+            <rect
+              key={`${r}-${c}`}
+              x={W / 2 - 62 + c * 12.4}
+              y={30 + r * 12.4}
+              width={10.4}
+              height={10.4}
+              fill={radial > 0.55 ? "var(--data-1)" : "var(--ink-2)"}
+              opacity={0.08 + radial * 0.42 + hash(r * 10 + c) * 0.12}
+              style={order((r + c) * 6)}
+            />
+          );
+        }),
       )}
       <text x={W / 2} y={146} textAnchor="middle" className="fg-label">MRI slice → CNN</text>
       <path d={`M ${W / 2} 156 V 184`} stroke="var(--ink-2)" />
@@ -445,27 +482,45 @@ function StagesFigure({ number }: FigureProps) {
         const x = left + i * (colW + gap);
         const hot = i === 1;
         return (
-          <g key={stage.join("")}>
+          <g key={stage.lines.join("")}>
             <rect
               x={x}
-              y={196}
+              y={slotTop}
               width={colW}
-              height={70}
+              height={slotH}
+              fill="var(--surface)"
+              stroke="var(--line)"
+            />
+            <rect
+              x={x}
+              y={slotBottom - stage.barH}
+              width={colW}
+              height={stage.barH}
               fill={hot ? "var(--data-1)" : "var(--data-2)"}
-              opacity={hot ? 1 : 0.14 + i * 0.1}
+              opacity={hot ? 1 : 0.28}
               className="fg-bar"
               style={order(110 + i * 22)}
             />
             <text
               x={x + 10}
-              y={220}
+              y={slotTop + 22}
               className={`fg-label fg-label--strong${hot ? " fg-label--on-accent" : ""}`}
             >
               {i + 1}
             </text>
+            {hot && (
+              <text
+                x={x + colW - 10}
+                y={slotTop + 22}
+                textAnchor="end"
+                className="fg-label fg-label--on-accent"
+              >
+                99.21%
+              </text>
+            )}
             {/* Names break onto two lines so the longest never outgrows its column. */}
             <text x={x} y={288} className="fg-label fg-label--sans">
-              {stage.map((line, n) => (
+              {stage.lines.map((line, n) => (
                 <tspan key={line} x={x} dy={n === 0 ? 0 : "1.25em"}>
                   {line}
                 </tspan>

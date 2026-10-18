@@ -106,10 +106,9 @@
   --fs-lede: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem); /* 19-22 */
   --fs-h3: clamp(1.5rem, 1.25rem + 1vw, 2.125rem); /* 24-34 */
   --fs-h2: clamp(2.125rem, 1.4rem + 2.6vw, 3.5rem); /* 34-56 */
-  --fs-h1: clamp(2.5rem, 1.25rem + 3.6vw, 4.75rem); /* 40-76 */
+  --fs-h1: clamp(2.4rem, 1.3rem + 3.1vw, 4.15rem); /* 38-66 */
   --fs-num: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem); /* 28-40 */
   --fs-display: clamp(2.75rem, 0.9rem + 6.6vw, 7.5rem); /* 44-120, the closing line */
-  --fs-index: clamp(3.5rem, 2.4rem + 3.4vw, 6rem); /* 56-96, project numbers */
 
   /* Space: a 4px base, doubled up */
   --space-1: 0.25rem;
@@ -307,6 +306,7 @@ main:focus {
   padding-block: var(--section-y);
 }
 
+.hero + .section,
 .section + .section {
   border-top: 1px solid var(--line);
 }
@@ -559,10 +559,26 @@ h2 {
   top: 0;
   z-index: 50;
   background: color-mix(in srgb, var(--paper) 90%, transparent);
+  color: var(--ink);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid transparent;
-  transition: border-color var(--med) var(--ease);
+  transition:
+    background-color var(--med) var(--ease),
+    color var(--med) var(--ease),
+    border-color var(--med) var(--ease);
+}
+
+.site-header[data-night] {
+  color-scheme: dark;
+  --paper: #101317;
+  --surface: #171b20;
+  --ink: #f3f1ea;
+  --ink-2: #b9bdc2;
+  --ink-3: #8e949b;
+  --line: rgb(243 241 234 / 0.14);
+  --control-border: rgb(243 241 234 / 0.45);
+  --accent: #a5b0ff;
 }
 
 .site-header[data-scrolled] {
@@ -622,12 +638,20 @@ h2 {
 
 .nav a {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.4em;
   min-height: 2.75rem;
   padding: 0 var(--space-3);
   font-size: var(--fs-ui);
+  line-height: 2.75rem;
   color: var(--ink-2);
   transition: color var(--fast) var(--ease);
+}
+
+.nav__no {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-3);
 }
 
 .nav a:hover {
@@ -647,13 +671,14 @@ h2 {
 
 .hero {
   padding-top: clamp(2rem, 4.5vw, 4rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6rem);
 }
 
 .hero__grid {
   display: grid;
-  /* Copy takes two thirds: wide enough that the headline sets in three lines
-     at full size, so the figure column carries the drawing, not dead air. */
-  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  /* Matches the 7:5 report grid used across the page while giving the
+     analytical figure a generous 5-column stage. */
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   column-gap: var(--col-gap);
   align-items: center;
 }
@@ -704,9 +729,16 @@ h2 {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: var(--col-gap);
+  column-gap: var(--space-6);
   margin-top: clamp(2.5rem, 5vw, 4rem);
   border-top: 1px solid var(--line);
+}
+
+@media (min-width: 40.0625rem) {
+  .keyfigures > li:not(:first-child) {
+    padding-left: var(--space-6);
+    border-left: 1px solid var(--line);
+  }
 }
 
 .keyfigure {
@@ -756,10 +788,23 @@ h2 {
 
 /* 09  Exhibits ------------------------------------------------------------ */
 
-/* Every figure on the page has one frame: the drawing, then a hairline and a
+/* Every figure on the page has one frame: a specimen plate on paper, then a
    one-line caption that says plainly what it is. */
 .exhibit {
   container-type: inline-size;
+}
+
+.hero-figure__stage,
+.exhibit > .plot,
+.exhibit > svg {
+  background: color-mix(in srgb, var(--surface) 65%, var(--paper));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.exhibit > .plot,
+.exhibit > svg {
+  padding: var(--space-3);
 }
 
 .exhibit svg {
@@ -773,9 +818,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  margin-top: var(--space-4);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--line);
+  margin-top: var(--space-3);
   font-size: var(--fs-small);
   line-height: 1.45;
   color: var(--ink-3);
@@ -854,15 +897,15 @@ h2 {
 .hero-figure__stage {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
   aspect-ratio: 3 / 2;
 }
 
-/* Graph paper: the surface the model is plotted on. It bleeds a little past
-   the stage and dissolves at the edges, so it reads as paper, not a box. */
+/* Graph paper: the surface the model is plotted on. */
 .hero-figure__stage::before {
   content: "";
   position: absolute;
-  inset: -6% -4%;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
   background-image:
@@ -870,8 +913,8 @@ h2 {
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 24px 24px;
   background-position: center;
-  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
-  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 45%, transparent 100%);
 }
 
 /* Figures are numbered through the brief, like the sections and the notes. */
@@ -890,6 +933,64 @@ h2 {
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-figure__stage {
+    cursor: crosshair;
+  }
+}
+
+.hero-figure__caption {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+.hero-figure__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding-top: var(--space-1);
+}
+
+.hero-figure__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  min-height: 2rem;
+  padding-inline: var(--space-1);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  color: var(--ink-3);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.45em;
+  transition:
+    color var(--fast) var(--ease),
+    text-decoration-color var(--fast) var(--ease);
+}
+
+.hero-figure__step:hover {
+  color: var(--ink);
+}
+
+.hero-figure__step[aria-pressed="true"] {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+.hero-figure__replay {
+  margin-left: auto;
+  font-size: var(--fs-label);
+}
+
+@media (pointer: coarse) {
+  .hero-figure__step {
+    min-height: 2.75rem;
+  }
 }
 
 /* Drawing vocabulary for the SVG illustrations. Text is sized in the
@@ -1008,6 +1109,13 @@ h2 {
   border-top: 1px solid var(--line);
 }
 
+@media (min-width: 56.0625rem) {
+  .project__figure {
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-6));
+  }
+}
+
 /* The drawings alternate sides, so the eye zig-zags down the evidence the way
    it reads a well-set report, and the grid still lines up every other row. */
 .project:nth-child(even) {
@@ -1024,28 +1132,36 @@ h2 {
   grid-row: 1;
 }
 
-/* Catalogue number: which of the eight projects this is. */
-.project__index {
+/* Catalogue header: project number on the left, discipline & year on the right. */
+.project__head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
+  justify-content: space-between;
   gap: var(--space-3);
-  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.project__index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
   font-family: var(--font-mono);
 }
 
 .project__no {
-  font-size: var(--fs-index);
-  font-weight: 300;
-  line-height: 0.85;
-  letter-spacing: -0.07em;
+  font-size: var(--fs-num);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
 }
 
 .project__of {
   font-size: var(--fs-label);
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--ink-3);
 }
 
@@ -1058,16 +1174,8 @@ h2 {
   color: var(--ink-3);
 }
 
-.project__stack {
-  margin-top: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: var(--fs-label);
-  line-height: 1.5;
-  color: var(--ink-3);
-}
-
 .project__title {
-  margin-top: var(--space-3);
+  margin-top: var(--space-5);
   font-size: var(--fs-h3);
   letter-spacing: -0.03em;
 }
@@ -1077,6 +1185,15 @@ h2 {
   font-size: var(--fs-lede);
   line-height: 1.45;
   color: var(--ink-2);
+}
+
+.project__stack {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  color: var(--ink-3);
 }
 
 .stats {
@@ -1126,12 +1243,19 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-3);
   min-height: 3.5rem;
   font-size: var(--fs-ui);
   font-weight: 500;
   cursor: pointer;
   list-style: none;
+}
+
+.method__count {
+  margin-left: auto;
+  font-size: var(--fs-label);
+  font-weight: 400;
+  color: var(--ink-3);
 }
 
 .method > summary::-webkit-details-marker {
@@ -1306,6 +1430,19 @@ h2 {
   gap: var(--space-6) var(--col-gap);
 }
 
+.practice li {
+  display: flex;
+  flex-direction: column;
+}
+
+.practice__no {
+  margin-bottom: var(--space-3);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
 .practice h4 {
   font-size: var(--fs-body);
   font-weight: 600;
@@ -1317,6 +1454,15 @@ h2 {
   margin-top: var(--space-2);
   font-size: var(--fs-ui);
   color: var(--ink-2);
+}
+
+.practice p.practice__evidence {
+  margin-top: auto;
+  padding-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  line-height: 1.45;
+  color: var(--ink-3);
 }
 
 .credentials li {
@@ -1378,8 +1524,10 @@ h2 {
 
 /* A query the visitor can edit: they pick one clause, the result row answers. */
 .query {
-  padding-left: var(--space-4);
-  border-left: 1px solid var(--line);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   font-family: var(--font-mono);
   font-size: var(--fs-small);
   line-height: 1.75;
@@ -1450,6 +1598,8 @@ h2 {
   gap: var(--space-1);
   max-width: 28rem;
   margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
   font-family: var(--font-sans);
   font-size: var(--fs-lede);
   line-height: 1.45;
@@ -1807,6 +1957,10 @@ h2 {
 
   .nav a {
     padding: 0 var(--space-2);
+  }
+
+  .nav__no {
+    display: none;
   }
 
   .keyfigures {

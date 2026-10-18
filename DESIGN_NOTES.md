@@ -42,9 +42,11 @@ than a set of effects.
 - **The analyst's marker.** One phrase per section carries a low cobalt
   highlighter stroke: "decisions", "result", "Business first", "Let's talk.".
   It sweeps in as the section arrives. The tint is `--hl`.
-- **Numbered like a report.** Sections (01 Work, 02 About, 03 Contact), figures
-  (Fig. 1 is the hero, Figs. 2 to 5 the projects) and notes (1 to 3) are all
-  numbered. Projects carry their featured index, "01 of 04" to "04 of 04".
+- **Numbered like a report.** Sections (`01 Work`, `02 About`, `03 Contact` in
+  both the section eyebrows and the header navigation), figures (Fig. 1 is the
+  hero, Figs. 2 to 5 the projects), practice habits (`01` to `03`) and notes (1
+  to 3) are all numbered. Projects carry their featured index (`01 / 04` to
+  `04 / 04`) paired with their discipline and year on a top header bar.
 - **Every headline number is sourced.** The hero results carry footnote
   markers, and a Sources list closes the work section. Beside it, "All 16
   projects on GitHub" is the page's secondary button (`.button--secondary`):
@@ -119,8 +121,8 @@ spacing, not from a second typeface.
 | `--fs-lede` | 19px to 22px | the sentence under a heading |
 | `--fs-h3` | 24px to 34px | project titles |
 | `--fs-h2` | 34px to 56px | section headings |
-| `--fs-h1` | 40px to 76px | the hero sentence |
-| `--fs-num` | 28px to 40px | the key figures |
+| `--fs-h1` | 38px to 66px | the hero sentence |
+| `--fs-num` | 28px to 40px | the key figures and project indices |
 
 Sizes are fluid (`clamp`) between the two ends. There is one corner radius
 (6px) and one spacing scale (`--space-1` to `--space-9`, a 4px base).
@@ -129,8 +131,10 @@ Sizes are fluid (`clamp`) between the two ends. There is one corner radius
 
 - Content is 75rem wide with a fluid gutter. Vertical rhythm between sections is
   `--section-y`, `clamp(4.5rem, 9vw, 8rem)`.
-- The header is sticky, 4rem tall (3.5rem on phones), translucent paper. Section
-  links use `scroll-padding-top` so anchors land clear of it.
+- The header is sticky, 4rem tall (3.5rem on phones), translucent paper, and
+  automatically transitions into the `.night` token palette when scrolled over
+  the dark Contact & Footer band. Section links use `scroll-padding-top` so
+  anchors land clear of it.
 - Breakpoints: `56rem` stacks every two-column layout, `40rem` tightens the
   header and stacks the key figures, `26rem` hides the brand's text and leaves
   the mark.
@@ -147,15 +151,22 @@ caption that says plainly what it is ("Illustration: ..."). Drawings are
 illustrations of method, not screenshots, and carry no invented numbers. The
 only figures shown are ones the project itself publishes.
 
-- **Hero figure**: a canvas showing gradient descent finding the lowest point of
-  an error surface. The camera looks down into the basins from above and in
-  front (`ELEVATION` in `HeroFigure.tsx`), so both minima and the ball's whole
-  path across the floor stay in view. It plays from step 1 on every load and
-  reload, through six captioned steps, then rests on the result. The clock only
-  runs while the canvas is on screen, so a visitor who scrolls down to it still
-  sees it from the start. It stops drawing once finished, so a finished figure
-  costs nothing. "Replay" runs it again. With reduced motion it opens on the
-  finished picture.
+- **Hero figure (`HeroFigure.tsx`)**: a three-stage interactive 3D/2D analytical
+  lens showing how 180 raw records become a business decision:
+  1. `01 Clean`: a `15 × 12` diagnostic matrix swept by a validation scanline that
+     flags 18 anomalous rows (`×`) and locks 162 clean records.
+  2. `02 Cluster`: a 3D perspective feature space with a floor lattice, where the
+     162 clean records separate into three behavioural segments connected by 3D
+     k-NN network filaments, projected 2D convex-hull floor footprints, and
+     vertical centroid drop-lines.
+  3. `03 Decide`: a non-linear net-lift response curve with vertical residual
+     stems from each observation, a shaded 95% confidence band, and the optimal
+     intervention cutoff marked in cobalt (`+31.4% lift`).
+  Moving the pointer over the canvas wakes the loop at any time to orbit the 3D
+  camera, inspect individual records (Stages 1–2), or scrub the decision cutoff
+  along the response curve (Stage 3). Visitors can also switch stages directly
+  (`01 Clean` · `02 Cluster` · `03 Decide`) or press `Replay`. With reduced
+  motion it opens directly on the finished decision view.
 - **Project drawings**: SVG in a 500 by 360 space. Their text is sized in drawing
   units, so it would shrink with the screen. Seven size steps in `globals.css`
   (section 09, container queries) pick the smallest label size that still

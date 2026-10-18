@@ -131,6 +131,7 @@ export default function RootLayout({
           />
         ))}
       </head>
+      {/* Extensions often inject attributes onto <html>/<body> before hydrate. */}
       <body suppressHydrationWarning>
         <script
           type="application/ld+json"
