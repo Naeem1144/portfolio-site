@@ -585,19 +585,6 @@ h2 {
   border-bottom-color: var(--line);
 }
 
-/* The reader's place in the brief, drawn along the header's bottom edge. */
-.site-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(var(--progress, 0));
-  transform-origin: 0 50%;
-}
-
 .site-header__inner {
   display: flex;
   align-items: center;
@@ -658,7 +645,7 @@ h2 {
   color: var(--ink);
 }
 
-/* The current place. The progress rule carries the accent, so this is ink. */
+/* The current place is ink, not accent: the underline is enough. */
 .nav a[aria-current] {
   color: var(--ink);
   text-decoration: underline;

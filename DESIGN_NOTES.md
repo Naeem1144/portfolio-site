@@ -21,8 +21,8 @@ that only decorated was removed.
 
 - **One point of emphasis.** The accent colour is a highlighter, not a theme.
   It marks the primary action (Email me), the one highlighted phrase per
-  section, the reader's progress, the brand's sample point, the result marker
-  in the hero figure, and keyboard focus. Availability is green, because it is
+  section, the brand's sample point, the result marker in the hero figure, and
+  keyboard focus. Availability is green, because it is
   a state, not an action. If a second thing wants the accent, one of them is
   wrong.
 - **Type does the structure.** No cards, pills, badges or boxed panels.
@@ -57,7 +57,6 @@ than a set of effects.
   order (`--i` on each mark). On a mouse, a crosshair with an x/y readout
   follows the pointer on coordinate charts (`Plot.tsx`).
 - **Graph paper** under the hero figure, dissolving at the edges.
-- **Reading progress** is the header's bottom rule, in the accent.
 - **The close** is the largest line on the page (`--fs-display`), "Got data?
   Let's talk." Under it, a three-line SQL query the visitor can edit: they pick
   who they are in the `WHERE` clause (a native select), the result row answers

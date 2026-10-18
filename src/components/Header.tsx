@@ -32,12 +32,6 @@ export function Header() {
         ),
       );
 
-      // Reading progress, drawn as the header's bottom rule. Set directly so
-      // scrolling never re-renders the header.
-      const range = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = range > 0 ? Math.min(1, window.scrollY / range) : 0;
-      headerRef.current?.style.setProperty("--progress", progress.toFixed(4));
-
       const atBottom =
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 4;
