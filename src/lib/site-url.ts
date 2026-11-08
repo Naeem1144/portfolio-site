@@ -1,11 +1,11 @@
 /**
  * Canonical origin for absolute URLs (Open Graph, sitemap, robots).
  *
- * `NEXT_PUBLIC_SITE_URL` should be set on the host. The fallback follows the
- * default Vercel slug so a fresh deploy still emits valid absolute URLs rather
- * than silently omitting them.
+ * `NEXT_PUBLIC_SITE_URL` should be set on the host. The fallback is the live
+ * deployment so a fresh build still emits valid absolute URLs rather than
+ * silently omitting them.
  */
-const FALLBACK = "https://portfolio-site-naeem1144.vercel.app";
+const FALLBACK = "https://portfolio-site-naeem.vercel.app";
 
 function normalize(value: string): string {
   const trimmed = value.trim().replace(/\/+$/, "");

@@ -48,7 +48,7 @@ export const credentials: Credential[] = [
     detail: "Classroom training & certification",
     issuer: "TOPS Technologies",
     date: "Oct 2023",
-    href: "https://www.tops.edu.in/",
+    href: "https://www.tops-int.com/",
     linkKind: "issuer",
   },
 ];
