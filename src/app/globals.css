@@ -195,16 +195,20 @@
 }
 
 html {
+  color-scheme: light;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-h) + var(--space-5));
+  scrollbar-gutter: stable;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   min-width: 300px;
   background: var(--paper);
   color: var(--ink);
+  accent-color: var(--accent);
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   line-height: 1.6;
@@ -308,6 +312,7 @@ main:focus {
   font-weight: 500;
   border-radius: var(--radius);
   transform: translateY(-200%);
+  transition: transform var(--med) var(--ease);
 }
 
 .skip-link:focus {
@@ -472,8 +477,10 @@ h2 {
   white-space: nowrap;
   transition:
     background-color var(--fast) var(--ease),
+    background-size var(--med) var(--ease),
     border-color var(--fast) var(--ease),
-    color var(--fast) var(--ease);
+    color var(--fast) var(--ease),
+    translate var(--fast) var(--ease);
 }
 
 /* A press moves the control a hair: touch gets a shape change as well as a
@@ -669,34 +676,76 @@ h2 {
 }
 
 .nav a {
+  --nav-px: var(--space-3);
+  position: relative;
   display: inline-flex;
   align-items: baseline;
   gap: 0.4em;
   min-height: 2.75rem;
-  padding: 0 var(--space-3);
+  padding: 0 var(--nav-px);
   font-size: var(--fs-ui);
   line-height: 2.75rem;
   color: var(--ink-2);
   transition: color var(--fast) var(--ease);
 }
 
+/* A quiet rule marks the option; it reveals on intent and settles in accent
+   for the reader's place. Transform/opacity keep it off the layout. */
+.nav a::after {
+  content: "";
+  position: absolute;
+  inset-inline: var(--nav-px);
+  bottom: 0.62rem;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ink-3);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  pointer-events: none;
+  transition:
+    transform var(--fast) var(--ease),
+    opacity var(--fast) var(--ease),
+    background-color var(--fast) var(--ease);
+}
+
 .nav__no {
   font-family: var(--font-mono);
   font-size: var(--fs-label);
   color: var(--ink-3);
+  transition: color var(--fast) var(--ease);
 }
 
-.nav a:hover {
+.nav a:hover,
+.nav a:focus-visible {
   color: var(--ink);
 }
 
-/* The current place is ink, not accent: the underline is enough. */
-.nav a[aria-current] {
+.nav a:hover::after,
+.nav a:focus-visible::after {
+  opacity: 0.55;
+  transform: scaleX(0.42);
+}
+
+.nav a:hover .nav__no,
+.nav a:focus-visible .nav__no {
+  color: var(--ink-2);
+}
+
+/* The current place: the index and its rule carry the accent, the label stays
+   ink, so the reader's place is the single point of emphasis. */
+.nav a[aria-current="location"] {
   color: var(--ink);
-  text-decoration: underline;
-  text-decoration-color: currentColor;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.5em;
+}
+
+.nav a[aria-current="location"] .nav__no {
+  color: var(--accent);
+}
+
+.nav a[aria-current="location"]::after {
+  background: var(--accent);
+  opacity: 1;
+  transform: scaleX(1);
 }
 
 /* 08  Hero ---------------------------------------------------------------- */
@@ -826,11 +875,13 @@ h2 {
   transition: text-decoration-color var(--fast) var(--ease);
 }
 
-.keyfigure:hover .keyfigure__value {
+.keyfigure:hover .keyfigure__value,
+.keyfigure:focus-visible .keyfigure__value {
   color: var(--accent);
 }
 
-.keyfigure:hover .keyfigure__label {
+.keyfigure:hover .keyfigure__label,
+.keyfigure:focus-visible .keyfigure__label {
   text-decoration-color: var(--accent);
 }
 
@@ -1333,6 +1384,11 @@ h2 {
   font-weight: 500;
   cursor: pointer;
   list-style: none;
+  transition: color var(--fast) var(--ease);
+}
+
+.method > summary:hover {
+  color: var(--ink);
 }
 
 .method__count {
@@ -2090,7 +2146,7 @@ h2 {
   }
 
   .nav a {
-    padding: 0 var(--space-2);
+    --nav-px: var(--space-2);
   }
 
   .nav__no {
