@@ -1,6 +1,8 @@
+import type { CSSProperties } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { HeroFigure } from "./HeroFigure";
 import { Odometer } from "./Odometer";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { projectAnchor } from "@/lib/projects";
 import { site } from "@/lib/site";
 
@@ -17,7 +19,7 @@ export function HeroSection() {
           <div className="hero__copy">
             {site.available && (
               <p className="status hero__enter">
-                Open to junior data roles · {site.location}
+                Open to {site.seeking} · {site.location}
               </p>
             )}
             <h1 id="hero-heading" className="hero__enter">
@@ -30,7 +32,7 @@ export function HeroSection() {
             </p>
             <div className="hero__actions hero__enter">
               <a href="#contact" className="button button--primary">
-                Email me
+                Get in touch
               </a>
               <a
                 href={site.resume.href}
@@ -39,7 +41,12 @@ export function HeroSection() {
                 className="link"
               >
                 {site.resume.label}
-                <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+                <ArrowUpRight
+                  className="link__icon"
+                  size={ICON_SIZE}
+                  strokeWidth={ICON_STROKE}
+                  aria-hidden="true"
+                />
                 <span className="sr-only"> (PDF, opens in a new tab)</span>
               </a>
             </div>
@@ -51,7 +58,7 @@ export function HeroSection() {
 
           <ul className="keyfigures" aria-label="Headline results">
             {site.proof.map((item, i) => (
-              <li key={item.project}>
+              <li key={item.project} style={{ "--i": i } as CSSProperties}>
                 <a className="keyfigure" href={`#${projectAnchor(item.project)}`}>
                   <span className="keyfigure__value num">
                     <Odometer value={item.value} />

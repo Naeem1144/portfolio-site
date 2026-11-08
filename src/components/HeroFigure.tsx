@@ -2,6 +2,7 @@
 
 import { RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { tokens } from "@/lib/tokens";
 
 /**
@@ -70,6 +71,14 @@ function gauss(s1: number, s2: number): number {
   const u1 = Math.max(1e-4, hash(s1));
   const u2 = hash(s2);
   return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+}
+
+/** The computed accent is always a hex from tokens.ts / globals.css. */
+function hexToRgb(hex: string): [number, number, number] {
+  let h = hex.trim().replace("#", "");
+  if (h.length === 3) h = h[0]! + h[0]! + h[1]! + h[1]! + h[2]! + h[2]!;
+  const v = Number.parseInt(h, 16);
+  return [(v >> 16) & 255, (v >> 8) & 255, v & 255];
 }
 
 const CLUSTERS = [
@@ -335,6 +344,37 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const approach = (value: number, target: number, delta: number, tau: number) =>
   value + (target - value) * (1 - Math.exp(-delta / tau));
 
+/**
+ * One integration step of a spring, in frame time. Critically damped (zeta = 1)
+ * arrives without overshoot; a little less makes a move feel placed rather
+ * than corrected. Returns the new value and velocity.
+ */
+const spring = (
+  value: number,
+  velocity: number,
+  target: number,
+  delta: number,
+  omega: number,
+  zeta = 1,
+): [number, number] => {
+  const accel = -2 * zeta * omega * velocity - omega * omega * (value - target);
+  const v = velocity + accel * delta;
+  return [value + v * delta, v];
+};
+
+/**
+ * Each filament's place in the Stage 2 weave: 0 at its cluster's centre, 1 at
+ * the rim. The web grows outward from each centroid when the stage arrives,
+ * so the order reads as clustering rather than a uniform fade.
+ */
+const EDGE_GROW = EDGES.map((edge) => {
+  const a = RECORDS[edge.a]!;
+  const b = RECORDS[edge.b]!;
+  const c = CLUSTERS[edge.cluster]!;
+  const mid = Math.hypot((a.x2 + b.x2) / 2 - c.cx, (a.y2 + b.y2) / 2 - c.cy);
+  return clamp01(mid / 0.34);
+});
+
 export function HeroFigure() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wakeRef = useRef<() => void>(() => {});
@@ -350,13 +390,15 @@ export function HeroFigure() {
   });
 
   const [activeStage, setActiveStage] = useState<StageId>("decide");
-  const [hasPlayed, setHasPlayed] = useState(false);
+  const [autoPlaying, setAutoPlaying] = useState(false);
+  const [userPicked, setUserPicked] = useState(false);
 
   const selectStage = (stage: StageId) => {
     autoPlayRef.current = false;
     stageTargetRef.current = stage;
     setActiveStage(stage);
-    setHasPlayed(true);
+    setAutoPlaying(false);
+    setUserPicked(true);
     wakeRef.current();
   };
 
@@ -365,7 +407,8 @@ export function HeroFigure() {
     restartRef.current = true;
     stageTargetRef.current = "clean";
     setActiveStage("clean");
-    setHasPlayed(true);
+    setAutoPlaying(true);
+    setUserPicked(false);
     wakeRef.current();
   };
 
@@ -395,17 +438,65 @@ export function HeroFigure() {
     let last = 0;
     let elapsed = T_DONE;
 
-    // Continuous stage weights (sum ~ 1) and camera parameters
+    // Continuous stage weights (sum ~ 1), camera parameters, and pointer
+    // tilt. Each is a spring — value plus velocity — so stage moves carry
+    // weight and settle instead of easing in a straight line.
     let wClean = 0;
     let wCluster = 0;
     let wDecide = 1;
+    let vClean = 0;
+    let vCluster = 0;
+    let vDecide = 0;
     let scanLine = 1;
     let camYaw = CAMERA_POSES.decide.yaw;
     let camElev = CAMERA_POSES.decide.elevation;
     let camPersp = CAMERA_POSES.decide.persp;
+    let vYaw = 0;
+    let vElev = 0;
+    let vPersp = 0;
     let tiltX = 0;
     let tiltY = 0;
+    let vTiltX = 0;
+    let vTiltY = 0;
+    /* Time since the stage last changed. Drives the label handoff (labels
+       leave before the geometry moves, and type on once it arrives) and the
+       record echoes during the move itself. */
+    let switchAge = 1e4;
+    let lastTarget: StageId | null = null;
     let reportedStage: StageId = "decide";
+    let glow: HTMLCanvasElement | null = null;
+    /* The previous two frames' drawn records, for motion echoes. */
+    let echoPrev: { sx: number; sy: number; radius: number; color: string; alpha: number }[] = [];
+    let echoPrev2: typeof echoPrev = [];
+
+    /* A soft radial sprite in the accent, pre-rendered per palette. Fogging
+       the beam head, the highlighted segment and the optimal cutoff with one
+       drawImage each stays cheap; shadowBlur would cost an offscreen pass
+       every frame. */
+    const buildGlow = () => {
+      const size = 64;
+      const sprite = document.createElement("canvas");
+      sprite.width = size;
+      sprite.height = size;
+      const g = sprite.getContext("2d");
+      if (!g) return null;
+      const [r, gr, b] = hexToRgb(accent);
+      const grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      grad.addColorStop(0, `rgba(${r}, ${gr}, ${b}, 0.55)`);
+      grad.addColorStop(0.5, `rgba(${r}, ${gr}, ${b}, 0.16)`);
+      grad.addColorStop(1, `rgba(${r}, ${gr}, ${b}, 0)`);
+      g.fillStyle = grad;
+      g.fillRect(0, 0, size, size);
+      return sprite;
+    };
+
+    const drawGlow = (x: number, y: number, radius: number, alpha: number) => {
+      if (!glow || alpha <= 0.01) return;
+      ctx.save();
+      ctx.globalAlpha = clamp01(alpha);
+      ctx.drawImage(glow, x - radius, y - radius, radius * 2, radius * 2);
+      ctx.restore();
+    };
 
     const readStyle = () => {
       const style = getComputedStyle(canvas);
@@ -414,8 +505,16 @@ export function HeroFigure() {
       ink3 = style.getPropertyValue("--ink-3").trim() || ink3;
       accent = style.getPropertyValue("--accent").trim() || accent;
       data3 = style.getPropertyValue("--data-3").trim() || data3;
-      surface = style.getPropertyValue("--paper").trim() || surface;
+      // Label halos knock out whatever is actually behind the canvas: the
+      // stage's painted background, which is a mix rather than flat paper.
+      const stage = canvas.parentElement;
+      const stageBg = stage ? getComputedStyle(stage).backgroundColor : "";
+      surface =
+        stageBg && stageBg !== "rgba(0, 0, 0, 0)" && stageBg !== "transparent"
+          ? stageBg
+          : style.getPropertyValue("--paper").trim() || surface;
       mono = style.getPropertyValue("--font-mono").trim() || mono;
+      glow = buildGlow();
     };
 
     const refit = () => {
@@ -451,8 +550,14 @@ export function HeroFigure() {
       color: string,
       align: CanvasTextAlign = "center",
       weight: 500 | 600 = 500,
+      reveal = 1,
     ) => {
       if (alpha <= 0.02) return;
+      /* A label arriving after a stage change is written, not flashed:
+         `reveal` is how much of it has been typed so far. */
+      const shown =
+        reveal >= 1 ? text : text.slice(0, Math.max(0, Math.floor(text.length * reveal)));
+      if (!shown) return;
       ctx.save();
       ctx.globalAlpha = clamp01(alpha);
       ctx.font = `${weight} 12px ${mono}`;
@@ -460,9 +565,9 @@ export function HeroFigure() {
       ctx.lineJoin = "round";
       ctx.lineWidth = 3.5;
       ctx.strokeStyle = surface;
-      ctx.strokeText(text, x, y);
+      ctx.strokeText(shown, x, y);
       ctx.fillStyle = color;
-      ctx.fillText(text, x, y);
+      ctx.fillText(shown, x, y);
       ctx.restore();
     };
 
@@ -486,8 +591,11 @@ export function HeroFigure() {
       ctx.fillStyle = surface;
       ctx.strokeStyle = accentBorder ? accent : ink2;
       ctx.lineWidth = 1;
+      // roundRect is not universal; a plain rect keeps one missing method
+      // from throwing inside the frame loop and killing the figure.
       ctx.beginPath();
-      ctx.roundRect(bx, by, boxW, boxH, 4);
+      if (typeof ctx.roundRect === "function") ctx.roundRect(bx, by, boxW, boxH, 4);
+      else ctx.rect(bx, by, boxW, boxH);
       ctx.fill();
       ctx.stroke();
 
@@ -517,10 +625,22 @@ export function HeroFigure() {
         wClean = 1;
         wCluster = 0;
         wDecide = 0;
+        vClean = 0;
+        vCluster = 0;
+        vDecide = 0;
         scanLine = 0;
         camYaw = CAMERA_POSES.clean.yaw;
         camElev = CAMERA_POSES.clean.elevation;
         camPersp = CAMERA_POSES.clean.persp;
+        vYaw = 0;
+        vElev = 0;
+        vPersp = 0;
+        echoPrev = [];
+        echoPrev2 = [];
+        /* The figure boots with its labels still to be written, and the
+           jump back to Stage 1 smears through the record echoes. */
+        switchAge = -260;
+        lastTarget = "clean";
       }
 
       if (autoPlayRef.current && !reduced) {
@@ -534,6 +654,7 @@ export function HeroFigure() {
         }
         if (elapsed >= T_DONE) {
           autoPlayRef.current = false;
+          setAutoPlaying(false);
         }
       } else {
         reportedStage = stageTargetRef.current;
@@ -544,11 +665,26 @@ export function HeroFigure() {
       const tCluster = target === "cluster" ? 1 : 0;
       const tDecide = target === "decide" ? 1 : 0;
 
+      const pose = CAMERA_POSES[target];
+
+      if (lastTarget === null) lastTarget = target;
+      if (!reduced) {
+        switchAge += delta;
+        if (target !== lastTarget) {
+          /* Anticipation: the camera takes a small kick away from where it
+             is going, then the springs carry it over and settle. */
+          lastTarget = target;
+          switchAge = 0;
+          vYaw += (camYaw - pose.yaw) * 0.0013;
+          vElev += (camElev - pose.elevation) * 0.0013;
+          vPersp += (camPersp - pose.persp) * 0.0011;
+        }
+      }
+
       const pointer = pointerRef.current;
       const targetTiltX = pointer.active && !reduced ? pointer.x : 0;
       const targetTiltY = pointer.active && !reduced ? pointer.y : 0;
 
-      const pose = CAMERA_POSES[target];
       const yawTarget =
         pose.yaw + targetTiltX * (target === "cluster" ? 0.28 : target === "decide" ? 0.1 : 0.04);
       const elevTarget =
@@ -566,10 +702,11 @@ export function HeroFigure() {
         tiltX = 0;
         tiltY = 0;
       } else {
-        const tau = 240;
-        wClean = approach(wClean, tClean, delta, tau);
-        wCluster = approach(wCluster, tCluster, delta, tau);
-        wDecide = approach(wDecide, tDecide, delta, tau);
+        // Stage weights: critically damped, so the blend never overshoots
+        // into a double exposure mid-morph.
+        [wClean, vClean] = spring(wClean, vClean, tClean, delta, 0.0055, 1);
+        [wCluster, vCluster] = spring(wCluster, vCluster, tCluster, delta, 0.0055, 1);
+        [wDecide, vDecide] = spring(wDecide, vDecide, tDecide, delta, 0.0055, 1);
         const wSum = wClean + wCluster + wDecide || 1;
         wClean /= wSum;
         wCluster /= wSum;
@@ -581,12 +718,34 @@ export function HeroFigure() {
           scanLine = approach(scanLine, 1, delta, 180);
         }
 
-        camYaw = approach(camYaw, yawTarget, delta, 190);
-        camElev = approach(camElev, elevTarget, delta, 190);
-        camPersp = approach(camPersp, pose.persp, delta, 220);
-        tiltX = approach(tiltX, targetTiltX, delta, 140);
-        tiltY = approach(tiltY, targetTiltY, delta, 140);
+        // The camera may overshoot a hair (zeta 0.88); that is what makes a
+        // stage change feel like a move rather than a cut.
+        [camYaw, vYaw] = spring(camYaw, vYaw, yawTarget, delta, 0.0058, 0.88);
+        [camElev, vElev] = spring(camElev, vElev, elevTarget, delta, 0.0058, 0.88);
+        [camPersp, vPersp] = spring(camPersp, vPersp, pose.persp, delta, 0.0062, 0.92);
+        [tiltX, vTiltX] = spring(tiltX, vTiltX, targetTiltX, delta, 0.009, 0.9);
+        [tiltY, vTiltY] = spring(tiltY, vTiltY, targetTiltY, delta, 0.009, 0.9);
       }
+
+      /* The label handoff: a departing stage's words leave before the
+         geometry moves, and the arriving stage's words are written once it
+         has mostly arrived. */
+      const labelGate = (departing: boolean) => {
+        if (reduced) return 1;
+        return departing
+          ? clamp01(1 - switchAge / 140)
+          : clamp01((switchAge - 260) / 340);
+      };
+      const gateClean = labelGate(tClean === 0);
+      const gateCluster = labelGate(tCluster === 0);
+      const gateDecide = labelGate(tDecide === 0);
+      const typeReveal = reduced ? 1 : clamp01((switchAge - 300) / 420);
+      const trailing = !reduced && switchAge < 400;
+      /* The arriving stage's set pieces are timed rather than weight-driven:
+         the springs settle in a few hundred milliseconds, far quicker than a
+         beat like the curve drawing itself wants to read. */
+      const sinceSwitch = (from: number, to: number) =>
+        reduced ? 1 : clamp01((switchAge - from) / (to - from));
 
       ctx.clearRect(0, 0, width, height);
 
@@ -599,47 +758,83 @@ export function HeroFigure() {
       // 1A. Stage 1 (Clean): Matrix frame, row/col index ticks, and live scanline
       if (wClean > 0.02) {
         ctx.save();
-        ctx.globalAlpha = wClean * 0.35;
         ctx.strokeStyle = ink3;
         ctx.lineWidth = 1;
 
+        /* The matrix is ruled row by row, top to bottom, as the stage opens. */
+        const rowAge = reduced ? 1e4 : switchAge + 260;
         for (let r = 0; r < ROWS; r++) {
+          const on = reduced ? 1 : clamp01((rowAge - r * 28) / 380);
+          if (on <= 0.01) continue;
           const y = ((r / (ROWS - 1)) * 2 - 1) * 0.74;
           const left = toScreen(-1.16, y, 0);
           const right = toScreen(1.16, y, 0);
+          ctx.globalAlpha = wClean * 0.35 * on;
           ctx.beginPath();
           ctx.moveTo(left.x, left.y);
           ctx.lineTo(right.x, right.y);
           ctx.stroke();
         }
 
-        const topL = toScreen(-1.16, -0.74, 0);
-        const botR = toScreen(1.16, 0.74, 0);
-        drawLabel("sql_clean · 180 rows × 12 cols", topL.x, topL.y - 14, wClean * 0.85, ink2, "left");
+        const topR = toScreen(1.16, -0.74, 0);
+        const botL = toScreen(-1.16, 0.74, 0);
+        /* Two rows, never one: on the stage widths this figure actually gets,
+           the table name and the scan report cannot share the top line. The
+           table name captions the matrix from below; the scan report stays in
+           the top-right corner, where the beam is heading. */
+        drawLabel(
+          "sql_clean · 180 rows × 12 cols",
+          botL.x,
+          botL.y + 16,
+          wClean * 0.85 * gateClean,
+          ink2,
+          "left",
+          500,
+          typeReveal,
+        );
         drawLabel(
           scanLine < 0.98
             ? `scanning ${Math.round(scanLine * 100)}%`
             : "162 valid · 18 excluded",
-          botR.x,
-          topL.y - 14,
-          wClean * 0.9,
+          topR.x,
+          topR.y - 14,
+          wClean * 0.9 * gateClean,
           accent,
           "right",
           600,
         );
 
-        // Sweeping validation scan beam
+        // Sweeping validation scan beam: a hairline with fog around it.
         if (scanLine > 0.01 && scanLine < 0.99) {
           const sxWorld = (-1 + scanLine * 2) * 1.2;
           const sTop = toScreen(sxWorld, -0.82, 0);
           const sBot = toScreen(sxWorld, 0.82, 0);
-          ctx.globalAlpha = wClean * 0.85;
+          const span = sBot.y - sTop.y;
+          drawGlow(sTop.x, sTop.y + span * 0.18, 44, wClean * 0.4);
+          drawGlow(sTop.x, sTop.y + span * 0.5, 58, wClean * 0.3);
+          drawGlow(sTop.x, sTop.y + span * 0.82, 44, wClean * 0.4);
+
           ctx.strokeStyle = accent;
+          ctx.lineCap = "round";
+          ctx.globalAlpha = wClean * 0.08;
+          ctx.lineWidth = 7;
+          ctx.beginPath();
+          ctx.moveTo(sTop.x, sTop.y);
+          ctx.lineTo(sBot.x, sBot.y);
+          ctx.stroke();
+          ctx.globalAlpha = wClean * 0.2;
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(sTop.x, sTop.y);
+          ctx.lineTo(sBot.x, sBot.y);
+          ctx.stroke();
+          ctx.globalAlpha = wClean * 0.85;
           ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.moveTo(sTop.x, sTop.y);
           ctx.lineTo(sBot.x, sBot.y);
           ctx.stroke();
+          ctx.lineCap = "butt";
         }
         ctx.restore();
       }
@@ -674,13 +869,19 @@ export function HeroFigure() {
         // Floor axis labels
         const axX = toScreen(gridRange, gridRange + 0.14, FLOOR_Z);
         const axY = toScreen(-gridRange - 0.1, gridRange, FLOOR_Z);
-        drawLabel("PC1 →", axX.x, axX.y, wCluster * 0.75, ink3, "right");
-        drawLabel("← PC2", axY.x, axY.y, wCluster * 0.75, ink3, "left");
+        drawLabel("PC1 →", axX.x, axX.y, wCluster * 0.75 * gateCluster, ink3, "right", 500, typeReveal);
+        drawLabel("← PC2", axY.x, axY.y, wCluster * 0.75 * gateCluster, ink3, "left", 500, typeReveal);
 
-        // Projected 2D convex hulls on the 3D floor plane
+        // Projected 2D convex hulls on the 3D floor plane. Each unrolls and
+        // settles onto the floor over the first second of the arrival.
+        const settle = sinceSwitch(150, 950);
         CLUSTER_HULLS.forEach((hull, cIdx) => {
           if (hull.length < 3) return;
-          const projected = hull.map((p) => toScreen(p.x, p.y, FLOOR_Z));
+          const c = CLUSTERS[cIdx]!;
+          const spread = 1 + (1 - settle) * 0.07;
+          const projected = hull.map((p) =>
+            toScreen(c.cx + (p.x - c.cx) * spread, c.cy + (p.y - c.cy) * spread, FLOOR_Z),
+          );
           const col = clusterColors[cIdx]!;
 
           ctx.beginPath();
@@ -691,15 +892,17 @@ export function HeroFigure() {
           ctx.closePath();
 
           ctx.fillStyle = col;
-          ctx.globalAlpha = wCluster * (cIdx === 0 ? 0.12 : 0.07);
+          ctx.globalAlpha = wCluster * (cIdx === 0 ? 0.12 : 0.07) * settle;
           ctx.fill();
 
           ctx.strokeStyle = col;
-          ctx.globalAlpha = wCluster * (cIdx === 0 ? 0.65 : 0.4);
+          ctx.globalAlpha = wCluster * (cIdx === 0 ? 0.65 : 0.4) * settle;
           ctx.lineWidth = 1.1;
           ctx.setLineDash([3, 3]);
+          ctx.lineDashOffset = -(1 - settle) * 26;
           ctx.stroke();
           ctx.setLineDash([]);
+          ctx.lineDashOffset = 0;
         });
 
         // Vertical drop-lines from 3D cluster centroids to the floor plane
@@ -749,7 +952,7 @@ export function HeroFigure() {
           ctx.lineTo(pR.x, pR.y);
           ctx.stroke();
           ctx.setLineDash([]);
-          drawLabel(tick.label, pL.x - 6, pL.y + 4, wDecide * 0.75, ink3, "right");
+          drawLabel(tick.label, pL.x - 6, pL.y + 4, wDecide * 0.75 * gateDecide, ink3, "right");
         }
 
         // Sample the curve across t in [0, 1]
@@ -768,41 +971,72 @@ export function HeroFigure() {
           lowerPts.push(toScreen(x, 0, liftToZ(m - ci)));
         }
 
-        // 95% confidence band fill
-        ctx.beginPath();
-        upperPts.forEach((p, idx) => {
-          if (idx === 0) ctx.moveTo(p.x, p.y);
-          else ctx.lineTo(p.x, p.y);
-        });
-        for (let idx = lowerPts.length - 1; idx >= 0; idx--) {
-          const p = lowerPts[idx]!;
-          ctx.lineTo(p.x, p.y);
-        }
-        ctx.closePath();
-        ctx.fillStyle = accent;
-        ctx.globalAlpha = wDecide * 0.12;
-        ctx.fill();
+        /* The ribbon unrolls left to right just behind the curve. */
+        const ribbonProgress = sinceSwitch(900, 1700);
+        const clipLeft = toScreen(scoreToX(0), 0, 0).x;
+        const clipRight = toScreen(scoreToX(1), 0, 0).x;
 
-        // Upper/lower confidence hairlines
-        ctx.strokeStyle = accent;
-        ctx.globalAlpha = wDecide * 0.32;
-        ctx.lineWidth = 1;
-        ctx.setLineDash([2, 3]);
-        for (const boundary of [upperPts, lowerPts]) {
+        if (ribbonProgress > 0.01) {
+          ctx.save();
           ctx.beginPath();
-          boundary.forEach((p, idx) => {
+          ctx.rect(0, 0, clipLeft + (clipRight - clipLeft) * ribbonProgress + 2, height);
+          ctx.clip();
+
+          // 95% confidence band fill
+          ctx.beginPath();
+          upperPts.forEach((p, idx) => {
             if (idx === 0) ctx.moveTo(p.x, p.y);
             else ctx.lineTo(p.x, p.y);
           });
-          ctx.stroke();
+          for (let idx = lowerPts.length - 1; idx >= 0; idx--) {
+            const p = lowerPts[idx]!;
+            ctx.lineTo(p.x, p.y);
+          }
+          ctx.closePath();
+          ctx.fillStyle = accent;
+          ctx.globalAlpha = wDecide * 0.12;
+          ctx.fill();
+
+          // Upper/lower confidence hairlines
+          ctx.strokeStyle = accent;
+          ctx.globalAlpha = wDecide * 0.32;
+          ctx.lineWidth = 1;
+          ctx.setLineDash([2, 3]);
+          for (const boundary of [upperPts, lowerPts]) {
+            ctx.beginPath();
+            boundary.forEach((p, idx) => {
+              if (idx === 0) ctx.moveTo(p.x, p.y);
+              else ctx.lineTo(p.x, p.y);
+            });
+            ctx.stroke();
+          }
+          ctx.setLineDash([]);
+          ctx.restore();
         }
-        ctx.setLineDash([]);
 
         // Axis labels
         const xEnd = toScreen(scoreToX(1), 0, liftToZ(-6));
         const yTop = toScreen(scoreToX(0), 0, liftToZ(35));
-        drawLabel("Propensity score →", xEnd.x, height - 10, wDecide * 0.8, ink3, "right");
-        drawLabel("Net lift (%) ↑", yTop.x, 18, wDecide * 0.8, ink2, "left", 600);
+        drawLabel(
+          "Propensity score →",
+          xEnd.x,
+          height - 10,
+          wDecide * 0.8 * gateDecide,
+          ink3,
+          "right",
+          500,
+          typeReveal,
+        );
+        drawLabel(
+          "Net lift (%) ↑",
+          yTop.x,
+          18,
+          wDecide * 0.8 * gateDecide,
+          ink2,
+          "left",
+          600,
+          typeReveal,
+        );
 
         ctx.restore();
       }
@@ -821,10 +1055,21 @@ export function HeroFigure() {
         const normalizedCol = r.col / (COLS - 1);
         const scanned = scanLine >= normalizedCol - 0.05;
 
+        /* Rows light up as the beam passes: a gaussian around the scanning
+           column, so the sweep reads as a wave rather than a threshold. */
+        const wave =
+          wClean > 0.02 && scanLine > 0.01 && scanLine < 0.99
+            ? Math.exp(-((normalizedCol - scanLine) ** 2) / 0.045)
+            : 0;
+
         // Anomalies are visible in Stage 1 and fade out smoothly in Stages 2–3
-        const alpha = r.anomaly
-          ? wClean * (scanned ? 0.9 : 0.35)
-          : 0.35 + 0.55 * (wClean * (scanned ? 1 : 0.45) + wCluster + wDecide);
+        const alpha = clamp01(
+          r.anomaly
+            ? wClean * (scanned ? 0.9 : 0.35)
+            : 0.35 +
+                0.55 * (wClean * (scanned ? 1 : 0.45) + wCluster + wDecide) +
+                wave * 0.25 * wClean,
+        );
 
         return {
           record: r,
@@ -837,6 +1082,7 @@ export function HeroFigure() {
           k: proj.k,
           alpha,
           scanned,
+          wave,
         };
       });
 
@@ -854,10 +1100,19 @@ export function HeroFigure() {
         }
       }
 
-      // 2A. Draw 3D k-NN cluster filaments (Stage 2)
+      // 2A. Draw 3D k-NN cluster filaments (Stage 2). The web grows outward
+      // from each centroid: each filament waits for its own place in the
+      // weave, which reads as clustering rather than a uniform fade-in.
       if (wCluster > 0.03) {
         ctx.save();
-        for (const edge of EDGES) {
+        EDGES.forEach((edge, edgeIndex) => {
+          /* Each filament waits its turn, so the web grows outward from each
+             centroid over the second after the switch rather than in one
+             weight step. */
+          const on = reduced
+            ? 1
+            : clamp01((switchAge - (200 + 620 * EDGE_GROW[edgeIndex]!)) / 420);
+          if (on <= 0.02) return;
           const pa = renderedPoints[edge.a]!;
           const pb = renderedPoints[edge.b]!;
           const isHoveredEdge =
@@ -866,23 +1121,26 @@ export function HeroFigure() {
 
           ctx.strokeStyle = isHoveredEdge ? accent : clusterColors[edge.cluster]!;
           ctx.lineWidth = isHoveredEdge ? 1.6 : 0.9;
-          ctx.globalAlpha = wCluster * (isHoveredEdge ? 0.85 : edge.cluster === 0 ? 0.34 : 0.22);
+          ctx.globalAlpha =
+            on * wCluster * (isHoveredEdge ? 0.85 : edge.cluster === 0 ? 0.34 : 0.22);
           ctx.beginPath();
           ctx.moveTo(pa.sx, pa.sy);
           ctx.lineTo(pb.sx, pb.sy);
           ctx.stroke();
-        }
+        });
         ctx.restore();
       }
 
-      // 2B. Draw vertical residual stems from each sample to the fitted curve (Stage 3)
+      // 2B. Draw vertical residual stems from each sample to the fitted curve
+      // (Stage 3); each stem drops in just behind the drawing curve.
       if (wDecide > 0.15) {
+        const stemsProgress = sinceSwitch(500, 1500);
         ctx.save();
         ctx.strokeStyle = ink3;
         ctx.lineWidth = 0.8;
         ctx.globalAlpha = wDecide * 0.24;
         for (const pt of renderedPoints) {
-          if (pt.record.anomaly) continue;
+          if (pt.record.anomaly || pt.record.t > stemsProgress) continue;
           const fitted = toScreen(pt.record.x3, 0, liftToZ(pt.record.liftHat));
           ctx.beginPath();
           ctx.moveTo(pt.sx, pt.sy);
@@ -894,8 +1152,29 @@ export function HeroFigure() {
 
       // 2C. Draw all data points sorted back-to-front by 3D depth
       const sorted = [...renderedPoints].sort((a, b) => a.depth - b.depth);
+
+      /* Motion echoes: while a stage change is in flight, the records of the
+         two previous frames are re-drawn faintly, so 180 points travelling
+         between stages read as travel. Nothing else on the stage smears. */
+      if (trailing && echoPrev.length) {
+        for (const [layer, mult] of [
+          [echoPrev2, 0.09],
+          [echoPrev, 0.26],
+        ] as const) {
+          for (const echo of layer) {
+            ctx.globalAlpha = echo.alpha * mult;
+            ctx.fillStyle = echo.color;
+            ctx.beginPath();
+            ctx.arc(echo.sx, echo.sy, echo.radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      const drawn: typeof echoPrev = trailing ? [] : echoPrev;
+
       for (const pt of sorted) {
-        const { record, sx, sy, k, alpha, scanned } = pt;
+        const { record, sx, sy, k, alpha, scanned, wave } = pt;
         if (alpha <= 0.02) continue;
 
         if (record.anomaly) {
@@ -926,13 +1205,29 @@ export function HeroFigure() {
         const radius =
           (wClean * 2.4 + wCluster * (record.cluster === 0 ? 3.1 : 2.6) + wDecide * 2.5) *
           k *
-          (isHovered ? 1.55 : 1);
+          (isHovered ? 1.55 : 1) *
+          (1 + wave * 0.45);
+
+        // The emphasis segment carries a soft halo in Stage 2, from the
+        // pre-rendered sprite so the frame stays cheap.
+        if (wCluster > 0.45 && record.cluster === 0) {
+          drawGlow(sx, sy, radius * 5, wCluster * 0.15 * alpha);
+        }
 
         ctx.fillStyle = isHovered ? accent : baseColor;
         ctx.globalAlpha = isHovered ? 1 : alpha;
         ctx.beginPath();
         ctx.arc(sx, sy, radius, 0, Math.PI * 2);
         ctx.fill();
+
+        if (trailing) drawn.push({ sx, sy, radius, color: ctx.fillStyle as string, alpha });
+      }
+      if (trailing) {
+        echoPrev2 = echoPrev;
+        echoPrev = drawn;
+      } else {
+        echoPrev2 = [];
+        echoPrev = [];
       }
       ctx.globalAlpha = 1;
 
@@ -953,9 +1248,12 @@ export function HeroFigure() {
           ctx.globalAlpha = wCluster;
           ctx.lineWidth = primary ? 1.6 : 1.2;
 
-          // Target ring + center dot
+          /* The reticle pulses once as the segment locks in, then rests. */
+          const lock = reduced ? 0 : Math.sin(Math.PI * clamp01((wCluster - 0.5) / 0.45));
+          drawGlow(center.x, center.y, 26, wCluster * 0.25);
+
           ctx.beginPath();
-          ctx.arc(center.x, center.y, primary ? 8 : 6, 0, Math.PI * 2);
+          ctx.arc(center.x, center.y, (primary ? 8 : 6) * (1 + lock * 0.5), 0, Math.PI * 2);
           ctx.stroke();
 
           ctx.fillStyle = col;
@@ -969,7 +1267,7 @@ export function HeroFigure() {
             c.short,
             center.x,
             labelY,
-            wCluster,
+            wCluster * gateCluster,
             primary ? accent : ink,
             "center",
             primary ? 600 : 500,
@@ -981,58 +1279,77 @@ export function HeroFigure() {
       if (wDecide > 0.05) {
         ctx.save();
         const curveSamples = 56;
-        ctx.strokeStyle = accent;
-        ctx.lineWidth = 2.2;
-        ctx.globalAlpha = wDecide;
-        ctx.beginPath();
-        for (let s = 0; s <= curveSamples; s++) {
-          const t = s / curveSamples;
-          const p = toScreen(scoreToX(t), 0, liftToZ(liftCurve(t)));
-          if (s === 0) ctx.moveTo(p.x, p.y);
-          else ctx.lineTo(p.x, p.y);
+        /* The curve draws itself left to right as the stage arrives, rather
+           than fading in whole: about a second of drawing. */
+        const curveProgress = sinceSwitch(280, 1200);
+        if (curveProgress > 0.01) {
+          ctx.strokeStyle = accent;
+          ctx.lineWidth = 2.2;
+          ctx.globalAlpha = wDecide;
+          ctx.beginPath();
+          for (let s = 0; s <= curveSamples; s++) {
+            const t = s / curveSamples;
+            if (t > curveProgress) break;
+            const p = toScreen(scoreToX(t), 0, liftToZ(liftCurve(t)));
+            if (s === 0) ctx.moveTo(p.x, p.y);
+            else ctx.lineTo(p.x, p.y);
+          }
+          ctx.stroke();
         }
-        ctx.stroke();
 
         // Optimal decision cutoff at t* = 0.68 (+31.4% net lift)
+        const beaconIn = sinceSwitch(1250, 1550);
         const optPeak = toScreen(scoreToX(OPTIMAL_T), 0, liftToZ(liftCurve(OPTIMAL_T)));
         const optBase = toScreen(scoreToX(OPTIMAL_T), 0, liftToZ(-4));
 
-        ctx.strokeStyle = accent;
-        ctx.lineWidth = 1.2;
-        ctx.globalAlpha = wDecide * 0.7;
-        ctx.setLineDash([3, 3]);
-        ctx.beginPath();
-        ctx.moveTo(optPeak.x, optPeak.y);
-        ctx.lineTo(optBase.x, optBase.y);
-        ctx.stroke();
-        ctx.setLineDash([]);
+        if (beaconIn > 0.01) {
+          // The marker drops onto the peak once the curve has drawn.
+          const dropY = optPeak.y - (1 - beaconIn) * 16;
 
-        // Pulsing halo and solid core on the optimal cutoff
-        const pulse = !reduced ? 1 + Math.sin(now * 0.004) * 0.22 : 1;
-        ctx.fillStyle = accent;
-        ctx.globalAlpha = wDecide * 0.2;
-        ctx.beginPath();
-        ctx.arc(optPeak.x, optPeak.y, 11 * pulse, 0, Math.PI * 2);
-        ctx.fill();
+          ctx.strokeStyle = accent;
+          ctx.lineWidth = 1.2;
+          ctx.globalAlpha = wDecide * 0.7 * beaconIn;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.moveTo(optPeak.x, dropY);
+          ctx.lineTo(optBase.x, optBase.y);
+          ctx.stroke();
+          ctx.setLineDash([]);
 
-        ctx.globalAlpha = wDecide;
-        ctx.beginPath();
-        ctx.arc(optPeak.x, optPeak.y, 4.5, 0, Math.PI * 2);
-        ctx.fill();
+          // Pulsing halo and solid core on the optimal cutoff
+          const pulse = !reduced ? 1 + Math.sin(now * 0.004) * 0.22 : 1;
+          ctx.fillStyle = accent;
+          drawGlow(optPeak.x, dropY, 40 * pulse, wDecide * 0.36 * beaconIn);
 
-        const scrubbing = pointer.active && wDecide > 0.6;
-        if (!scrubbing) {
-          drawBadge(
-            "Optimal cutoff 0.68 · +31.4% lift",
-            optPeak.x - 16,
-            optPeak.y - 24,
-            wDecide,
-            true,
-          );
-        } else {
-          // Keep compact label on optimal peak while visitor scrubs another threshold
-          drawLabel("opt 0.68", optPeak.x, optBase.y + 14, wDecide * 0.85, accent, "center", 600);
+          ctx.globalAlpha = wDecide * beaconIn;
+          ctx.beginPath();
+          ctx.arc(optPeak.x, dropY, 4.5, 0, Math.PI * 2);
+          ctx.fill();
 
+          const scrubbing = pointer.active && wDecide > 0.6;
+          if (!scrubbing) {
+            drawBadge(
+              "Optimal cutoff 0.68 · +31.4% lift",
+              optPeak.x - 16,
+              optPeak.y - 24,
+              wDecide * beaconIn,
+              true,
+            );
+          } else {
+            // Keep compact label on optimal peak while visitor scrubs another threshold
+            drawLabel(
+              "opt 0.68",
+              optPeak.x,
+              optBase.y + 14,
+              wDecide * 0.85 * beaconIn,
+              accent,
+              "center",
+              600,
+            );
+          }
+        }
+
+        if (pointer.active && wDecide > 0.6) {
           const leftEdge = toScreen(scoreToX(0), 0, 0).x;
           const rightEdge = toScreen(scoreToX(1), 0, 0).x;
           const hoverT = clamp01((pointer.px - leftEdge) / Math.max(1, rightEdge - leftEdge));
@@ -1094,6 +1411,7 @@ export function HeroFigure() {
         }
 
         // Precision target ring around hovered point
+        drawGlow(sx, sy, 26, 0.45);
         ctx.strokeStyle = accent;
         ctx.lineWidth = 1.5;
         ctx.globalAlpha = 1;
@@ -1111,7 +1429,8 @@ export function HeroFigure() {
         ctx.restore();
       }
 
-      // Continue scheduling while auto-playing, morphing, or pointer is active
+      // Continue scheduling while auto-playing, morphing, echoing, or the
+      // pointer is inspecting.
       const morphing =
         Math.abs(wClean - tClean) > 0.002 ||
         Math.abs(wCluster - tCluster) > 0.002 ||
@@ -1121,7 +1440,12 @@ export function HeroFigure() {
         Math.abs(tiltX - targetTiltX) > 0.002 ||
         Math.abs(tiltY - targetTiltY) > 0.002;
 
-      if (!reduced && (autoPlayRef.current || morphing || pointer.active)) {
+      /* A stage arrival keeps its own frames: the timed beats (the curve
+         drawing, the ribbon unrolling) run longer than the weight springs. */
+      if (
+        !reduced &&
+        (autoPlayRef.current || morphing || switchAge < 1900 || pointer.active)
+      ) {
         schedule();
       }
     }
@@ -1151,6 +1475,8 @@ export function HeroFigure() {
         autoPlayRef.current = false;
         stageTargetRef.current = "decide";
         setActiveStage("decide");
+        setAutoPlaying(false);
+        setUserPicked(false);
       }
       schedule();
     };
@@ -1163,7 +1489,7 @@ export function HeroFigure() {
       autoPlayRef.current = true;
       stageTargetRef.current = "clean";
       setActiveStage("clean");
-      setHasPlayed(true);
+      setAutoPlaying(true);
     }
 
     resize.observe(canvas);
@@ -1181,15 +1507,22 @@ export function HeroFigure() {
     };
   }, []);
 
-  const caption = hasPlayed
-    ? STAGES.find((s) => s.id === activeStage)!.caption
-    : REST_CAPTION;
+  // Every other exhibit keeps its "Illustration:" caption at rest. This one
+  // names the step only while the sequence plays or after a stage is chosen;
+  // the stage buttons carry aria-pressed, so the caption itself stays quiet
+  // rather than announcing each autoplay step.
+  const stageCaption = STAGES.find((s) => s.id === activeStage)!.caption;
+  const caption = autoPlaying || userPicked ? stageCaption : REST_CAPTION;
 
   return (
     <figure className="exhibit hero-figure">
       <div
         className="hero-figure__stage"
         onPointerMove={(event) => {
+          // Mouse only, as in Plot.tsx: a touch drag here is a page scroll,
+          // and treating it as orbit would hold the render loop awake for
+          // the whole gesture.
+          if (event.pointerType !== "mouse") return;
           const box = event.currentTarget.getBoundingClientRect();
           const px = event.clientX - box.left;
           const py = event.clientY - box.top;
@@ -1213,12 +1546,61 @@ export function HeroFigure() {
         }}
       >
         <canvas ref={canvasRef} aria-hidden="true" />
+
+        {/* Without JavaScript the canvas never paints. This static view of
+            the resting decision state stands in; the noscript rule below is
+            what reveals it, so with JS on it never flashes. Drawn to the
+            stage's own 3/2 ratio so nothing letterboxes. */}
+        <div className="hero-figure__fallback" aria-hidden="true">
+          <svg viewBox="0 0 450 300" aria-hidden="true" focusable="false">
+            <line className="fg-grid" x1="60" y1="200" x2="420" y2="200" />
+            <line className="fg-grid" x1="60" y1="150" x2="420" y2="150" />
+            <line className="fg-grid" x1="60" y1="100" x2="420" y2="100" />
+            <line className="fg-axis" x1="60" y1="250" x2="420" y2="250" />
+            <line className="fg-axis" x1="60" y1="250" x2="60" y2="50" />
+            <path
+              fill="var(--hl)"
+              d="M66 231 C 150 227 230 189 296 129 S 372 51 414 59 L414 81 C 372 73 340 121 296 151 S 150 249 66 253 Z"
+            />
+            <line x1="120" y1="228" x2="120" y2="240" stroke="var(--ink-3)" strokeWidth="1" />
+            <line x1="200" y1="194" x2="200" y2="205" stroke="var(--ink-3)" strokeWidth="1" />
+            <line x1="350" y1="89" x2="350" y2="100" stroke="var(--ink-3)" strokeWidth="1" />
+            <path
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="2.5"
+              d="M66 242 C 150 238 230 200 296 140 S 372 62 414 70"
+            />
+            <line
+              x1="296"
+              y1="250"
+              x2="296"
+              y2="140"
+              stroke="var(--accent)"
+              strokeWidth="1"
+              strokeDasharray="3 4"
+            />
+            <circle cx="296" cy="140" r="5" fill="var(--accent)" />
+            <text className="fg-label" x="70" y="90" fill="var(--accent)">
+              +31.4% lift
+            </text>
+            <text className="fg-label" x="420" y="272" textAnchor="end">
+              score
+            </text>
+            <text className="fg-label" x="60" y="36">
+              net lift
+            </text>
+          </svg>
+        </div>
+        <noscript>
+          <style>{".hero-figure__fallback{display:grid}"}</style>
+        </noscript>
       </div>
 
       <figcaption className="exhibit__caption hero-figure__caption">
         <span className="hero-figure__status">
           <span className="exhibit__no">Fig. 1</span>
-          <span aria-live="polite">{caption}</span>
+          {caption}
         </span>
 
         <div className="hero-figure__controls" role="group" aria-label="Figure stages">
@@ -1242,7 +1624,7 @@ export function HeroFigure() {
             onClick={replay}
             aria-label="Replay figure animation"
           >
-            <RotateCcw size={14} aria-hidden="true" />
+            <RotateCcw size={ICON_SIZE} strokeWidth={ICON_STROKE} aria-hidden="true" />
             <span>Replay</span>
           </button>
         </div>

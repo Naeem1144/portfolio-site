@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { RotateCcw } from "lucide-react";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { site } from "@/lib/site";
 
 /** Route-level error boundary, so one failing client component cannot blank the page. */
@@ -28,7 +29,7 @@ export default function Error({
         </p>
         <div className="status-actions">
           <button type="button" className="button button--primary" onClick={reset}>
-            <RotateCcw size={17} aria-hidden="true" /> Try again
+            <RotateCcw size={ICON_SIZE} strokeWidth={ICON_STROKE} aria-hidden="true" /> Try again
           </button>
           <Link href="/" className="link">
             Back to the portfolio

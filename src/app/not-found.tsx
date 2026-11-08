@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { site } from "@/lib/site";
 
 export default function NotFound() {
@@ -14,7 +15,8 @@ export default function NotFound() {
         </p>
         <div className="status-actions">
           <Link href="/" className="button button--primary">
-            <ArrowLeft size={17} aria-hidden="true" /> Back to the portfolio
+            <ArrowLeft size={ICON_SIZE} strokeWidth={ICON_STROKE} aria-hidden="true" /> Back to the
+            portfolio
           </Link>
           <a href={`mailto:${site.email}`} className="link">
             {site.email}

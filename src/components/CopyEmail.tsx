@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { site } from "@/lib/site";
 
 /**
@@ -51,9 +52,9 @@ export function CopyEmail({ className = "" }: { className?: string }) {
         }
       >
         {copied ? (
-          <Check size={15} aria-hidden="true" />
+          <Check size={ICON_SIZE} strokeWidth={ICON_STROKE} aria-hidden="true" />
         ) : (
-          <Copy size={15} aria-hidden="true" />
+          <Copy size={ICON_SIZE} strokeWidth={ICON_STROKE} aria-hidden="true" />
         )}
         <span aria-hidden="true">
           {copied ? "Copied" : state === "failed" ? "Failed" : "Copy"}

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { site } from "@/lib/site";
 
 /**
@@ -22,26 +23,28 @@ export function ProfileSection() {
             </p>
             <p>
               I taught myself SQL, Python, Power BI and machine learning alongside it.
-              Now I&apos;m looking for my first data role, ideally somewhere people
-              actually use the analysis to decide.
+              Now I&apos;m looking for my first full-time data role, ideally somewhere
+              people actually use the analysis to decide.
             </p>
           </div>
         </div>
 
-        <dl className="facts" aria-label="At a glance">
-          <div>
+        {/* A heading, not a label: dl is not reliably nameable. */}
+        <h3 className="sr-only">At a glance</h3>
+        <dl className="facts">
+          <div style={{ "--i": 0 } as CSSProperties}>
             <dt>Looking for</dt>
-            <dd>Data analyst and marketing analytics roles</dd>
+            <dd>{site.seeking}</dd>
           </div>
-          <div>
+          <div style={{ "--i": 1 } as CSSProperties}>
             <dt>Based in</dt>
             <dd>{site.location}</dd>
           </div>
-          <div>
+          <div style={{ "--i": 2 } as CSSProperties}>
             <dt>Tools</dt>
             <dd>{site.tools.join(", ")}</dd>
           </div>
-          <div>
+          <div style={{ "--i": 3 } as CSSProperties}>
             <dt>Languages</dt>
             <dd>
               {site.languages
@@ -49,7 +52,7 @@ export function ProfileSection() {
                 .join(", ")}
             </dd>
           </div>
-          <div>
+          <div style={{ "--i": 4 } as CSSProperties}>
             <dt>Experience</dt>
             <dd>
               {site.experience.map((job) => (
@@ -71,7 +74,7 @@ export function ProfileSection() {
         </h3>
         <ol className="practice">
           {site.strengths.map((strength, i) => (
-            <li key={strength.title}>
+            <li key={strength.title} style={{ "--i": i } as CSSProperties}>
               <span className="practice__no num" aria-hidden="true">
                 {String(i + 1).padStart(2, "0")}
               </span>

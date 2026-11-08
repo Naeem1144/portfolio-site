@@ -19,8 +19,9 @@ export const site = {
     linkedin: "https://www.linkedin.com/in/naeemnagori/",
   },
   /**
-   * Public repositories on GitHub. The page writes up eight of them; the rest
-   * are only on the profile, so counts that point at GitHub use this figure.
+   * Public repositories on GitHub. Four of them are written up on the page
+   * (seven are catalogued in projects.ts); counts that point at GitHub use
+   * this figure.
    */
   githubRepos: 16,
   resume: {

@@ -5,7 +5,9 @@ import type { ChangeEvent, FormEvent, ReactNode } from "react";
 import { ArrowRight, ArrowUpRight, Check, ChevronDown, LoaderCircle } from "lucide-react";
 import { CopyEmail } from "./CopyEmail";
 import { LocalTime } from "./LocalTime";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { site } from "@/lib/site";
+import { absoluteUrl } from "@/lib/site-url";
 
 type FieldName = "name" | "email" | "message";
 type Values = Record<FieldName, string>;
@@ -65,7 +67,7 @@ async function failureReason(response: Response): Promise<string> {
     return `That's a lot of messages in a short time. Please try again in ${minutes} ${minutes === 1 ? "minute" : "minutes"}.`;
   }
   if (payload?.error === "delivery") return "Sorry, your message couldn’t be delivered.";
-  return payload?.error ?? `The server returned an error (${response.status}).`;
+  return "Something went wrong on my end. Please try again in a moment.";
 }
 
 export function ContactSection() {
@@ -76,6 +78,7 @@ export function ContactSection() {
   const [topicId, setTopicId] = useState<TopicId>("role");
   const topic = TOPICS.find((t) => t.id === topicId)!;
   const abortRef = useRef<AbortController | null>(null);
+  const showCounter = values.message.length > MESSAGE_MAX * 0.8;
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
@@ -163,7 +166,7 @@ export function ContactSection() {
         </h2>
       </header>
 
-      <div className="contact__intro">
+      <div className="contact__intro" data-reveal="rise">
         <div className="query">
           <p className="query__comment" aria-hidden="true">
             -- What brings you here?
@@ -193,7 +196,12 @@ export function ContactSection() {
                   </option>
                 ))}
               </select>
-              <ChevronDown className="query__chevron" size={15} aria-hidden="true" />
+              <ChevronDown
+                className="query__chevron"
+                size={ICON_SIZE}
+                strokeWidth={ICON_STROKE}
+                aria-hidden="true"
+              />
             </span>
           </p>
           <p className="query__result" aria-live="polite">
@@ -218,7 +226,12 @@ export function ContactSection() {
               className="link"
             >
               LinkedIn
-              <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+              <ArrowUpRight
+                className="link__icon"
+                size={ICON_SIZE}
+                strokeWidth={ICON_STROKE}
+                aria-hidden="true"
+              />
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </li>
@@ -230,7 +243,12 @@ export function ContactSection() {
               className="link"
             >
               GitHub
-              <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+              <ArrowUpRight
+                className="link__icon"
+                size={ICON_SIZE}
+                strokeWidth={ICON_STROKE}
+                aria-hidden="true"
+              />
               <span className="sr-only"> (opens in a new tab)</span>
             </a>
           </li>
@@ -240,9 +258,15 @@ export function ContactSection() {
               target="_blank"
               rel="noopener noreferrer"
               className="link"
+              data-print-href={absoluteUrl(site.resume.href)}
             >
               {site.resume.label}
-              <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+              <ArrowUpRight
+                className="link__icon"
+                size={ICON_SIZE}
+                strokeWidth={ICON_STROKE}
+                aria-hidden="true"
+              />
               <span className="sr-only"> (PDF, opens in a new tab)</span>
             </a>
           </li>
@@ -251,6 +275,7 @@ export function ContactSection() {
 
       <form
         className="form"
+        data-reveal="rise"
         onSubmit={handleSubmit}
         aria-label="Send a message"
         aria-busy={submitting}
@@ -277,18 +302,26 @@ export function ContactSection() {
         </div>
 
         <div className="field">
-          <label htmlFor="contact-message">
-            Message
-            <span className="field__counter" aria-live="polite">
-              {values.message.length > MESSAGE_MAX * 0.8 &&
-                `${values.message.length} / ${MESSAGE_MAX}`}
-            </span>
-          </label>
+          <div className="field__head">
+            <label htmlFor="contact-message">Message</label>
+            {showCounter && (
+              <span className="field__counter" id="contact-message-counter">
+                {values.message.length} / {MESSAGE_MAX}
+              </span>
+            )}
+          </div>
           <textarea
             {...field("message")}
             rows={5}
             maxLength={MESSAGE_MAX}
             placeholder={topic.placeholder}
+            aria-describedby={
+              errors.message
+                ? "contact-message-error"
+                : showCounter
+                  ? "contact-message-counter"
+                  : undefined
+            }
           />
           {fieldError("message")}
         </div>
@@ -298,12 +331,22 @@ export function ContactSection() {
             {submitting ? (
               <>
                 Sending
-                <LoaderCircle className="spinner" size={17} aria-hidden="true" />
+                <LoaderCircle
+                  className="spinner"
+                  size={ICON_SIZE}
+                  strokeWidth={ICON_STROKE}
+                  aria-hidden="true"
+                />
               </>
             ) : (
               <>
                 Send message
-                <ArrowRight className="button__icon" size={17} aria-hidden="true" />
+                <ArrowRight
+                  className="button__icon"
+                  size={ICON_SIZE}
+                  strokeWidth={ICON_STROKE}
+                  aria-hidden="true"
+                />
               </>
             )}
           </button>
@@ -311,7 +354,7 @@ export function ContactSection() {
           <div className="form__status" role="status" aria-live="polite" aria-atomic="true">
             {status.kind === "success" && (
               <p className="form__success">
-                <Check size={16} aria-hidden="true" />
+                <Check size={ICON_SIZE} strokeWidth={ICON_STROKE} aria-hidden="true" />
                 Sent. Thanks for getting in touch, I&rsquo;ll get back to you soon.
               </p>
             )}

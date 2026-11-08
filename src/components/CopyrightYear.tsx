@@ -7,9 +7,10 @@ import { useEffect, useState } from "react";
  * needed.
  *
  * The page is statically prerendered, so evaluating `new Date()` in a server
- * component froze the copyright at build time. Rendering it on first paint
- * would mismatch the prerendered HTML, so the year is filled in after mount:
- * the prerendered markup is empty and the client fills it in once.
+ * component froze the copyright at build time. The start year is rendered on
+ * the server and on the client's first paint — they agree, so there is no
+ * hydration mismatch — and the range is filled in after mount. Without
+ * JavaScript the start year simply stands alone.
  */
 export function CopyrightYear({ start }: { start?: number }) {
   const [year, setYear] = useState<number | null>(null);
@@ -18,7 +19,7 @@ export function CopyrightYear({ start }: { start?: number }) {
     setYear(new Date().getFullYear());
   }, []);
 
-  if (year === null) return null;
+  if (year === null) return start !== undefined ? <>{start}</> : null;
   if (start !== undefined && start !== year) return <>{start}–{year}</>;
   return <>{year}</>;
 }

@@ -1,4 +1,5 @@
 import { ArrowUpRight, Github } from "lucide-react";
+import type { CSSProperties } from "react";
 import { Odometer } from "./Odometer";
 import { ProjectFigure } from "./ProjectFigures";
 import {
@@ -7,6 +8,7 @@ import {
   projectHref,
   type Project,
 } from "@/lib/projects";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { site } from "@/lib/site";
 
 /**
@@ -56,11 +58,12 @@ export function ProjectsSection() {
           </h3>
           <ol className="sources__list">
             {site.proof.map((item, i) => (
-              <li key={item.project} aria-label={`Source ${i + 1}`}>
+              <li key={item.project} style={{ "--i": i } as CSSProperties}>
                 <span className="sources__no num" aria-hidden="true">
                   {i + 1}
                 </span>
                 <p>
+                  <span className="sr-only">Source {i + 1}: </span>
                   <span className="num">{item.value}</span> {item.label}.{" "}
                   <span className="sources__detail">{item.source}</span>
                 </p>
@@ -76,11 +79,21 @@ export function ProjectsSection() {
             rel="noopener noreferrer"
             className="button button--secondary"
           >
-            <Github className="button__glyph" size={18} aria-hidden="true" />
+            <Github
+              className="button__glyph"
+              size={ICON_SIZE}
+              strokeWidth={ICON_STROKE}
+              aria-hidden="true"
+            />
             <span>
               All <span className="num">{site.githubRepos}</span> projects on GitHub
             </span>
-            <ArrowUpRight className="button__icon" size={17} aria-hidden="true" />
+            <ArrowUpRight
+              className="button__icon"
+              size={ICON_SIZE}
+              strokeWidth={ICON_STROKE}
+              aria-hidden="true"
+            />
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </p>
@@ -121,8 +134,9 @@ function ProjectItem({
           {project.title}
         </h3>
         <p className="project__thesis">{project.thesis}</p>
-        <p className="project__stack" aria-label="Technical stack">
-          {project.stack.join(" · ")}
+        <p className="project__stack">
+          <span aria-hidden="true">{project.stack.join(" · ")}</span>
+          <span className="sr-only">Technical stack: {project.stack.join(", ")}</span>
         </p>
 
         <dl className="stats">
@@ -144,7 +158,12 @@ function ProjectItem({
             className="link"
           >
             Code
-            <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+            <ArrowUpRight
+              className="link__icon"
+              size={ICON_SIZE}
+              strokeWidth={ICON_STROKE}
+              aria-hidden="true"
+            />
             <span className="sr-only"> for {project.title} on GitHub (opens in a new tab)</span>
           </a>
           {project.liveUrl && (
@@ -155,7 +174,12 @@ function ProjectItem({
               className="link"
             >
               Live demo
-              <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+              <ArrowUpRight
+                className="link__icon"
+                size={ICON_SIZE}
+                strokeWidth={ICON_STROKE}
+                aria-hidden="true"
+              />
               <span className="sr-only"> of {project.title} (opens in a new tab)</span>
             </a>
           )}
