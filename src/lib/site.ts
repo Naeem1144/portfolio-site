@@ -19,8 +19,9 @@ export const site = {
     linkedin: "https://www.linkedin.com/in/naeemnagori/",
   },
   /**
-   * Public repositories on GitHub. The page writes up eight of them; the rest
-   * are only on the profile, so counts that point at GitHub use this figure.
+   * Public repositories on GitHub. Four of them are written up on the page
+   * (seven are catalogued in projects.ts); counts that point at GitHub use
+   * this figure.
    */
   githubRepos: 16,
   resume: {
@@ -41,18 +42,18 @@ export const site = {
   },
   experience: [
     {
-      role: "Team Member",
-      org: "Tim Hortons",
-      place: "Canada",
-      years: "Jul 2025 to Aug 2026",
-      detail: "Baking and store operations as part of a busy team.",
-    },
-    {
       role: "Ecommerce Analyst (Part-time)",
       org: "Canadian Outlet Store",
       place: "Canada",
       years: "May 2024 to Oct 2024",
       detail: "Analyzed sales, product and customer data for ecommerce and marketing decisions.",
+    },
+    {
+      role: "Team Member",
+      org: "Tim Hortons",
+      place: "Canada",
+      years: "Jul 2025 to Aug 2026",
+      detail: "Baking and store operations as part of a busy team.",
     },
   ],
   languages: [

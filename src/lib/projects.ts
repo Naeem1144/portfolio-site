@@ -20,7 +20,6 @@ export type ProjectVisual =
   | "schema"
   | "dashboard"
   | "network"
-  | "regression"
   | "ensemble"
   | "stages"
   | "bandit";

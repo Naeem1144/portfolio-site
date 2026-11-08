@@ -25,7 +25,7 @@ export function RevealObserver() {
     );
 
     for (const element of document.querySelectorAll("[data-reveal]")) {
-      if (element.getBoundingClientRect().top < window.innerHeight * 0.9) continue;
+      if (element.getBoundingClientRect().top < window.innerHeight) continue;
       element.setAttribute("data-pending", "");
       observer.observe(element);
     }

@@ -1,5 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
+import type { CSSProperties } from "react";
 import { credentials } from "@/lib/credentials";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { site } from "@/lib/site";
 
 /**
@@ -15,7 +17,7 @@ export function CredentialsSection() {
         Education &amp; certifications
       </h3>
       <ol className="credentials">
-        <li>
+        <li style={{ "--i": 0 } as CSSProperties}>
           <div>
             <p className="credentials__title">
               {education.programme}, {education.major}
@@ -25,14 +27,15 @@ export function CredentialsSection() {
             </p>
           </div>
           <span className="credentials__date num">{education.graduated}</span>
-          <span />
         </li>
 
-        {credentials.map((cert) => (
-          <li key={cert.title}>
+        {credentials.map((cert, i) => (
+          <li key={cert.title} style={{ "--i": i + 1 } as CSSProperties}>
             <div>
               <p className="credentials__title">{cert.title}</p>
-              <p className="credentials__issuer">{cert.issuer}</p>
+              <p className="credentials__issuer">
+                {cert.issuer} · {cert.detail}
+              </p>
             </div>
             <span className="credentials__date num">{cert.date}</span>
             <a
@@ -42,7 +45,12 @@ export function CredentialsSection() {
               rel="noopener noreferrer"
             >
               {cert.linkKind === "credential" ? "Verify" : "View programme"}
-              <ArrowUpRight className="link__icon" size={14} aria-hidden="true" />
+              <ArrowUpRight
+                className="link__icon"
+                size={ICON_SIZE}
+                strokeWidth={ICON_STROKE}
+                aria-hidden="true"
+              />
               <span className="sr-only"> for {cert.title} (opens in a new tab)</span>
             </a>
           </li>

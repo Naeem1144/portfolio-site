@@ -1,13 +1,14 @@
 import { ArrowUpRight, Github } from "lucide-react";
+import type { CSSProperties } from "react";
 import { Odometer } from "./Odometer";
 import { ProjectFigure } from "./ProjectFigures";
 import {
   projectAnchor,
   projectByNumber,
   projectHref,
-  projects,
   type Project,
 } from "@/lib/projects";
+import { ICON_SIZE, ICON_STROKE } from "@/lib/icon";
 import { site } from "@/lib/site";
 
 /**
@@ -34,14 +35,19 @@ export function ProjectsSection() {
           Four projects, from question to <mark className="hl">result</mark>.
         </h2>
         <p className="section-head__note">
-          Four of seven, written up here. Each one shows the question, the result and the
+          Four of sixteen, written up here. Each one shows the question, the result and the
           code behind it. The rest are on GitHub.
         </p>
       </header>
 
       <ol className="projects">
         {selected.map((project, i) => (
-          <ProjectItem key={project.repo} project={project} figure={i + 2} />
+          <ProjectItem
+            key={project.repo}
+            project={project}
+            figure={i + 2}
+            defaultOpen={i === 0}
+          />
         ))}
       </ol>
 
@@ -52,11 +58,12 @@ export function ProjectsSection() {
           </h3>
           <ol className="sources__list">
             {site.proof.map((item, i) => (
-              <li key={item.project}>
+              <li key={item.project} style={{ "--i": i } as CSSProperties}>
                 <span className="sources__no num" aria-hidden="true">
                   {i + 1}
                 </span>
                 <p>
+                  <span className="sr-only">Source {i + 1}: </span>
                   <span className="num">{item.value}</span> {item.label}.{" "}
                   <span className="sources__detail">{item.source}</span>
                 </p>
@@ -72,11 +79,21 @@ export function ProjectsSection() {
             rel="noopener noreferrer"
             className="button button--secondary"
           >
-            <Github className="button__glyph" size={18} aria-hidden="true" />
+            <Github
+              className="button__glyph"
+              size={ICON_SIZE}
+              strokeWidth={ICON_STROKE}
+              aria-hidden="true"
+            />
             <span>
               All <span className="num">{site.githubRepos}</span> projects on GitHub
             </span>
-            <ArrowUpRight className="button__icon" size={17} aria-hidden="true" />
+            <ArrowUpRight
+              className="button__icon"
+              size={ICON_SIZE}
+              strokeWidth={ICON_STROKE}
+              aria-hidden="true"
+            />
             <span className="sr-only"> (opens in a new tab)</span>
           </a>
         </p>
@@ -85,7 +102,15 @@ export function ProjectsSection() {
   );
 }
 
-function ProjectItem({ project, figure }: { project: Project; figure: number }) {
+function ProjectItem({
+  project,
+  figure,
+  defaultOpen = false,
+}: {
+  project: Project;
+  figure: number;
+  defaultOpen?: boolean;
+}) {
   const anchor = projectAnchor(project.number);
   const outcomes = project.outcomes.slice(0, 2);
 
@@ -96,17 +121,23 @@ function ProjectItem({ project, figure }: { project: Project; figure: number }) 
       </div>
 
       <article className="project__body" aria-labelledby={`${anchor}-title`}>
-        <p className="project__index" aria-hidden="true">
-          <span className="project__no">{project.number}</span>
-          <span className="project__of">of {String(projects.length).padStart(2, "0")}</span>
-        </p>
-        <p className="project__meta">
-          {project.discipline} · {project.year}
-        </p>
+        <div className="project__head">
+          <p className="project__index" aria-hidden="true">
+            <span className="project__no">{project.number}</span>
+            <span className="project__of">/ {String(SELECTED.length).padStart(2, "0")}</span>
+          </p>
+          <p className="project__meta">
+            {project.discipline} · {project.year}
+          </p>
+        </div>
         <h3 id={`${anchor}-title`} className="project__title">
           {project.title}
         </h3>
         <p className="project__thesis">{project.thesis}</p>
+        <p className="project__stack">
+          <span aria-hidden="true">{project.stack.join(" · ")}</span>
+          <span className="sr-only">Technical stack: {project.stack.join(", ")}</span>
+        </p>
 
         <dl className="stats">
           {outcomes.map((outcome) => (
@@ -127,7 +158,12 @@ function ProjectItem({ project, figure }: { project: Project; figure: number }) 
             className="link"
           >
             Code
-            <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+            <ArrowUpRight
+              className="link__icon"
+              size={ICON_SIZE}
+              strokeWidth={ICON_STROKE}
+              aria-hidden="true"
+            />
             <span className="sr-only"> for {project.title} on GitHub (opens in a new tab)</span>
           </a>
           {project.liveUrl && (
@@ -138,14 +174,24 @@ function ProjectItem({ project, figure }: { project: Project; figure: number }) 
               className="link"
             >
               Live demo
-              <ArrowUpRight className="link__icon" size={16} aria-hidden="true" />
+              <ArrowUpRight
+                className="link__icon"
+                size={ICON_SIZE}
+                strokeWidth={ICON_STROKE}
+                aria-hidden="true"
+              />
               <span className="sr-only"> of {project.title} (opens in a new tab)</span>
             </a>
           )}
         </div>
 
-        <details className="method">
-          <summary>How I did it</summary>
+        <details className="method" open={defaultOpen}>
+          <summary>
+            <span>How I did it</span>
+            <span className="method__count num" aria-hidden="true">
+              {project.approach.length} steps
+            </span>
+          </summary>
           <div className="method__body">
             <div>
               <h4>Problem</h4>

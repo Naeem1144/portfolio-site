@@ -3,8 +3,8 @@
 A single-page portfolio built with [Next.js](https://nextjs.org) (App Router)
 and TypeScript, styled with one hand-written stylesheet (`src/app/globals.css`).
 Statically prerendered, with a small client-side surface: header scroll-spy,
-the project filter, the copy-email button and the contact form. It follows the
-visitor's light/dark preference.
+the copy-email button and the contact form. It is a light paper design that
+closes on a dark band.
 
 ```bash
 npm install
@@ -61,8 +61,8 @@ matters.
    environment settings.
 2. `npm run build` should report every route as `○ (Static)`.
 3. Deploy. `/opengraph-image` is rendered at build time and reads Geist from
-   `node_modules` and Newsreader from `assets/og/`; `next.config.ts` lists them
-   in `outputFileTracingIncludes` so they survive output-file tracing.
+   `node_modules`; `next.config.ts` lists the faces in
+   `outputFileTracingIncludes` so they survive output-file tracing.
 
 ## Security
 
@@ -84,9 +84,9 @@ src/
   components/           sections (mostly server components)
   lib/
     site.ts             name, email, URLs, hero results (single source of truth)
-    projects.ts         project catalogue and derived filter counts
-    skills.ts           skills, each linked to the projects that use it
+    projects.ts         project catalogue
     credentials.ts      certifications and their verification links
+    tokens.ts           design tokens shared with canvas, OG image and viewport
     email.ts            nodemailer transport + message templating
     site-url.ts         canonical origin
   middleware.ts

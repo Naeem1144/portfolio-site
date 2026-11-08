@@ -30,6 +30,8 @@
       13  Footer
       14  Status pages
       15  Breakpoints
+      16  Motion
+      17  Print
    ========================================================================== */
 
 /* 01  Faces --------------------------------------------------------------- */
@@ -106,10 +108,15 @@
   --fs-lede: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem); /* 19-22 */
   --fs-h3: clamp(1.5rem, 1.25rem + 1vw, 2.125rem); /* 24-34 */
   --fs-h2: clamp(2.125rem, 1.4rem + 2.6vw, 3.5rem); /* 34-56 */
-  --fs-h1: clamp(2.5rem, 1.25rem + 3.6vw, 4.75rem); /* 40-76 */
+  --fs-h1: clamp(2.4rem, 1.3rem + 3.1vw, 4.15rem); /* 38-66 */
   --fs-num: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem); /* 28-40 */
   --fs-display: clamp(2.75rem, 0.9rem + 6.6vw, 7.5rem); /* 44-120, the closing line */
-  --fs-index: clamp(3.5rem, 2.4rem + 3.4vw, 6rem); /* 56-96, project numbers */
+  /* Two deliberate sizes outside the scale above, both because of what they
+     are rather than how they look: the contact address sits between lede and
+     num, and the sign-off is bigger than the closing line because it is a
+     field of dots, not a line of text. */
+  --fs-address: clamp(1.375rem, 1rem + 1.4vw, 1.875rem); /* 22-30 */
+  --fs-signature: clamp(3.5rem, 13.2vw, 12.5rem); /* 56-200 */
 
   /* Space: a 4px base, doubled up */
   --space-1: 0.25rem;
@@ -129,18 +136,31 @@
   --section-y: clamp(4.5rem, 9vw, 8rem);
   --header-h: 4rem;
 
-  /* Shape and motion: one radius, one easing, two durations */
+  /* Shape and motion: one radius. Durations are numbered for the
+     choreography in section 16; --fast and --med are the two the controls
+     use, named that way because that is how they read at the call site. */
   --radius: 6px;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --fast: 150ms;
-  --med: 300ms;
+  --dur-1: 150ms; /* feedback: hover, press */
+  --dur-2: 300ms; /* controls: focus, disclosure */
+  --dur-3: 480ms; /* reveals */
+  --dur-4: 900ms; /* entrances */
+  --dur-5: 1700ms; /* counting, plotting */
+  --fast: var(--dur-1);
+  --med: var(--dur-2);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1); /* arrivals, decelerating */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1); /* travel, eased at both ends */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* a pop, with overshoot */
+  --stagger: 50ms; /* a column of things stepping in one after another */
 
   interpolate-size: allow-keywords;
 }
 
 /* The closing band: same tokens, re-mapped. Everything inside it (text,
-   controls, focus, errors) follows without a single override. */
-.night {
+   controls, focus, errors) follows without a single override. The header
+   shares this swap when it floats over the band, so the two palettes can
+   never drift apart. */
+.night,
+.site-header[data-night] {
   color-scheme: dark;
   --paper: #101317;
   --surface: #171b20;
@@ -155,7 +175,9 @@
   --error: #ff9a92;
   --success: #7fdda8;
   --hl: rgb(165 176 255 / 0.3);
+}
 
+.night {
   background: var(--paper);
   color: var(--ink);
 }
@@ -245,7 +267,7 @@ button {
 }
 
 button:disabled {
-  cursor: progress;
+  cursor: not-allowed;
 }
 
 ::selection {
@@ -307,10 +329,13 @@ main:focus {
   padding-block: var(--section-y);
 }
 
+.hero + .section,
 .section + .section {
   border-top: 1px solid var(--line);
 }
 
+/* Hairlines separate paper from paper. The night band is not paper: the
+   background change is its separator, so it takes no hairline of its own. */
 .section.night {
   border-top: 0;
 }
@@ -451,12 +476,23 @@ h2 {
     color var(--fast) var(--ease);
 }
 
+/* A press moves the control a hair: touch gets a shape change as well as a
+   colour one. */
+.button:active {
+  translate: 0 1px;
+}
+
 .button--primary {
   background: var(--accent);
   color: var(--on-accent);
 }
 
 .button--primary:hover {
+  background: var(--accent-hover);
+}
+
+/* Touch has no hover, so the pressed state carries the same feedback. */
+.button--primary:active {
   background: var(--accent-hover);
 }
 
@@ -472,6 +508,11 @@ h2 {
 }
 
 .button--secondary:hover {
+  background-size: 100% 100%;
+  color: var(--paper);
+}
+
+.button--secondary:active {
   background-size: 100% 100%;
   color: var(--paper);
 }
@@ -508,6 +549,11 @@ h2 {
   text-decoration-color: currentColor;
 }
 
+.link:active {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
 /* Fingers need a bigger target than a cursor does. */
 @media (pointer: coarse) {
   .link {
@@ -515,11 +561,7 @@ h2 {
   }
 }
 
-/* Icons that point down or back up move down or up, not diagonally. */
-.link:hover .link__icon--down {
-  transform: translateY(2px);
-}
-
+/* Icons that point back up move up, not diagonally. */
 .link:hover .link__icon--up {
   transform: translateY(-2px);
 }
@@ -542,6 +584,10 @@ h2 {
   color: var(--accent);
 }
 
+.text-button:active {
+  translate: 0 1px;
+}
+
 .spinner {
   animation: spin 900ms linear infinite;
 }
@@ -559,27 +605,20 @@ h2 {
   top: 0;
   z-index: 50;
   background: color-mix(in srgb, var(--paper) 90%, transparent);
+  color: var(--ink);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid transparent;
-  transition: border-color var(--med) var(--ease);
+  transition:
+    background-color var(--med) var(--ease),
+    color var(--med) var(--ease),
+    border-color var(--med) var(--ease);
 }
 
+/* The night palette is the shared swap from section 02; the header only
+   decides when to wear it (see the scroll listener in Header.tsx). */
 .site-header[data-scrolled] {
   border-bottom-color: var(--line);
-}
-
-/* The reader's place in the brief, drawn along the header's bottom edge. */
-.site-header::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(var(--progress, 0));
-  transform-origin: 0 50%;
 }
 
 .site-header__inner {
@@ -613,6 +652,15 @@ h2 {
 
 .brand-mark__point {
   fill: var(--accent);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: scale var(--fast) var(--ease);
+}
+
+/* The mark's sample point answers the pointer: the smallest possible sign
+   that the brand is a control too. */
+.brand:hover .brand-mark__point {
+  scale: 1.45;
 }
 
 .nav {
@@ -622,19 +670,27 @@ h2 {
 
 .nav a {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.4em;
   min-height: 2.75rem;
   padding: 0 var(--space-3);
   font-size: var(--fs-ui);
+  line-height: 2.75rem;
   color: var(--ink-2);
   transition: color var(--fast) var(--ease);
+}
+
+.nav__no {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  color: var(--ink-3);
 }
 
 .nav a:hover {
   color: var(--ink);
 }
 
-/* The current place. The progress rule carries the accent, so this is ink. */
+/* The current place is ink, not accent: the underline is enough. */
 .nav a[aria-current] {
   color: var(--ink);
   text-decoration: underline;
@@ -647,13 +703,14 @@ h2 {
 
 .hero {
   padding-top: clamp(2rem, 4.5vw, 4rem);
+  padding-bottom: clamp(3.5rem, 7vw, 6rem);
 }
 
 .hero__grid {
   display: grid;
-  /* Copy takes two thirds: wide enough that the headline sets in three lines
-     at full size, so the figure column carries the drawing, not dead air. */
-  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  /* Matches the 7:5 report grid used across the page while giving the
+     analytical figure a generous 5-column stage. */
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   column-gap: var(--col-gap);
   align-items: center;
 }
@@ -701,12 +758,35 @@ h2 {
 /* Three headline results: an index into the work below. They span the whole
    hero grid, under both the copy and the figure. */
 .keyfigures {
+  position: relative;
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: var(--col-gap);
+  column-gap: var(--space-6);
   margin-top: clamp(2.5rem, 5vw, 4rem);
-  border-top: 1px solid var(--line);
+}
+
+/* The rule above the results is drawn on arrival (section 16); at rest, or
+   without motion, it is simply the next hairline in the report. */
+.keyfigures::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left;
+}
+
+/* The breakpoint edges match their max-width twins exactly (56rem / 40rem).
+   Where both rules match at the boundary, the stacking block below wins by
+   source order — so it resets what the desktop rules add. */
+@media (min-width: 40rem) {
+  .keyfigures > li:not(:first-child) {
+    padding-left: var(--space-6);
+    border-left: 1px solid var(--line);
+  }
 }
 
 .keyfigure {
@@ -739,18 +819,40 @@ h2 {
   font-size: var(--fs-small);
   line-height: 1.45;
   color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--control-border);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.28em;
+  transition: text-decoration-color var(--fast) var(--ease);
 }
 
 .keyfigure:hover .keyfigure__value {
   color: var(--accent);
 }
 
+.keyfigure:hover .keyfigure__label {
+  text-decoration-color: var(--accent);
+}
+
 /* 09  Exhibits ------------------------------------------------------------ */
 
-/* Every figure on the page has one frame: the drawing, then a hairline and a
+/* Every figure on the page has one frame: a specimen plate on paper, then a
    one-line caption that says plainly what it is. */
 .exhibit {
   container-type: inline-size;
+}
+
+.hero-figure__stage,
+.exhibit > .plot,
+.exhibit > svg {
+  background: color-mix(in srgb, var(--surface) 65%, var(--paper));
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.exhibit > .plot,
+.exhibit > svg {
+  padding: var(--space-3);
 }
 
 .exhibit svg {
@@ -764,9 +866,7 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  margin-top: var(--space-4);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--line);
+  margin-top: var(--space-3);
   font-size: var(--fs-small);
   line-height: 1.45;
   color: var(--ink-3);
@@ -775,6 +875,9 @@ h2 {
 /* A plotting-tool crosshair over each drawing (see Plot.tsx). */
 .plot {
   position: relative;
+  /* Backstop for the readout: the flip logic in Plot.tsx keeps it inside,
+     and this guarantees it can never escape the frame. */
+  overflow: hidden;
   --tx: 0.75rem;
   --ty: calc(-100% - 0.5rem);
 }
@@ -841,19 +944,38 @@ h2 {
   --ty: 0.6rem;
 }
 
+/* When the crosshair snaps to a plotted value, the dot marks the reading. */
+.plot__dot {
+  position: absolute;
+  left: var(--cx, 50%);
+  top: var(--cy, 50%);
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--ink);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--fast) var(--ease);
+}
+
+.plot[data-mode="series"][data-tracking] .plot__dot {
+  opacity: 1;
+}
+
 /* The drawing is fitted to its width, so the stage follows it at a fixed ratio. */
 .hero-figure__stage {
   position: relative;
   isolation: isolate;
+  overflow: hidden;
   aspect-ratio: 3 / 2;
 }
 
-/* Graph paper: the surface the model is plotted on. It bleeds a little past
-   the stage and dissolves at the edges, so it reads as paper, not a box. */
+/* Graph paper: the surface the model is plotted on. */
 .hero-figure__stage::before {
   content: "";
   position: absolute;
-  inset: -6% -4%;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
   background-image:
@@ -861,8 +983,8 @@ h2 {
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 24px 24px;
   background-position: center;
-  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
-  mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 45%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 45%, transparent 100%);
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 50%, #000 45%, transparent 100%);
 }
 
 /* Figures are numbered through the brief, like the sections and the notes. */
@@ -881,6 +1003,89 @@ h2 {
   inset: 0;
   width: 100%;
   height: 100%;
+}
+
+/* Without JavaScript the canvas never paints, so a static view of the
+   resting decision state stands in. The noscript rule in HeroFigure.tsx is
+   what reveals it; with JS on it stays hidden and never flashes. No padding:
+   the stage and the drawing share one 3/2 ratio, so the drawing fills the
+   stage exactly and its labels scale with the stage's full width. */
+.hero-figure__fallback {
+  display: none;
+  position: absolute;
+  inset: 0;
+  place-items: center;
+}
+
+.hero-figure__stage .hero-figure__fallback svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* The fallback is a one-off static view, not part of the figure vocabulary:
+   one fixed label size, chosen to clear the 12px floor across the stage's
+   whole width range without the container-query steps (it carries no frame
+   padding for them to account for). */
+.hero-figure__stage .hero-figure__fallback .fg-label {
+  font-size: 22px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .hero-figure__stage {
+    cursor: crosshair;
+  }
+}
+
+.hero-figure__caption {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2);
+}
+
+.hero-figure__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
+  padding-top: var(--space-1);
+}
+
+.hero-figure__step {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  min-height: 2rem;
+  padding-inline: var(--space-1);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  color: var(--ink-3);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.45em;
+  transition:
+    color var(--fast) var(--ease),
+    text-decoration-color var(--fast) var(--ease);
+}
+
+.hero-figure__step:hover {
+  color: var(--ink);
+}
+
+.hero-figure__step[aria-pressed="true"] {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+}
+
+.hero-figure__replay {
+  margin-left: auto;
+  font-size: var(--fs-label);
+}
+
+@media (pointer: coarse) {
+  .hero-figure__step {
+    min-height: 2.75rem;
+  }
 }
 
 /* Drawing vocabulary for the SVG illustrations. Text is sized in the
@@ -931,60 +1136,49 @@ h2 {
   fill: var(--on-accent);
 }
 
-.fg-value {
-  font-family: var(--font-sans);
-  font-size: var(--fg-value);
-  fill: var(--ink);
-}
-
 /* A drawing of 500 units is scaled to whatever width it is given, so a label
-   of u units renders at u × width / 500 px. Each step below is the smallest
-   size that still renders at 12px or more at the narrowest width it serves,
-   so text never falls under the floor and is never larger than it must be. */
+   of u units renders at u × (container − 24) / 500 px: the frame's 12px
+   padding counts, because it sits inside the container the queries measure.
+   Each step below is the smallest size that still renders at 12px or more at
+   the narrowest width it serves, so text never falls under the floor and is
+   never larger than it must be. */
 .exhibit svg {
-  --fg-label: 10.5px;
-  --fg-value: 26px;
+  --fg-label: 11.5px;
 }
 
 @container (width < 35.6rem) {
   .exhibit svg {
-    --fg-label: 11.5px;
-    --fg-value: 27px;
+    --fg-label: 12.5px;
   }
 }
 
 @container (width < 32.6rem) {
   .exhibit svg {
-    --fg-label: 13px;
-    --fg-value: 28px;
+    --fg-label: 14px;
   }
 }
 
 @container (width < 28.9rem) {
   .exhibit svg {
-    --fg-label: 15px;
-    --fg-value: 30px;
+    --fg-label: 16px;
   }
 }
 
 @container (width < 25rem) {
   .exhibit svg {
-    --fg-label: 17px;
-    --fg-value: 34px;
+    --fg-label: 18.5px;
   }
 }
 
 @container (width < 22.1rem) {
   .exhibit svg {
-    --fg-label: 19px;
-    --fg-value: 38px;
+    --fg-label: 21px;
   }
 }
 
 @container (width < 19.7rem) {
   .exhibit svg {
-    --fg-label: 22px;
-    --fg-value: 42px;
+    --fg-label: 27px;
   }
 }
 
@@ -997,6 +1191,13 @@ h2 {
   align-items: start;
   padding-block: clamp(3rem, 7vw, 6rem);
   border-top: 1px solid var(--line);
+}
+
+@media (min-width: 56rem) {
+  .project__figure {
+    position: sticky;
+    top: calc(var(--header-h) + var(--space-6));
+  }
 }
 
 /* The drawings alternate sides, so the eye zig-zags down the evidence the way
@@ -1015,28 +1216,36 @@ h2 {
   grid-row: 1;
 }
 
-/* Catalogue number: which of the eight projects this is. */
-.project__index {
+/* Catalogue header: project number on the left, discipline & year on the right. */
+.project__head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
+  justify-content: space-between;
   gap: var(--space-3);
-  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.project__index {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
   font-family: var(--font-mono);
 }
 
 .project__no {
-  font-size: var(--fs-index);
-  font-weight: 300;
-  line-height: 0.85;
-  letter-spacing: -0.07em;
+  font-size: var(--fs-num);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
   font-variant-numeric: tabular-nums;
 }
 
 .project__of {
   font-size: var(--fs-label);
   font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--ink-3);
 }
 
@@ -1050,7 +1259,7 @@ h2 {
 }
 
 .project__title {
-  margin-top: var(--space-3);
+  margin-top: var(--space-5);
   font-size: var(--fs-h3);
   letter-spacing: -0.03em;
 }
@@ -1060,6 +1269,15 @@ h2 {
   font-size: var(--fs-lede);
   line-height: 1.45;
   color: var(--ink-2);
+}
+
+.project__stack {
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  color: var(--ink-3);
 }
 
 .stats {
@@ -1109,7 +1327,7 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--space-3);
   min-height: 3.5rem;
   font-size: var(--fs-ui);
   font-weight: 500;
@@ -1117,31 +1335,49 @@ h2 {
   list-style: none;
 }
 
+.method__count {
+  margin-left: auto;
+  font-size: var(--fs-label);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
 .method > summary::-webkit-details-marker {
   display: none;
 }
 
+/* A control glyph, not text: two hairlines sharing a centre, drawn rather
+   than typed, so the closing stroke can fold away when the method opens. */
 .method > summary::after {
-  content: "+";
-  font-family: var(--font-mono);
-  font-size: 1.25rem;
-  font-weight: 400;
-  line-height: 1;
+  content: "";
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  background:
+    linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
   color: var(--ink-3);
   transition: color var(--fast) var(--ease);
 }
 
 .method[open] > summary::after {
-  content: "\2212";
+  background-size:
+    100% 1.5px,
+    1.5px 0;
 }
 
 .method > summary:hover::after {
   color: var(--accent);
 }
 
+.method > summary:active::after {
+  color: var(--accent);
+}
+
 .method__body {
   display: grid;
   gap: var(--space-4);
+  padding-top: var(--space-2);
   padding-bottom: var(--space-3);
   font-size: var(--fs-ui);
   color: var(--ink-2);
@@ -1272,6 +1508,10 @@ h2 {
   color: var(--ink-3);
 }
 
+.facts__item + .facts__item {
+  margin-top: var(--space-3);
+}
+
 .subsection {
   margin-top: clamp(4rem, 8vw, 6rem);
   padding-top: var(--space-5);
@@ -1282,6 +1522,19 @@ h2 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-6) var(--col-gap);
+}
+
+.practice li {
+  display: flex;
+  flex-direction: column;
+}
+
+.practice__no {
+  margin-bottom: var(--space-3);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
 }
 
 .practice h4 {
@@ -1295,6 +1548,15 @@ h2 {
   margin-top: var(--space-2);
   font-size: var(--fs-ui);
   color: var(--ink-2);
+}
+
+.practice p.practice__evidence {
+  margin-top: auto;
+  padding-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  line-height: 1.45;
+  color: var(--ink-3);
 }
 
 .credentials li {
@@ -1348,6 +1610,16 @@ h2 {
   margin-bottom: clamp(3rem, 6vw, 5.5rem);
 }
 
+/* The contact split mirrors the work split by rule, not by source order:
+   the intro takes the narrow column, the form the wide one. */
+.contact__intro {
+  grid-column: 1;
+}
+
+.contact .form {
+  grid-column: 2;
+}
+
 .contact__title {
   font-size: var(--fs-display);
   line-height: 0.98;
@@ -1356,8 +1628,10 @@ h2 {
 
 /* A query the visitor can edit: they pick one clause, the result row answers. */
 .query {
-  padding-left: var(--space-4);
-  border-left: 1px solid var(--line);
+  padding: var(--space-4) var(--space-5);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
   font-family: var(--font-mono);
   font-size: var(--fs-small);
   line-height: 1.75;
@@ -1428,6 +1702,8 @@ h2 {
   gap: var(--space-1);
   max-width: 28rem;
   margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--line);
   font-family: var(--font-sans);
   font-size: var(--fs-lede);
   line-height: 1.45;
@@ -1498,7 +1774,7 @@ h2 {
   display: inline-flex;
   align-items: center;
   min-height: 2.75rem;
-  font-size: clamp(1.375rem, 1rem + 1.4vw, 1.875rem);
+  font-size: var(--fs-address);
   font-weight: 500;
   letter-spacing: -0.03em;
   text-decoration: underline;
@@ -1532,9 +1808,15 @@ h2 {
   gap: var(--space-2);
 }
 
-.field label {
+.field__head {
   display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
   justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+}
+
+.field label {
   font-size: var(--fs-small);
   font-weight: 500;
   color: var(--ink-2);
@@ -1581,6 +1863,19 @@ h2 {
 
 .field [aria-invalid="true"] {
   border-color: var(--error);
+}
+
+/* While the message is on its way the fields are visibly inert, so a
+   readOnly field never looks like it is still accepting input. */
+.form[aria-busy="true"] .field input,
+.form[aria-busy="true"] .field textarea {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form[aria-busy="true"] .field input:hover,
+.form[aria-busy="true"] .field textarea:hover {
+  border-color: var(--control-border);
 }
 
 .field__error,
@@ -1631,7 +1926,7 @@ h2 {
 }
 
 .signature__text {
-  font-size: clamp(3.5rem, 13.2vw, 12.5rem);
+  font-size: var(--fs-signature);
   font-weight: 600;
   line-height: 0.9;
   letter-spacing: -0.045em;
@@ -1706,7 +2001,7 @@ h2 {
 
 /* On a short landscape screen the results have to arrive with the claim, so
    the hero gives back a little vertical space. */
-@media (min-width: 56.0625rem) and (max-height: 50rem) {
+@media (min-width: 56rem) and (max-height: 50rem) {
   .hero {
     padding-top: var(--space-5);
   }
@@ -1731,6 +2026,17 @@ h2 {
   .project:nth-child(even) .project__body {
     grid-column: auto;
     grid-row: auto;
+  }
+
+  /* The desktop-only column placement and sticky figure stand down at the
+     boundary. */
+  .project__figure {
+    position: static;
+  }
+
+  .contact__intro,
+  .contact .form {
+    grid-column: auto;
   }
 
   .projects__more {
@@ -1787,8 +2093,18 @@ h2 {
     padding: 0 var(--space-2);
   }
 
+  .nav__no {
+    display: none;
+  }
+
   .keyfigures {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* The stacked figures keep their bottom hairline only. */
+  .keyfigures > li:not(:first-child) {
+    padding-left: 0;
+    border-left: 0;
   }
 
   .keyfigure {
@@ -1827,7 +2143,8 @@ h2 {
 
   .credentials__action {
     grid-column: 2;
-    grid-row: 1;
+    grid-row: 1 / span 2;
+    align-self: center;
   }
 
   .facts > div {
@@ -1857,34 +2174,71 @@ h2 {
    blocks that start off screen. */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* The hero on first paint: copy first, then the figure. */
+  /* The hero on first paint: the status, then the headline is set line into
+     place, the copy follows, the figure boots, the results draw and count
+     in. Total envelope, status to last digit: about 2.6s. */
   .hero__enter {
-    animation: enter 900ms var(--ease) both;
+    animation: enter var(--dur-4) var(--ease) both;
   }
 
-  .hero__copy > :nth-child(2) {
-    animation-delay: 60ms;
+  .hero .status {
+    animation-duration: 520ms;
   }
 
-  .hero__copy > :nth-child(3) {
-    animation-delay: 140ms;
+  .hero .status::before {
+    animation:
+      dot-pop 560ms var(--ease-spring) 200ms both,
+      live 2.8s ease-out 900ms infinite;
   }
 
-  .hero__copy > :nth-child(4) {
-    animation-delay: 200ms;
+  /* The headline is wiped into place rather than faded: the block rises
+     while its clip opens downward, so the line reads as being set. */
+  .hero__copy > h1 {
+    animation: h-set 820ms var(--ease) 120ms both;
+  }
+
+  .hero__lede {
+    animation-delay: 300ms;
+  }
+
+  .hero__actions {
+    animation-delay: 380ms;
   }
 
   .hero__figure {
-    animation-delay: 260ms;
+    animation-delay: 430ms;
   }
 
+  /* The marker draws while the headline is still setting. */
   .hero .hl {
-    animation: hl-sweep 1000ms var(--ease) 700ms both;
+    animation: hl-sweep 1000ms var(--ease) 720ms both;
+  }
+
+  /* The results: the rule draws, each column rises, its digits count in. */
+  .keyfigures::before {
+    animation: rule-draw 640ms var(--ease) 520ms both;
+  }
+
+  .keyfigures > li {
+    animation: enter 700ms var(--ease) both;
+    animation-delay: calc(540ms + var(--i, 0) * 90ms);
   }
 
   .hero .odo__strip {
-    animation: odo-roll 1700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(450ms + var(--p) * 70ms);
+    animation: odo-roll var(--dur-5) var(--ease) both;
+    animation-delay: calc(680ms + var(--i, 0) * 90ms + var(--p) * 50ms);
+  }
+
+  /* The monogram draws itself and ends on the sample point. */
+  .brand-mark path {
+    stroke-dasharray: 100;
+    animation: draw-in 900ms var(--ease-inout) 60ms both;
+  }
+
+  .brand-mark__point {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: dot-pop 480ms var(--ease-spring) 880ms both;
   }
 
   .status::before {
@@ -1897,8 +2251,42 @@ h2 {
       color var(--med) var(--ease);
   }
 
+  /* The method opens like a sheet: its height travels while the body settles
+     inside it, and the marker's closing stroke folds away. Browsers without
+     ::details-content simply open, with the body's own arrival. */
+  .method > summary::after {
+    transition:
+      background-size var(--dur-2) var(--ease),
+      color var(--fast) var(--ease);
+  }
+
+  .method::details-content {
+    box-sizing: border-box;
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--dur-2) var(--ease),
+      content-visibility var(--dur-2) allow-discrete;
+  }
+
+  .method[open]::details-content {
+    block-size: auto;
+    content-visibility: visible;
+  }
+
+  .method[open] > .method__body {
+    animation: method-in var(--dur-2) var(--ease) 60ms both;
+  }
+
+  @keyframes method-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
   /* Blocks below the fold rise in once, as they arrive. */
-  [data-reveal] {
+  [data-reveal]:not([data-pending]) {
     transition:
       opacity 800ms var(--ease),
       transform 900ms var(--ease);
@@ -1909,7 +2297,7 @@ h2 {
     transform: translateY(1.5rem);
   }
 
-  [data-reveal] .hl {
+  [data-reveal]:not([data-pending]) .hl {
     transition: background-size 1000ms var(--ease) 350ms;
   }
 
@@ -1917,13 +2305,81 @@ h2 {
     background-size: 0% 0.42em;
   }
 
-  [data-reveal] .odo__strip {
+  [data-reveal]:not([data-pending]) .odo__strip {
     transition: transform 1700ms cubic-bezier(0.16, 1, 0.3, 1);
     transition-delay: calc(350ms + var(--p) * 70ms);
   }
 
   [data-pending] .odo__strip {
     transform: translateY(0);
+  }
+
+  /* Lists inside a revealed block step in as rows, in order: the block rises
+     as one piece while its rows settle one after another, so a list arrives
+     as a list rather than as a slab. */
+  [data-reveal]:not([data-pending]) :is(.credentials, .facts, .sources__list, .practice) > :is(li, div) {
+    transition:
+      opacity 520ms var(--ease),
+      transform 520ms var(--ease);
+    transition-delay: calc(320ms + var(--i, 0) * 70ms);
+  }
+
+  [data-pending] :is(.credentials, .facts, .sources__list, .practice) > :is(li, div) {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  /* The closing band stages itself the same way: the query prints its lines
+     one after another, the ways to reach out step in behind them, and the
+     form arrives on the same clock. */
+  [data-reveal]:not([data-pending]) .query > p {
+    transition:
+      opacity 520ms var(--ease),
+      transform 520ms var(--ease);
+    transition-delay: calc(320ms + var(--i, 0) * 70ms);
+  }
+
+  [data-reveal]:not([data-pending]):is(.contact__intro, .form) > :not(.query) {
+    transition:
+      opacity 520ms var(--ease),
+      transform 520ms var(--ease);
+    transition-delay: calc(560ms + var(--i, 0) * 90ms);
+  }
+
+  [data-pending] .query > p,
+  [data-pending]:is(.contact__intro, .form) > :not(.query) {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+
+  /* Row order is the markup's order, named once here; first rows keep the 0
+     default. */
+  .query > :nth-child(2) {
+    --i: 1;
+  }
+  .query > :nth-child(3) {
+    --i: 2;
+  }
+  .query > :nth-child(4) {
+    --i: 3;
+  }
+  .query > :nth-child(5) {
+    --i: 4;
+  }
+  .contact__intro > :nth-child(3) {
+    --i: 1;
+  }
+  .contact__intro > :nth-child(4) {
+    --i: 2;
+  }
+  .contact__intro > :nth-child(5) {
+    --i: 3;
+  }
+  .form > :nth-child(2) {
+    --i: 1;
+  }
+  .form > :nth-child(3) {
+    --i: 2;
   }
 
   /* The drawings plot themselves: frame and labels, then the points in order. */
@@ -1937,11 +2393,53 @@ h2 {
     transform-origin: 50% 100%;
   }
 
-  [data-reveal] .exhibit svg * {
-    transition:
-      opacity 600ms var(--ease),
-      transform 700ms var(--ease);
-    transition-delay: calc(250ms + var(--i, 0) * 4ms);
+  /* Figures have their own tempo: what one step between staggered marks is
+     worth. */
+  .exhibit svg.fg-clusters {
+    --step: 2.6ms;
+  }
+
+  .exhibit svg.fg-network {
+    --step: 30ms;
+  }
+
+  [data-reveal]:not([data-pending]) .exhibit svg * {
+    transition-property: opacity, transform;
+    transition-duration: 600ms, 700ms;
+    transition-timing-function: var(--ease);
+    transition-delay: calc(var(--d, 250ms) + var(--i, 0) * var(--step, 4ms));
+  }
+
+  /* A bar grows from its baseline, quick enough to read as a fill. */
+  [data-reveal]:not([data-pending]) .exhibit svg .fg-bar {
+    transition-duration: 460ms, 460ms;
+  }
+
+  /* An arrival with a touch of overshoot: the network's decision. */
+  [data-reveal]:not([data-pending]) .exhibit svg .fg-pop {
+    transition-duration: 600ms, 640ms;
+    transition-timing-function: var(--ease), var(--ease-spring);
+  }
+
+  /* An endpoint stamped as the line reaches it. */
+  [data-reveal]:not([data-pending]) .exhibit svg .fg-dot {
+    transition-duration: 480ms, 480ms;
+    transition-timing-function: var(--ease), var(--ease-spring);
+  }
+
+  /* A reading on an accent bar: it may arrive late, but it has to arrive on
+     the bar, so it fades in quickly once the bar is under it. */
+  [data-reveal]:not([data-pending]) .exhibit svg .fg-snap {
+    transition-duration: 360ms, 700ms;
+  }
+
+  /* A series drawing itself: the path carries pathLength=1, so one dash
+     covers the whole line and the offset unrolls it. */
+  [data-reveal]:not([data-pending]) .exhibit svg .fg-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    transition-property: opacity, transform, stroke-dashoffset;
+    transition-duration: 600ms, 700ms, 850ms;
   }
 
   [data-pending] .exhibit svg :is(text, line, path, ellipse, polyline, polygon, .fg-panel) {
@@ -1953,8 +2451,22 @@ h2 {
     transform: scale(0.2);
   }
 
-  [data-pending] .exhibit svg .fg-bar {
+  [data-pending] .exhibit svg rect.fg-bar {
     transform: scaleY(0);
+  }
+
+  /* Marks that are surfaces rather than points: they fade in place instead of
+     shrinking from the middle. */
+  [data-pending] .exhibit svg rect.fg-track,
+  [data-pending] .exhibit svg rect.fg-fade {
+    opacity: 0;
+    transform: none;
+  }
+
+  [data-pending] .exhibit svg path.fg-draw {
+    opacity: 1;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
   }
 }
 
@@ -1988,6 +2500,39 @@ h2 {
   }
 }
 
+/* The headline: the clip opens downward as the block rises, so the line is
+   set rather than faded in. Negative ends keep glyph overshoot clear. */
+@keyframes h-set {
+  from {
+    clip-path: inset(-0.2em -0.08em 100% -0.08em);
+    transform: translateY(0.55rem);
+  }
+
+  to {
+    clip-path: inset(-0.2em -0.08em -0.2em -0.08em);
+    transform: translateY(0);
+  }
+}
+
+@keyframes dot-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+}
+
+@keyframes draw-in {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
 /* Motion is optional: nothing here carries meaning. */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -1998,10 +2543,295 @@ h2 {
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 
   .button:hover .button__icon,
   .link:hover .link__icon {
     transform: none;
+  }
+}
+
+/* Forced colours (Windows High Contrast): everything the palette carried as
+   a tinted border gets a real one, and the marker becomes an underline. */
+@media (forced-colors: active) {
+  :root {
+    --line: currentColor;
+    --control-border: currentColor;
+  }
+
+  .hl {
+    text-decoration: underline;
+  }
+
+  /* Forced colours removes background images, and the method's marker is
+     drawn with two of them. Give it back the typed sign. */
+  .method > summary::after {
+    content: "+";
+    width: auto;
+    height: auto;
+    background: none;
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    line-height: 1;
+    color: currentColor;
+  }
+
+  .method[open] > summary::after {
+    content: "\2212";
+  }
+}
+
+/* 17  Print --------------------------------------------------------------- */
+
+/* The brief on paper: light whatever band the screen was in, every method
+   open (PrintSheet.tsx), every link's target spelled out, and the screen-only
+   machinery gone. PrintSheet also freezes motion and releases held-back
+   blocks before the page is captured. */
+[data-printing] *,
+[data-printing] *::before,
+[data-printing] *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  /* The night band becomes paper too; the accent goes to ink. */
+  :root,
+  .night,
+  .site-header[data-night] {
+    --paper: #fff;
+    --surface: #fff;
+    --ink: #111;
+    --ink-2: #333;
+    --ink-3: #555;
+    --line: #c9c9c9;
+    --control-border: #8a8a8a;
+    --accent: #111;
+    --accent-hover: #111;
+    --on-accent: #fff;
+    --error: #111;
+    --success: #111;
+    --hl: #e6e6e2;
+    /* Three series, three weights of grey: the groups stay apart on a
+       black-and-white printer. */
+    --data-1: #111;
+    --data-2: #555;
+    --data-3: #8f8f8f;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: #fff;
+    color: #111;
+  }
+
+  /* Screen-only: navigation, gates, the form, the playthings. */
+  nav,
+  .skip-link,
+  .hero__actions,
+  .hero__figure,
+  .form,
+  .signature,
+  .text-button,
+  .method__count,
+  .plot__dot,
+  .plot__readout,
+  .site-footer a,
+  .site-footer__thanks,
+  .status::before {
+    display: none !important;
+  }
+
+  /* The header becomes a letterhead on the first page. */
+  .site-header {
+    position: static;
+    background: none;
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .site-header__inner {
+    height: auto;
+    padding-block: 0.65rem;
+  }
+
+  .brand {
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Sections flow rather than divide viewports. */
+  main .section {
+    padding-block: 1.75rem;
+  }
+
+  .hero {
+    padding-top: 0;
+  }
+
+  .hero__grid {
+    display: block;
+  }
+
+  .hero__lede {
+    max-width: none;
+  }
+
+  .keyfigures {
+    margin-top: 1.5rem;
+    column-gap: 1rem;
+  }
+
+  .section.night {
+    border-top: 1px solid var(--line);
+  }
+
+  .contact {
+    display: block;
+  }
+
+  .contact__title {
+    font-size: 2.5rem;
+  }
+
+  .contact__head {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Each project starts a page, its drawing above the argument at full
+     width. */
+  .project {
+    display: block;
+  }
+
+  #projects,
+  .project + .project,
+  #about,
+  #contact {
+    break-before: page;
+  }
+
+  .project__figure {
+    position: static;
+    margin: 0 0 1.25rem;
+    break-inside: avoid;
+  }
+
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+  }
+
+  .project__head,
+  .project__title,
+  .stats,
+  .exhibit,
+  .method {
+    break-inside: avoid;
+  }
+
+  /* Links keep their words; the target is spelled out beside them. Local
+     files carry their absolute address in data-print-href. */
+  a[href^="http"]::after,
+  a[data-print-href]::after {
+    font-size: 0.82em;
+    color: #555;
+    overflow-wrap: anywhere;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+  }
+
+  a[data-print-href]::after {
+    content: " (" attr(data-print-href) ")";
+  }
+
+  .link__icon,
+  .button__icon {
+    display: none;
+  }
+
+  .link {
+    text-decoration-color: var(--control-border);
+  }
+
+  /* The marker survives as a grey band, printed exactly. The band's shape
+     comes from the screen rule (--hl); only the printing is forced. */
+  .hl {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* The query prints as the query it is. */
+  .query {
+    background: #fff;
+    break-inside: avoid;
+  }
+
+  .query__chevron {
+    display: none;
+  }
+
+  .query__pick select {
+    appearance: none;
+    padding: 0;
+    border: 0;
+  }
+
+  /* The method's control is a signpost on paper. */
+  .method > summary {
+    min-height: 0;
+    padding-block: 0.5rem;
+  }
+
+  .method > summary::after {
+    display: none;
+  }
+
+  /* Without the script (or before it runs), a closed method still prints its
+     content where ::details-content is supported. */
+  .method::details-content {
+    content-visibility: visible !important;
+    block-size: auto !important;
+    overflow: visible;
+  }
+
+  /* A certificate's link moves to its own line: the target URL needs the
+     width, not a nine-rem column. */
+  .credentials li {
+    grid-template-columns: minmax(0, 1fr) 5.5rem;
+    break-inside: avoid;
+  }
+
+  .credentials__action {
+    grid-column: 1 / -1;
+    justify-self: start;
+    margin-top: 0.35rem;
+  }
+
+  .subhead {
+    break-after: avoid;
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--line);
+  }
+
+  .site-footer__row {
+    justify-content: flex-start;
+    padding-block: 0.75rem;
   }
 }

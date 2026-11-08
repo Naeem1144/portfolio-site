@@ -5,14 +5,15 @@ import { site } from "@/lib/site";
 import { BrandMark } from "./BrandMark";
 
 const links = [
-  { label: "Work", id: "projects" },
-  { label: "About", id: "about" },
-  { label: "Contact", id: "contact" },
+  { no: "01", label: "Work", id: "projects" },
+  { no: "02", label: "About", id: "about" },
+  { no: "03", label: "Contact", id: "contact" },
 ];
 
 export function Header() {
   const [active, setActive] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [night, setNight] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -22,11 +23,14 @@ export function Header() {
       frame = 0;
       setScrolled(window.scrollY > 8);
 
-      // Reading progress, drawn as the header's bottom rule. Set directly so
-      // scrolling never re-renders the header.
-      const range = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = range > 0 ? Math.min(1, window.scrollY / range) : 0;
-      headerRef.current?.style.setProperty("--progress", progress.toFixed(4));
+      const contactSection = document.getElementById("contact");
+      const headerHeight = headerRef.current?.offsetHeight ?? 64;
+      setNight(
+        Boolean(
+          contactSection &&
+            contactSection.getBoundingClientRect().top <= headerHeight * 0.6,
+        ),
+      );
 
       const atBottom =
         window.innerHeight + window.scrollY >=
@@ -36,12 +40,20 @@ export function Header() {
         return;
       }
 
-      // A section becomes current once its top crosses the upper third.
+      // A section becomes current once its top crosses the upper third; among
+      // the crossed ones the lowest on screen (largest top) is the current one.
+      // Ties and ordering do not depend on the order of `links`.
       const line = window.innerHeight * 0.33;
       let current: string | null = null;
+      let crossedAt = -Infinity;
       for (const { id } of links) {
         const section = document.getElementById(id);
-        if (section && section.getBoundingClientRect().top <= line) current = id;
+        if (!section) continue;
+        const top = section.getBoundingClientRect().top;
+        if (top <= line && top > crossedAt) {
+          current = id;
+          crossedAt = top;
+        }
       }
       setActive(current);
     };
@@ -61,7 +73,12 @@ export function Header() {
   }, []);
 
   return (
-    <header ref={headerRef} className="site-header" data-scrolled={scrolled || undefined}>
+    <header
+      ref={headerRef}
+      className="site-header"
+      data-scrolled={scrolled || undefined}
+      data-night={night || undefined}
+    >
       <div className="container site-header__inner">
         <a href="#top" className="brand">
           <BrandMark />
@@ -77,6 +94,9 @@ export function Header() {
                   href={`#${link.id}`}
                   aria-current={active === link.id ? "location" : undefined}
                 >
+                  <span className="nav__no" aria-hidden="true">
+                    {link.no}
+                  </span>
                   {link.label}
                 </a>
               </li>

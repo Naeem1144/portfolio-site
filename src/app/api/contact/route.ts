@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 /** Hard ceiling on the request body; the longest allowed message is 5 000 chars. */
 const MAX_BODY_BYTES = 16 * 1024;
 
-const LIMITS = { name: 120, email: 254, message: 5000 } as const;
+const LIMITS = { name: 120, email: 254, message: 5000, topic: 120 } as const;
 
 // A deliberately forgiving address check: one @, a dot in the domain, no spaces.
 // Anything stricter starts rejecting valid addresses.
@@ -112,6 +112,7 @@ export async function POST(request: Request) {
   const name = read("name");
   const email = read("email");
   const message = read("message");
+  const topic = read("topic");
 
   if (!name || !email || !message) {
     return badRequest("Name, email, and message are all required.");
@@ -119,7 +120,8 @@ export async function POST(request: Request) {
   if (
     name.length > LIMITS.name ||
     email.length > LIMITS.email ||
-    message.length > LIMITS.message
+    message.length > LIMITS.message ||
+    topic.length > LIMITS.topic
   ) {
     return badRequest("One or more fields exceed the allowed length.");
   }
@@ -133,7 +135,7 @@ export async function POST(request: Request) {
 
   let delivered = false;
   try {
-    delivered = await sendEmail(createContactEmail(name, email, message));
+    delivered = await sendEmail(createContactEmail(name, email, message, topic));
   } catch (error) {
     // Misconfiguration (missing EMAIL_ADDRESS / EMAIL_PASSWORD) throws before
     // any network call, so log it distinctly from a delivery failure.

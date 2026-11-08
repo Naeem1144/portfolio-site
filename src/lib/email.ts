@@ -89,22 +89,29 @@ export function createContactEmail(
   name: string,
   email: string,
   message: string,
+  topic?: string,
 ): EmailData {
   const recipient = process.env.EMAIL_ADDRESS;
   if (!recipient) {
     throw new Error("Recipient email not configured: set EMAIL_ADDRESS.");
   }
 
+  const cleanTopic = topic ? sanitizeHeaderValue(topic) : "";
+  const topicText = cleanTopic ? `Context: ${cleanTopic}\n` : "";
+  const topicHtml = cleanTopic
+    ? `\n  <p><strong>Context:</strong> ${escapeHtml(cleanTopic)}</p>`
+    : "";
+
   return {
     to: recipient,
-    subject: `New contact form submission from ${sanitizeHeaderValue(name)}`,
+    subject: `New contact form submission from ${sanitizeHeaderValue(name)}${cleanTopic ? ` (${cleanTopic})` : ""}`,
     replyTo: sanitizeHeaderValue(email),
     // The plain-text part carries the raw values; the HTML part escapes them.
-    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}\n`,
+    text: `Name: ${name}\nEmail: ${email}\n${topicText}\nMessage:\n${message}\n`,
     html: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
   <h2 style="color: #0070f3;">New contact form submission</h2>
   <p><strong>From:</strong> ${escapeHtml(name)}</p>
-  <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+  <p><strong>Email:</strong> ${escapeHtml(email)}</p>${topicHtml}
   <div style="margin-top: 20px; padding: 15px; background-color: #f5f5f5; border-radius: 5px;">
     <p><strong>Message:</strong></p>
     <p style="white-space: pre-wrap;">${escapeHtml(message)}</p>

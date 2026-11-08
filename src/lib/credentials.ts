@@ -12,13 +12,9 @@ export type Credential = {
   detail: string;
   issuer: string;
   date: string;
-  /** What the programme covered, in a few words each. */
-  covers: string[];
   href: string;
   linkKind: "credential" | "issuer";
   credentialId?: string;
-  /** Accessible text for the outbound link. */
-  linkLabel: string;
 };
 
 export const credentials: Credential[] = [
@@ -27,40 +23,32 @@ export const credentials: Credential[] = [
     detail: "Professional Certificate",
     issuer: "Google · Coursera",
     date: "Sep 2025",
-    covers: ["Data lifecycle", "SQL", "Spreadsheets", "Tableau", "Visualisation"],
     href: "https://www.coursera.org/professional-certificates/google-data-analytics",
     linkKind: "issuer",
-    linkLabel: "View the Google Data Analytics programme",
   },
   {
     title: "Data Science, ML, DL & NLP Bootcamp",
     detail: "Complete course certificate",
     issuer: "Udemy",
     date: "2025",
-    covers: ["Machine learning", "Deep learning", "NLP", "Tableau"],
     href: "https://www.udemy.com/certificate/UC-d8be2692-b47c-437e-9422-11520e426ae8/",
     linkKind: "credential",
     credentialId: "UC-d8be2692-b47c-437e-9422-11520e426ae8",
-    linkLabel: "Verify this Udemy certificate",
   },
   {
     title: "Inbound Marketing",
     detail: "Professional certification",
     issuer: "HubSpot Academy",
     date: "Sep 2024",
-    covers: ["Content strategy", "Marketing funnel", "Data-driven marketing"],
     href: "https://academy.hubspot.com/courses/inbound-marketing",
     linkKind: "issuer",
-    linkLabel: "View the HubSpot Inbound Marketing course",
   },
   {
     title: "Data Analytics",
     detail: "Classroom training & certification",
     issuer: "TOPS Technologies",
     date: "Oct 2023",
-    covers: ["Python", "Statistics", "Excel", "SQL", "Tableau"],
     href: "https://www.tops.edu.in/",
     linkKind: "issuer",
-    linkLabel: "Visit TOPS Technologies",
   },
 ];

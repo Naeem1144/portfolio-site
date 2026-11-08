@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { site } from "@/lib/site";
 
 /**
- * The sign-off: the name set huge in a field of dots. They lean away from the
- * pointer and light up in the accent, a tap sends a ripple through them, and a
- * slow sweep of light crosses them while nobody is touching. Nothing to read.
+ * The sign-off: the name set huge in a field of dots. The field inks itself
+ * in from the left as it first arrives, the dots lean away from the pointer
+ * and light up in the accent, a tap sends a ripple through them, and a slow
+ * sweep of light crosses them while nobody is touching. Nothing to read.
  */
 
 type Dot = { x: number; y: number; ox: number; oy: number; glow: number };
@@ -17,6 +18,8 @@ const PUSH = 16;
 const RIPPLE_SPEED = 0.8;
 const RIPPLE_WIDTH = 46;
 const SWEEP_MS = 5600;
+const ASSEMBLE_MS = 620;
+const ASSEMBLE_RAMP = 320;
 
 const approach = (value: number, target: number, delta: number, tau: number) =>
   value + (target - value) * (1 - Math.exp(-delta / tau));
@@ -45,14 +48,25 @@ export function Signature() {
     let last = 0;
     let visible = false;
     let cancelled = false;
+    let restSince = 0;
+    let layoutRun = 0;
+    let arrivedAt = 0;
 
-    const layout = async () => {
+    const layout = async (run: number) => {
       const style = getComputedStyle(canvas);
       ink = style.getPropertyValue("--ink").trim() || ink;
       accent = style.getPropertyValue("--accent").trim() || accent;
       const family = style.fontFamily;
-      await document.fonts.load(`600 100px ${family}`).catch(() => undefined);
-      if (cancelled) return;
+      // FontFaceSet is not universal; without it the metric-matched fallback
+      // still lays the dots out.
+      try {
+        await (document.fonts as FontFaceSet | undefined)?.load(`600 100px ${family}`);
+      } catch {
+        /* the face failed to load: the fallback metrics stand in */
+      }
+      // A resize that lands mid-layout starts a newer run; this one drops
+      // out before it touches the canvas.
+      if (cancelled || run !== layoutRun) return;
 
       width = Math.round(wrap.getBoundingClientRect().width);
       if (!width) return;
@@ -105,7 +119,10 @@ export function Signature() {
       canvas.style.height = `${height}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       setReady(true);
-      draw(performance.now());
+      // Before the field has arrived its first frame stays in hand, so the
+      // inking-in happens on screen rather than off it. Reduced motion has no
+      // ink-in to play, so it paints the finished field at once.
+      if (arrivedAt || reduced) draw(performance.now());
     };
 
     const draw = (now: number) => {
@@ -113,9 +130,11 @@ export function Signature() {
       const delta = last ? Math.min(now - last, 40) : 16;
       last = now;
       ripples = ripples.filter((r) => (now - r.born) * RIPPLE_SPEED < width + RIPPLE_WIDTH);
-      const sweep = ((now % SWEEP_MS) / SWEEP_MS) * (width + height + 600) - 300;
+      const elapsed = arrivedAt ? Math.max(0, now - arrivedAt) : 0;
+      const sweep = ((elapsed % SWEEP_MS) / SWEEP_MS) * (width + height + 600) - 300;
 
       ctx.clearRect(0, 0, width, height);
+      let active = ripples.length > 0;
       for (const dot of dots) {
         let tx = 0;
         let ty = 0;
@@ -130,6 +149,7 @@ export function Signature() {
             tx += (dx / d) * k * PUSH;
             ty += (dy / d) * k * PUSH;
             glow = Math.max(glow, k);
+            active = true;
           }
         }
         for (const r of ripples) {
@@ -143,39 +163,68 @@ export function Signature() {
             tx += (dx / d) * k * PUSH * 0.7;
             ty += (dy / d) * k * PUSH * 0.7;
             glow = Math.max(glow, k);
+            active = true;
           }
         }
+
+        // The field arrives in one pass from the left; each dot finishes its
+        // own short ramp once the front has passed it.
+        const arrive = reduced
+          ? 1
+          : Math.max(0, Math.min(1, (elapsed - (dot.x / width) * ASSEMBLE_MS) / ASSEMBLE_RAMP));
 
         dot.ox = reduced ? 0 : approach(dot.ox, tx, delta, 110);
         dot.oy = reduced ? 0 : approach(dot.oy, ty, delta, 110);
         dot.glow = reduced ? 0 : approach(dot.glow, glow, delta, 140);
 
-        const light = reduced ? 0 : Math.max(0, 1 - Math.abs(dot.x + dot.y * 0.6 - sweep) / 160);
-        const x = dot.x + dot.ox;
-        const y = dot.y + dot.oy;
+        // Still easing back to rest counts as activity.
+        if (Math.abs(dot.ox) > 0.05 || Math.abs(dot.oy) > 0.05 || dot.glow > 0.01) {
+          active = true;
+        }
+        if (arrive < 1) active = true;
 
-        ctx.globalAlpha = Math.min(1, 0.4 + light * 0.4 + dot.glow * 0.6);
+        const light = reduced ? 0 : Math.max(0, 1 - Math.abs(dot.x + dot.y * 0.6 - sweep) / 160);
+        const scale = 0.55 + 0.45 * arrive;
+        const x = dot.x + dot.ox;
+        const y = dot.y + dot.oy + (1 - arrive) * 7;
+
+        ctx.globalAlpha = arrive * Math.min(1, 0.4 + light * 0.4 + dot.glow * 0.6);
         ctx.fillStyle = ink;
         ctx.beginPath();
-        ctx.arc(x, y, radius * (1 + dot.glow * 0.5), 0, Math.PI * 2);
+        ctx.arc(x, y, radius * scale * (1 + dot.glow * 0.5), 0, Math.PI * 2);
         ctx.fill();
 
         if (dot.glow > 0.04) {
-          ctx.globalAlpha = dot.glow;
+          ctx.globalAlpha = dot.glow * arrive;
           ctx.fillStyle = accent;
           ctx.beginPath();
-          ctx.arc(x, y, radius * (1 + dot.glow * 0.9), 0, Math.PI * 2);
+          ctx.arc(x, y, radius * scale * (1 + dot.glow * 0.9), 0, Math.PI * 2);
           ctx.fill();
         }
       }
       ctx.globalAlpha = 1;
 
-      if (!reduced && visible && !document.hidden) frame = requestAnimationFrame(draw);
+      // The resting state is the finished state: once the field has settled,
+      // the idle sweep plays one pass and then the loop rests until a pointer
+      // or a tap wakes it. Without this the sweep runs for as long as the
+      // footer is on screen.
+      if (active) restSince = 0;
+      else if (!restSince) restSince = now;
+
+      if (
+        !reduced &&
+        visible &&
+        !document.hidden &&
+        (active || now - restSince < SWEEP_MS)
+      ) {
+        frame = requestAnimationFrame(draw);
+      }
     };
 
     const wakeUp = () => {
       if (!frame && !reduced && visible && !document.hidden && dots.length) {
         last = 0;
+        restSince = 0;
         frame = requestAnimationFrame(draw);
       }
     };
@@ -199,6 +248,7 @@ export function Signature() {
 
     const seen = new IntersectionObserver(([entry]) => {
       visible = entry?.isIntersecting ?? false;
+      if (visible && !arrivedAt) arrivedAt = performance.now();
       wakeUp();
     });
     let lastWidth = 0;
@@ -206,7 +256,7 @@ export function Signature() {
       const w = Math.round(entry?.contentRect.width ?? 0);
       if (w && w !== lastWidth) {
         lastWidth = w;
-        void layout();
+        void layout(++layoutRun);
       }
     });
 

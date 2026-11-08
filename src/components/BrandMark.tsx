@@ -8,6 +8,7 @@ export function BrandMark() {
     <svg viewBox="0 0 40 40" aria-hidden="true" focusable="false" className="brand-mark">
       <path
         d="M6 29V11L20 29V11L34 29V11"
+        pathLength={100}
         fill="none"
         stroke="currentColor"
         strokeWidth="3"

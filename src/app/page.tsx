@@ -6,6 +6,7 @@ import { CredentialsSection } from "@/components/CredentialsSection";
 import { ContactSection } from "@/components/ContactSection";
 import { Footer } from "@/components/Footer";
 import { RevealObserver } from "@/components/RevealObserver";
+import { PrintSheet } from "@/components/PrintSheet";
 
 /**
  * One page, one job: get the interview. The page is a brief. It states the
@@ -43,6 +44,7 @@ export default function Home() {
       </main>
       <Footer />
       <RevealObserver />
+      <PrintSheet />
     </>
   );
 }
